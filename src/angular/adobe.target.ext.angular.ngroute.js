@@ -1,5 +1,5 @@
 /*!
- * adobe.target.ext.angular.ngroute.js v0.0.3
+ * adobe.target.ext.angular.ngroute.js v0.1.0
  *
  * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
  * 
@@ -31,26 +31,10 @@
         
         // Define Angular module from string or object
         var appModule = (typeof app==='string') ? angular.module(app) : app;       
-        
-        var self =  this;
-        var lib =   (A.target.ext.lib) ? A.target.ext.lib : {};
-        var utils = new lib.Util();
-        
-        // Set options or defaults
-        opts = opts||{};
-        var defopts = lib.defaultOptions;
-        var options = {
-                mbox:                     opts.mbox||defopts.mbox,
-                params:                   opts.params||defopts.params,
-                selector:                 opts.selector||defopts.selector,
-                timeout:                  opts.timeout||defopts.timeout,
-                allowedRoutesFilter:      opts.allowedRoutesFilter||defopts.allowedRoutesFilter, 
-                disallowedRoutesFilter:   opts.disallowedRoutesFilter||defopts.disallowedRoutesFilter,
-                debug:                    opts.debug||defopts.debug
-            };
-
-        // Set objects from library
-        var log = (options.debug && utils.log) ? utils.log : function(){};
+        var lib =       A.target.ext.lib;
+        var utils =     new lib.Util();
+        var options =   lib.getOptions(opts||{});
+        var log =       (options.debug && utils.log) ? utils.log : function(){};
 
         // Angular Run Block
         appModule.run(

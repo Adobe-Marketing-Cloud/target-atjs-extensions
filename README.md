@@ -1,4 +1,4 @@
-# target-spa-extensions
+# target-atjs-extensions
 Adobe Target extensions to at.js to support Single Page Application implementations. 
 
 * [Wiki](https://github.com/Adobe-Marketing-Cloud/target-spa-extensions/wiki)

@@ -108,7 +108,7 @@
     });
 */
 
-!(function(A){
+!(function(A){ 
     "use strict";
 
     // Set up adobe.taregt.ext.initRoutes namespace

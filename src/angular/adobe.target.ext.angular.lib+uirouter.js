@@ -64,7 +64,7 @@
                     if (options.selector) offer.selector = options.selector;
                     // adobe.target API call method to inject data to DOM
                     A.target.applyOffer(offer);
-                    // clear data after use
+                    // clear data after use 
                     self.data = null;
                 }
             }

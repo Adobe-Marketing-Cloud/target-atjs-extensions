@@ -7,3 +7,5 @@ Adobe Target extensions to at.js--the new library for Adobe Target.  At the mome
 * /src/ contains the original extension source code, uncompressed with comments.
 
 These extensions are provided free to developers as a starting point to integrate at.js with their single page application. Customization may be required to integrate successfully with your single page app.
+
+This repository is a work-in-progress.  Please check commits for version history.  These extensions are only to be used with an at.js deployment of the Adobe Target solution.

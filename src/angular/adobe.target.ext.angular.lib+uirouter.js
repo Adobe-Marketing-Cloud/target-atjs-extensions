@@ -1,5 +1,5 @@
 /*!
- * adobe.target.ext.lib.js v0.1.0
+ * adobe.target.ext.lib.js v0.1.1
  *
  * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
  * 
@@ -26,10 +26,11 @@
         
     };
 
-    // Define reusable service for Target calls. TODO: handle non-Angular promise $q
+    // Define reusable service for Target calls.
     // Usage: var service = new adobe.target.ext.lib.Service(userOptions, promiseHandler, logFnReference)
     A.target.ext.lib.Service = function(options, $q, log){  
         var self = this;
+        $q=$q||{'defer':function(){return {'resolve':function(){},'promise':function(){}}}};
         return {
             data: null, // temporarily store Target response
             // promise resolver
@@ -64,7 +65,7 @@
                     if (options.selector) offer.selector = options.selector;
                     // adobe.target API call method to inject data to DOM
                     A.target.applyOffer(offer);
-                    // clear data after use 
+                    // clear data after use
                     self.data = null;
                 }
             }

@@ -1,5 +1,5 @@
 /*!
- * adobe.target.ext.angular.directive.js v0.0.1
+ * adobe.target.ext.angular.directive.js v0.0.3
  *
  * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
  * 
@@ -13,8 +13,9 @@
         mbox: 'custom-mbox-name',         // Target mbox name, optional
         selector: '.selector',            // CSS selector for mbox element, optional
         //timeout: 5000,                  // Target call timeout
-        allowedRoutesFilter: [],          // Blank for all routes or restrict to specific routes: ['/','/about','/item/:id']
-        disallowedRoutesFilter: [],       // Exclude specific routes: ['/login','/privacy']
+        allowedRoutesFilter: [],          // Blank for all path names or restrict to specific path names: ['/','/about','/item/:id']
+        disallowedRoutesFilter: [],       // Exclude specific path names: ['/login','/privacy']
+        appendToSelector: false,          // true appends mbox as a child to selector, otherwise selector becomes mbox directive 
         debug: true                       // Print console statements
     });
 */
@@ -42,11 +43,13 @@
                         element.css('visibility', 'hidden');
                     },
                     post: function postLink(scope, element, attributes, controller) {
+                        log('getOffer');
                         adobe.target.getOffer({
                             mbox: attributes.mboxname,
                             params: options.params,
                             timeout: options.timeout,
                             success: function(response) {
+                                log('applyOffer',response);
                                 adobe.target.applyOffer({
                                     element: element[0],
                                     offer: response
@@ -67,32 +70,53 @@
             ['$rootScope', '$injector',
                 function($rootScope, $injector) {
 
-                    // When DOM is updated, apply Target offer 
+                    // When DOM is updated, inject Mbox directive for Target call 
                     $rootScope.$on("$viewContentLoaded", function(event, next, current) {    
-                        //log('in $viewContentLoaded for '+window.location.href)
                         
-                        var mboxSelector = options.mbox+'-dir'; // set unique class name for mbox element so we do not re-inject 
-                        if(angular.element(mboxSelector).size()==0 && // mbox does not exist
-                            angular.element(options.selector).size()>0){ // mbox candidate exists
-                            
-                            // Turn element into mbox and compile
-                            $injector.invoke(['$compile', function ($compile) {
-                                var mboxEl = angular.element(options.selector);
-                                mboxEl.attr('mbox',''); // makes mbox directive
-                                mboxEl.attr('data-mboxname', options.mbox);
-                                var $scope = mboxEl.scope();
-                                var $compiled = $compile(mboxEl)($scope);
-                                log('added mbox directive '+options.mbox+' for '+window.location.href);
-                            }]);
-                            
-                        }
+                        // Get path from hash or pretty url
+                        var currentPath = window.location.hash.substr(1);
+                        if (currentPath.indexOf('?') !== -1) 
+                            currentPath = currentPath.substr(0, currentPath.indexOf('?')); // Remove params from route
+                        if(currentPath === '') 
+                            currentPath = window.location.pathname;// for Angular pretty url on
 
+                        log('$viewContentLoaded '+currentPath);
+
+                        // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
+                        var mboxId = options.mbox+'-dir';
+
+                        // Validate if mbox should be injected
+                        if(utils.isRouteAllowed(currentPath, options.allowedRoutesFilter, options.disallowedRoutesFilter) && //allowed route
+                            document.getElementById(mboxId) == null && // mbox does not exist
+                            document.querySelectorAll(options.selector).length > 0 // element to append to exists
+                        ){
+
+                            // Create mbox and compile
+                            $injector.invoke(['$compile', function ($compile) {
+                                
+                                var el = document.querySelector( options.selector )
+                                var $el = angular.element( el );
+                                if (options.appendToSelector) {
+                                    var $scope = $el.scope();
+                                    var $compiled = $compile('<div id="'+mboxId+'" mbox data-mboxname="'+options.mbox+'"></div>')($scope);
+                                    $el.append($compiled);
+                                }else{
+                                    $el.attr('mbox',''); // turns el into mbox directive
+                                    $el.attr('data-mboxname', options.mbox);
+                                    $el.attr('id',mboxId);
+                                    var $scope = $el.scope();
+                                    var $compiled = $compile($el)($scope);
+                                };
+                                log( ((options.appendToSelector)?'appended':'created') + ' mbox directive',options.mbox);                                
+
+                            }]);
+
+                        }
                     });
 
                 }
             ]
         );
-
     };
 
 })(adobe);

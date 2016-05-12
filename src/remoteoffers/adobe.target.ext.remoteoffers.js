@@ -36,7 +36,7 @@
             log('XHR to '+url);
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == XMLHttpRequest.DONE ) {
+                if (xmlhttp.readyState == 4 ) {
                     if(xmlhttp.status == 200)
                         callback(xmlhttp.responseText);
                     else error(xmlhttp.status);

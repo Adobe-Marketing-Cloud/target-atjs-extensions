@@ -1,0 +1,21 @@
+<!-- heading -->
+<div class="section">
+  <h5 class="center-align" data-mboxname="productsPage" mbox>Products <span></span></h5>
+</div>
+
+<div class="divider"></div>
+
+<div class="row" ng-controller="productsCtrl" style="column-count: 1; column-gap: 10px;">
+  <div class="col s12 m12 l4" ng-repeat="product in products" style="display: inline-block; float: none;">
+    <div class="card">
+      <div class="card-image">
+        <img ng-src="{{product.path}}" />
+        <span class="card-title">{{product.name}}</span>
+      </div>
+      <div class="card-content">${{product.price}} / {{product.amount}}</div>
+      <div class="card-action">
+        <button class="btn waves-effect waves-light" ng-click="addProductToCart(product)">Add to cart</button>
+      </div>
+    </div>
+  </div>
+</div>

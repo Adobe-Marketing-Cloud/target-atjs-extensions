@@ -1,0 +1,45 @@
+<div class="section">
+  <h5 class="center-align">Cart</h5>
+</div>
+
+<div class="divider"></div>
+
+<div class="row" ng-controller="cartSummary">
+  <div class="col s12 m12 l12">
+    <div class="card-panel teal" ng-show="isCartEmpty">
+      <span class="white-text"><i class="mdi-alert-warning"></i>There are no products in your shopping cart.</span>
+    </div>
+
+    <section ng-hide="isCartEmpty">
+      <table class="striped">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="product in cartData">
+            <td>{{product.name}}</td>
+            <td>${{product.price}}</td>
+            <td>{{product.count}}</td>
+            <td>${{product.price * product.count}}</td>
+            <td><a class="waves-effect waves-light btn" ng-click="remove(product.id)">Remove</a></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <td colspan="3" class="right-align">Total:</td>
+          <td>${{total()}}</td>
+          <td></td>
+        </tfoot>
+      </table>
+      <a class="waves-effect waves-light btn orange darken-3">Checkout</a>
+    </section>
+  </div>
+  <div data-mboxname="cartPage" mbox>
+    <img class="right" width="650" src="../assets/mangoes.jpg"/>
+  </div>
+</div>

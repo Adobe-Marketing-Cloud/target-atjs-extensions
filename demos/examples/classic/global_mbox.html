@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script>
+        if (document.getElementById && document.createElement) {
+            document.write("<st"+"yle>html {display: none}</st" + "yle><scr" + "ipt>if (self == top){document.documentElement.style.display = 'block';}else{top.location=self.location;}</scr" + "ipt>");
+        } else {
+            if (top != self) {
+                top.location = self.location;
+            }
+        }
+    </script>
+
+    <script src="../../../at-js/at-with-autocreate.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">global mbox</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+                <blockquote>
+                    In this example, the teal body background is set by an offer fetched by <strong>target-global-mbox</strong>.
+                </blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Details</div>
+                <div class="collapsible-body white">
+                    <style>
+                    ol li {list-style-type: decimal; margin-left: 1rem;}
+                    ol li ol li {list-style-type: lower-alpha}
+                    </style>
+                    <p style="padding-bottom: 1rem">The global mbox or "auto-created" global mbox is supported by at.js.  A few considerations:</p>
+                    <ol>
+                        <li>The global mbox uses the new adobe.target.getOffer() + adobe.target.applyOffer() method instead of TNT.createGlobalMbox() or mboxCreate().
+                        <li>The global mbox uses the "json" endpoint instead of the "standard" or "ajax" endpoints.  Because of this <a href="https://github.com/Adobe-Marketing-Cloud/target-sdk-libraries/wiki/Debugging">Debugging is a little different</a>.</li> 
+                        <li>The global mbox is asynchronous so be careful with offers requiring synchronous functionality.  (e.g. offers that set javascript variables that are used by code later on the page--it might not be there in time!)</li>
+                        <li>Both window.targetPageParams() and  window.targetPageParamsAll() can be used to populate parameters in the auto-created global mbox.</li>
+                        <li>Flicker is controlled by pre-hiding the document and then revealing it on both success and error scenarios.  Unlike the old synchronous, blocking global mbox of mbox.js, other assets will continue to load while the response is pending.</li>
+                        <li>The global mbox in at.js is controlled by the "Auto-create global mbox" toggle on the Setup->Implementation->Edit mbox.js settings screen of the new Target UI.</li>
+                        
+                    </ol>
+                    <p style="padding-bottom: 1rem; padding-left: 1rem">
+                        Note 1: <strong>targetPageParams(),targetPageParamsAll()</strong> should be defined before at.js script tag. e.g.
+                    </p>
+
+                     <pre style="font-size: 0.9em">
+    &lt;html&gt;
+    &lt;head&gt;
+        //styles & vital scripts
+        ...
+        &lt;script&gt;
+            function targetPageParams(){
+                return ['page=' + document.location.pathname,
+                    'src=targetPageParams'];
+            }
+            // and/or
+            function targetPageParamsAll(){
+                return ['page=' + document.location.pathname,
+                    'src=targetPageParamsAll']
+            }
+        &lt;/script&gt;
+        ...
+        &lt;script src="at.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;!-- some content --&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+                    </pre>
+                    <p style="padding-bottom: 1rem; padding-left: 1rem">
+                        Note 2: check console/network tab/Query String Parameters
+                        if page,src parameters are listed and have they values
+                    </p>
+                </div>
+            </li>
+        </ul>
+
+        
+    </div>
+</main>
+</body>
+</html>

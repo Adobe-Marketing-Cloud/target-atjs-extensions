@@ -1,0 +1,15 @@
+#ignore MAC files
+*.DS_Store
+
+#node modules
+node_modules/
+
+#bower modules
+bower_components/
+
+#idea files
+.idea/
+
+#dist folder
+dist/
+mbox/coverage/

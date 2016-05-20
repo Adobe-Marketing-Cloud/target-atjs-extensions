@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../angular/angular.min.js"></script>
+    <script src="../../angular-route/angular-route.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="../../../at-js/at.js"></script>
+    <script src="js/directive-mbox.js"></script>
+</head>
+<body ng-app="sampleApp">
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">TrackEvent Example</a>
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li ng-class="{active: isActive('/view1')}"><a href="#view1">View 1</a></li>
+                        <li ng-class="{active: isActive('/view2')}"><a href="#view2">View 2</a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-demo">
+                        <li><a href="#view1">View 1</a></li>
+                        <li><a href="#view2">View 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <blockquote>In the example below, we have two links that will track events. And one trackEvent defined inline. Check Description.</blockquote>
+        <blockquote>
+            Note: choose View1 or View2 from the top right corner. Notice network tab for json?... requests 
+        </blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
+                <div class="collapsible-body">
+                    <p>
+                        You can define inline (no prevent default):
+                    </p>
+<pre>
+    &lt;a onclick="adobe.target.trackEvent({
+      mbox: 'myMboxName',
+      success:function(){
+        alert('example#1. Look at url. It is already changed.')
+      }
+    })" href="#view1"&gt;switch to view1 (no prevent default)&lt;/a&gt;
+</pre>
+                    <p>
+                        <strong>Inline</strong>, with prevent default action.
+                    </p>
+<pre>
+    &lt;a href="#view2"
+      onclick="adobe.target.trackEvent({
+        mbox: 'myMboxName',
+        event: event,
+        usePreventDefault: true,
+        success: function(){
+          alert('example#2. Look at url. It will change after clicking ok');
+        }})"&gt;switch to view2 (with prevent default)&lt;/a&gt;
+</pre>
+                    <p>
+                        or assign it to multiple elements by selector,type parameters
+                    </p>
+<pre>
+    &lt;a href="#view1" class="trackEventClass"&gt;switch to view1 (with prevent default)&lt;/a&gt;
+    &lt;a href="#view2" class="trackEventClass"&gt;switch to view2 (with prevent default)&lt;/a&gt;
+    &lt;script&gt;
+        adobe.target.trackEvent({
+          mbox: 'myMboxName',
+          type: 'click',
+          selector: '.trackEventClass',
+          usePreventDefault: true,  // works only for  [a:click, form:submit] element:event combinations
+          success: function() {
+            alert('example#3. Look at url. It will change after clicking ok');
+          }
+        });
+    &lt;/script&gt;
+</pre>
+
+                </div>
+            </li>
+        </ul>
+
+        <div class="valign-wrapper">
+            <div ng-view></div>
+        </div>
+        <div class="row">
+            <p>1. <strong>Inline</strong>, no prevent default action. Meaning you will see url changed before an alert.
+
+            <div>
+                <a onclick="adobe.target.trackEvent({mbox: 'myMboxName',success:function(){alert('example#1. Look at url. It is already changed.')}})"
+                   href="#view1">switch to view1 (no prevent default)</a>
+            </div>
+            </p>
+
+            <p>2. <strong>Inline</strong>, with prevent default action. Meaning you will see an alert before url changed.
+
+            <div>
+                <a href="#view2"
+                   onclick="adobe.target.trackEvent({
+                     mbox: 'myMboxName',
+                     event:event,
+                     usePreventDefault: true,
+                     success:function(){alert('example#2. Look at url. It will change after clicking ok');}})">switch to view2 (with prevent default)</a>
+            </div>
+
+            <p>3. <strong>Outline.</strong> Assign track event (prevent default: on) to multiple elements.
+
+            <div>
+                <div><a href="#view1" class="trackEventClass">switch to view1 (with prevent default)</a></div>
+                <div><a href="#view2" class="trackEventClass">switch to view2 (with prevent default)</a></div>
+                <script>
+                    adobe.target.trackEvent({
+                        mbox: 'myMboxName',
+                        type: 'click',
+                        selector: '.trackEventClass',
+                        usePreventDefault: true,
+                        success: function() {
+                            alert('example#3. Look at url. It will change after clicking ok');
+                        }
+                    });
+                </script>
+            </div>
+
+            </p>
+        </div>
+    </div>
+</main>
+<script src="js/directive-example.js"></script>
+<script src="../../store/js/widgets.js"></script>
+</body>
+</html>

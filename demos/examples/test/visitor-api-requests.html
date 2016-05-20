@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+    <title>Multiple parallel requests using VisitorAPI.js</title>
+    <script src="VisitorAPI.js"></script>
+</head>
+<body>
+  <script>
+    var visitor = Visitor.getInstance("F6421253512D2C100A490D45@AdobeOrg");
+
+    visitor.getMarketingCloudVisitorID(function(value) {
+        console.log('MarketingCloudVisitorID:', value);
+    }, true);
+    
+    visitor.getAudienceManagerBlob(function(value) {
+        console.log('AudienceManagerBlob:', value);
+    }, true);
+    
+    visitor.getAnalyticsVisitorID(function(value) {
+        console.log('AnalyticsVisitorID:', value);
+    }, true);
+    
+    visitor.getAudienceManagerLocationHint(function(value) {
+        console.log('AudienceManagerLocationHint:', value);
+    }, true);
+  </script>
+</body>
+</html>

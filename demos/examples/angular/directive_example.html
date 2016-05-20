@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../angular/angular.min.js"></script>
+    <script src="../../angular-route/angular-route.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="../../../at-js/at.js"></script>
+    <script src="js/directive-mbox.js"></script>
+</head>
+<body ng-app="sampleApp">
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">Directive Example</a>
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li ng-class="{active: isActive('/view1')}"><a href="#view1">View 1</a></li>
+                        <li ng-class="{active: isActive('/view2')}"><a href="#view2">View 2</a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-demo">
+                        <li><a href="#view1">View 1</a></li>
+                        <li><a href="#view2">View 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <blockquote>In the example below, a directive mbox is replacing content in the "Simple Directive Content" area.</blockquote>
+        <blockquote>
+            Note: choose View1 or View2 from the top right corner.
+        </blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
+                <div class="collapsible-body">
+                    <p>
+                        You can use a directive:
+                    </p>
+<pre>
+    &lt;h4 <b>data-mboxname="</b>simpleDirective<b>"</b> <b>mbox</b>&gt;
+        Default content.
+    &lt;/h4&gt;
+</pre>
+                </div>
+            </li>
+        </ul>
+
+        <div class="valign-wrapper">
+            <div ng-view></div>
+        </div>
+        <div class="row">
+            <h4 data-mboxname="simpleDirective" mbox>
+                Unfortunately, we have no offer for the moment.
+            </h4>
+        </div>
+
+    </div>
+</main>
+<script src="js/directive-example.js"></script>
+<script src="../../store/js/widgets.js"></script>
+</body>
+</html>

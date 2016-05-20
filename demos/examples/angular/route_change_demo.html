@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../angular/angular.min.js"></script>
+    <script src="../../angular-route/angular-route.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="js/at.0.4.11.js"></script>
+</head>
+<body ng-app="sampleApp">
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">Route Change Event Example</a>
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li ng-class="{active: isActive('/view1')}"><a href="#view1">View 1</a></li>
+                        <li ng-class="{active: isActive('/view2')}"><a href="#view2">View 2</a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-demo">
+                        <li><a href="#view1">View 1</a></li>
+                        <li><a href="#view2">View 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <blockquote>
+            In this example, a route change mbox will fire when you click View2 in the top right corner.  The response will deliver a Target offer which will replace the content below.
+        </blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Details</div>
+                <div class="collapsible-body">
+                    <style>
+                    ol li {list-style-type: decimal; margin-left: 1rem;}
+                    ol li ol li {list-style-type: lower-alpha}
+                    </style>
+                    
+                    <h4 style="padding: 1rem 0 0 2.2rem">Adobe Target Angular ngRoute Implementation</h4>
+                   
+                    <h5 style="padding: 1rem 0 0 2.2rem">Prerequisites:</h5>
+
+                    <ol> 
+                        <li>at.js library</li>
+                        <li>AngularJS library</li>
+                    </ol>
+
+                    <h5 style="padding: 1rem 0 0 2.2rem">NgRoute Extension Integration:</h5>
+                    
+                    <ol>
+                        
+                        <li>Copy <a target="_blank" href="js/adobe.target.ext.angular.lib+ngroute.js">adobe.target.ext.angular.lib+ngroute.js</a> file to your server</li>
+
+
+                        <li>
+                            Add the above file to the end of <strong>at.js</strong> in the Target Tool configuration of DTM.  Or, include it in your HTML after <strong>angular.js</strong> and <strong>at.js</strong>
+                        </li>
+
+
+                        <li>
+                            Initialize with <strong><em>adobe.target.ext.angular.initRoutes</em></strong> method by passing your Angular module as an argument. In DTM you might need to include this as a Sequential Javascript snippet in a Page Load Rule triggered at the Bottom of the Page. 
+
+                            <br>
+                            <pre>
+    adobe.target.ext.angular.initRoutes(sampleApp);
+                            </pre>
+
+                            <p>
+                                or example with all available options:
+                            </p>
+
+                            <pre>
+
+    adobe.target.ext.angular.initRoutes(sampleApp, // Angular module, object reference or string, required 
+        {
+            mbox: 'spa-demo-mbox',                 // Target mbox name, optional
+            selector: '#view2 .offer',             // CSS selector to inject Target content to, optional
+            params: {param1:'val1',param2:'val2'}, // Target mbox parameters, optional
+            //timeout: 500,                        // Target call timeout
+            allowedRoutesFilter: ['/view2'],       // Blank for all routes or restrict to specific routes: ['/','/about','/item/:id']
+            disallowedRoutesFilter: ['/view1'],    // Exclude specific routes: ['/login','/privacy']
+            debug: true                            // Print console statements
+        });
+                            </pre>
+                        </li>
+                   </ol>
+
+                   <h5 style="padding: 1rem 0 0 2.2rem">How It Works:</h5>
+
+
+
+
+
+                    <p style="padding-bottom: 0.3rem">
+                        NgRoute extension consists of 2 parts:
+                    </p>
+
+                    <ol>
+                        <li><em>Angular Service</em>
+                            <br />- Service <em>adobeTargetOfferService</em> is a wrapper function that contains at.js API and some utility methods 
+                            <br />- The at.js API methods include <em>adobe.target.getOffer</em> and <em>adobe.target.applyOffer</em>
+                        </li>
+                        <li><em>Angular Run Block</em>
+                            <br />- Uses <em>adobeTargetOfferService</em> to apply Target calls to specified routes
+                            <br />- Uses Angular <em>$viewContentLoaded</em> event to apply Target response. 
+                        </li>
+                    </ol>
+
+                    <p style="padding-bottom: 0.3rem">
+                        All Target calls of at.js are asynchronous. The idea behind this extension implementation is taking advantage of <em>promises</em>, which resolve on Angular application route changes by delivering Target response. This happens before DOM is updated with new content. To inject the new Target response into DOM, we use <em>$viewContentLoaded</em> event. This allows us to avoid page flicker, since the new HTML and new Target response are added to DOM almost at the same time.  
+                    </p>
+
+                </div>
+            </li>
+        </ul>
+
+        <div class="valign-wrapper">
+            <div ng-view></div>
+        </div>
+    </div>
+</main>
+<script src="js/route-change-demo-app.js"></script>
+
+<!-- Start Adobe Target SPA Integration -->
+<script src="js/adobe.target.ext.angular.lib+ngroute.js"></script>
+<script>
+
+window.targetPageParams=function(){
+    var route = window.location.hash;
+    if (route == '#/view1') {
+        return {param1:'val1',param2:'val2'};
+    }else if (route == '#/view2'){
+        return {param3:'val3',param4:'val4'};
+    }else{
+        return null;
+    };
+};
+
+adobe.target.ext.angular.initRoutes(sampleApp, 
+    {
+        mbox: 'spa-demo-mbox',
+        selector: '#view2 .offer',
+        params: targetPageParams(),
+        //timeout: 500,
+        allowedRoutesFilter: ['/view2'], // blank for all routes or restrict to specific routes: ['/','/about','/item/:id']
+        disallowedRoutesFilter: ['/view1'], //exclude specific routes: ['/login','/privacy']
+        debug: true
+    });
+</script>
+<!-- End Adobe Target SPA Integration -->
+
+<script src="../../store/js/widgets.js"></script>
+</body>
+</html>

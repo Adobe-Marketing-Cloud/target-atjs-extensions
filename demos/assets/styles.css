@@ -1,0 +1,12 @@
+.header {
+    color: #ee6e73;
+    font-weight: 300;
+}
+
+.-pad-left1 {
+    padding-left: 10px;
+}
+
+.ordered li {
+    list-style-type: decimal;
+}

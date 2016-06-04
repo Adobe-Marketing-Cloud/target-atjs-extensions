@@ -21,7 +21,6 @@
     {debug:true}
     );
  */
-
 !(function(A){
     "use strict";
 
@@ -30,7 +29,7 @@
     A.target.ext.remoteoffers = A.target.ext.remoteoffers || {};
     A.target.ext.remoteoffers.init = function(data, opts){
 
-        var log = (opts.debug && opts.debug==true && console && console.info) ? function(msg){console.info('ATX:' + msg);} : function(){};
+        var log = (opts.debug && opts.debug===true && console && console.info) ? function(msg){console.info('ATX:' + msg);} : function(){};
 
         var makeAjaxCall = function(url,callback,error) {
             log('XHR to '+url);
@@ -65,13 +64,14 @@
             var prehide = selector + '{visibility:hidden}';
             addCssToHead(prehide);           
             makeAjaxCall(path, function(result){
-                log('Call success, applyOffer');               
+                log('Call success, applyOffer '+path+' to '+selector);               
                 var element = document.querySelector(selector);
                 if(element){
                     if(typeof method === 'string' && method === 'replace'){
                         var newNode = document.createElement('div');
                         element.parentNode.replaceChild(newNode, element);
                         element = newNode;
+                        log('method:'+method);
                     }
                     adobe.target.applyOffer({  
                       'element': element,
@@ -80,14 +80,13 @@
                         'content': result
                       }]
                     });
-                    //note: element will become visible //element.style.visibility = 'visible';  
                 }
-                if(typeof callbackSuccess==='function') callbackSuccess();
+                if(typeof callbackSuccess==='function'){ log('Success handler'); callbackSuccess(); }
             }, function(status){
                 log("Error loading content for '" + path + "', status: '" + status);
                 var element = document.querySelector(selector);
                 if(element) element.style.visibility = 'visible';
-                if(typeof callbackError==='function') callbackError();
+                if(typeof callbackError==='function') { log('Error handler'); callbackError(); }
             });    
 
         };

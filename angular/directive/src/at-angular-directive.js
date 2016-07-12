@@ -67,15 +67,17 @@
     name: 'angular.initDirective',
     modules: ['settings', 'logger'],
     register: function (settings, logger) {
-      angular.module('target-angular.common', [])
-        .constant('version', '0.3.0')
-        .constant('settings', settings)
-        .constant('logger', logger)
-        .constant('customOptions', {})
+      return function (app, opts) {
+        angular.module('target-angular.common', [])
+          .constant('version', '0.3.0')
+          .constant('settings', settings)
+          .constant('logger', logger)
+          .constant('customOptions', opts)
 
-        .factory('options', ['settings', 'customOptions', getOptions])
+          .factory('options', ['settings', 'customOptions', getOptions])
 
-        .factory('getAndApplyOffers', ['options', '$q', 'logger', getAndApplyOffers]);
+          .factory('getAndApplyOffers', ['options', '$q', 'logger', getAndApplyOffers]);
+      }
     }
   });
 })();

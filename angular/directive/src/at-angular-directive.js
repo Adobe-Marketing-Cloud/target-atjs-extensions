@@ -17,23 +17,23 @@
 'use strict';
 (function () {
   function getOfferPromise(options, promise) {
-    var defer = promise.defer();
+    var deferred = promise.defer();
     adobe.target.getOffer({
       mbox: options.mbox,
       params: options.params,
       timeout: options.timeout,
       success: function (response) {
         if (response && response.length > 0) {
-          defer.resolve(response, options);
+          deferred.resolve(response, options);
         } else {
-          defer.reject('Empty offer');
+          deferred.reject('Empty offer');
         }
       },
       error: function (status, error) {
-        defer.reject(error);
+        deferred.reject(error);
       }
     });
-    return defer.promise;
+    return deferred.promise;
   }
 
   function applyOffer(offer, options) {
@@ -41,6 +41,13 @@
       offer: offer,
       selector: options.selector
     });
+  }
+
+  function getAndApplyOffers(options, promise, logger) {
+    getOfferPromise(options, promise)
+      .then(applyOffer, function (reason) {
+        logger.log('getAndApplyOffers() failed: ' + reason);
+      });
   }
 
   function getOptions(settings, opts) {
@@ -68,7 +75,7 @@
 
         .factory('options', ['settings', 'customOptions', getOptions])
 
-        // .service('service', ['options', '$q', 'logger', ServiceFunction]);
+        .factory('getAndApplyOffers', ['options', '$q', 'logger', getAndApplyOffers]);
     }
   });
 })();

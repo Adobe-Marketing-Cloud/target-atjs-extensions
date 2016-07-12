@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../angular/angular.min.js"></script>
+    <script src="../../angular-route/angular-route.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="../../../at-js/at.js"></script>
+    <script src="js/directive-mbox.js"></script>
+</head>
+<body ng-app="sampleApp">
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">ApplyOffer Example</a>
+                    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li ng-class="{active: isActive('/view1')}"><a href="#view1">View 1</a></li>
+                        <li ng-class="{active: isActive('/view2')}"><a href="#view2">View 2</a></li>
+                    </ul>
+                    <ul class="side-nav" id="mobile-demo">
+                        <li><a href="#view1">View 1</a></li>
+                        <li><a href="#view2">View 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <blockquote>In the examples below, we have few examples showing how adobe.target.applyOffer looks like</blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
+                <div class="collapsible-body"></div>
+            </li>
+        </ul>
+
+        <div class="valign-wrapper">
+            <div ng-view></div>
+        </div>
+        <div class="row">
+            <p>
+<pre id="test1Id" style="width: 100%; border: 1px solid gray; background-color: lightblue; min-height: 80px">
+    // example how applyOffer can be used (as globalMbox)
+    // applies target-global-mbox's mbox call response
+    $('#applyGlobalMboxContentId').click(function() {
+        adobe.target.getOffer({
+            mbox: 'target-global-mbox',
+            success: function(offer) {
+                adobe.target.applyOffer({
+                    offer: offer
+                })
+            },
+            error: function() {
+            }
+        })
+    });
+</pre>
+            <input id="applyGlobalMboxContentId" type="button" value="1. click to apply target-global-mbox offer"/>
+            </p>
+
+        </div>
+    </div>
+</main>
+<script src="js/directive-example.js"></script>
+<script src="../../store/js/widgets.js"></script>
+<script>
+  $(function() {
+      function showContent(content) {
+        $('#test1Id').text(content);
+      }
+      $('#applyRedirect').click(function() {
+          adobe.target.applyOffer({
+              selector: '#test2Id',
+              offer: [{
+                  type: 'redirect',
+                  content: 'http://adobe.com'
+              }]
+          })
+      });
+      $('#applySimpleContent').click(function() {
+          adobe.target.applyOffer({
+              selector: '#test2Id',
+              offer: [{
+                  type: 'html',
+                  content: '<h5 style="color: darkolivegreen">hello <strong>world!</strong></h5>'
+              }]
+          })
+      });
+      $('#applyGlobalMboxContentId').click(function() {
+          adobe.target.getOffer({
+              mbox: 'target-global-mbox',
+              success: function(offer) {
+                  showContent('applying content... (3 seconds delay)');
+                  setTimeout(function() {
+                      showContent('retrieved content:\n' + JSON.stringify(offer));
+                      adobe.target.applyOffer({
+                          offer: offer
+                      })
+                  }, 3000)
+              },error: function() {
+
+              }
+          })
+      });
+  })
+</script>
+</body>
+</html>

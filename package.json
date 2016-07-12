@@ -1,0 +1,11 @@
+{
+  "name": "Mango",
+  "version": "0.0.1",
+  "description": "Mango App",
+  "devDependencies": {
+    "express": "^4.12.4"
+  },
+  "scripts": {},
+  "author": "Adobe Systems",
+  "license": "2003-2015 by Adobe Systems, Inc. All Rights Reserved. This software is proprietary; use is subject to license terms."
+}

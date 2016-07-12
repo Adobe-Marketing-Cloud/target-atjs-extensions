@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="../../../at-js/at.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">mboxDefine/Update</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Details</div>
+                <div class="collapsible-body">
+                    <style>
+                    ol li {list-style-type: decimal; margin-left: 1rem;}
+                    ol li ol li {list-style-type: lower-alpha}
+                    </style>
+                    <p style="padding-bottom: 1rem">mboxDefine() and mboxUpdate() are supported by at.js.  All existing mboxDefine()/mboxUpdate()'s on your site should continue to work!  A few things to keep in mind:
+                    <ol>
+                        <li>mboxUpdate() now uses the json endpoint instead of the "ajax" endpoint.  Because of this <a href="https://github.com/Adobe-Marketing-Cloud/target-sdk-libraries/wiki/Debugging">debugging is a little different</a>.</li>
+                        <li>mboxUpdate()'s invoked during page load now fire immediately.  Previously they waited until window.onload.</li>
+                        <li>window.targetPageParamsAll() will also populate parameters in an mboxUpdate() call.</li>
+                    </ol>
+                    </p>
+                </div>
+            </li>
+        </ul>
+
+        <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+                <span class="card-title">mboxUpdate (dynamic offer)</span>
+
+                <div>Offer to be delivered here via mboxUpdate</div>
+                <div id="classicMboxId" class="mboxDefault">Default content.</div>
+            </div>
+            <div class="card-action">
+                <a href="#" onclick="mboxUpdate('classicMbox3')">Click to change content</a>
+            </div>
+        </div>
+
+    </div>
+</main>
+<script>
+    mboxDefine('classicMboxId', 'classicMbox2');
+    mboxUpdate('classicMbox2');
+    mboxDefine('classicMboxId', 'classicMbox3');
+</script>
+</body>
+</html>

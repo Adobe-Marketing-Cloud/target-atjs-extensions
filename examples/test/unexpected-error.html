@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+    <title>Multiple parallel requests from using at.js</title>
+    <script src="at.js"></script>
+</head>
+<body>
+  <script>
+    for (var i = 0; i < 10; i++) {
+        adobe.target.getOffer({
+            mbox: 'mbox' + 1,
+            success: function(response) {
+                console.log('Success', response);
+            },
+            error: function(status, error) {
+                console.log('Error', status, error);
+            }
+        });
+    }
+    </script>
+</body>
+</html>

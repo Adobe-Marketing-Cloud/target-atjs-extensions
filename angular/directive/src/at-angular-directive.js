@@ -13,19 +13,88 @@
  * limitations under the License.
  */
 
-/* global adobe */
+/* global adobe, angular */
 'use strict';
 
+function ServiceFunction(options, promise, log) {
+  var self = this;
+  promise = promise || {
+    defer: function () {
+      return {resolve: function () {}, promise: function () {}};
+    }}; // empty promise
+  return {
+    data: null, // temporarily store Target response
+    // promise resolver
+    getOffer: function () {
+      log('service.getOffer');
+      var defer = promise.defer();
+      // adobe.target API call to get a Target offer
+      var offer = {
+        mbox: options.mbox,
+        success: function (response) {
+          log('getOffer success', response);
+          self.data = response;
+          defer.resolve(response); // promise is resolved
+        },
+        error: function (status, error) {
+          log('getOffer error', error);
+          defer.resolve(); // promise is resolved to continue app execution
+        }
+      };
+      // Add optional properties
+      if (options.params) {
+        offer.params = options.params;
+      }
+      if (options.timeout) {
+        offer.timeout = options.timeout;
+      }
+      adobe.target.getOffer(offer); // Target call
+      return defer.promise;
+    },
+    applyOffer: function () {
+      log('service.applyOffer');
+      var data = self.data;
+      if (data && data.length > 0) {
+        var offer = {offer: data};
+        // add optional selector if defined
+        if (options.selector) {
+          offer.selector = options.selector;
+        }
+        log('applyOffer', offer);
+        // adobe.target API call method to inject data to DOM
+        adobe.target.applyOffer(offer);
+        // clear data after use
+        self.data = null;
+      }
+    }
+  };
+}
+
 adobe.target.registerExtension({
-  name: 'myGreetingExtension',
-  modules: ['logger'],
-  register: function (logger) {
-    return function (name) {
-      var message = 'Hello, ' + name + '!';
-      logger.log(message);
-      return message;
-    };
+  name: 'angular-directive',
+  modules: ['settings', 'logger'],
+  register: function (settings, logger) {
+    angular.module('angular-directive.lib', [])
+      .constant('version', '0.3.0')
+      .constant('settings', settings)
+      .constant('logger', logger)
+      .constant('customOptions', {})
+
+      .factory('options', ['settings', 'customOptions',
+        function (settings, opts) {
+          return {
+            mbox:                     opts.mbox                   || settings.globalMboxName,
+            timeout:                  opts.timeout                || settings.timeout,
+            globalMboxAutoCreate:     settings.globalMboxAutoCreate,
+            params:                   opts.params                 || null,
+            selector:                 opts.selector               || null,
+            allowedRoutesFilter:      opts.allowedRoutesFilter    || [],
+            disallowedRoutesFilter:   opts.disallowedRoutesFilter || [],
+            appendToSelector:         opts.appendToSelector       || false,
+            debug:                    opts.debug                  || false
+          };
+        }])
+
+      .service('service', ['options', '$q', 'logger', ServiceFunction]);
   }
 });
-
-adobe.target.ext.myGreetingExtension('Geronimo');

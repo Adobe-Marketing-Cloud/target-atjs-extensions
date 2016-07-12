@@ -11,6 +11,14 @@
       "browser": true,
       "jasmine": true,
       "phantomjs": true
+    },
+    "rules": {
+      "key-spacing": ["error", {
+        "beforeColon": false,
+        "afterColon": true,
+        "mode": "minimum"
+      }],
+      "no-multi-spaces": "warn"
     }
   },
   "repository": "/at-angular-directive",

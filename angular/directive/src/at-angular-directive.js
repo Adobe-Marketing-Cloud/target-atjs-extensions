@@ -16,54 +16,31 @@
 /* global adobe, angular */
 'use strict';
 (function () {
-  function ServiceFunction(options, promise, log) {
-    var self = this;
-    return {
-      data: null, // temporarily store Target response
-      // promise resolver
-      getOffer: function () {
-        log('service.getOffer');
-        var defer = promise.defer();
-        // adobe.target API call to get a Target offer
-        var offer = {
-          mbox: options.mbox,
-          success: function (response) {
-            log('getOffer success', response);
-            self.data = response;
-            defer.resolve(response); // promise is resolved
-          },
-          error: function (status, error) {
-            log('getOffer error', error);
-            defer.resolve(); // promise is resolved to continue app execution
-          }
-        };
-        // Add optional properties
-        if (options.params) {
-          offer.params = options.params;
+  function getOfferPromise(options, promise) {
+    var defer = promise.defer();
+    adobe.target.getOffer({
+      mbox: options.mbox,
+      params: options.params,
+      timeout: options.timeout,
+      success: function (response) {
+        if (response && response.length > 0) {
+          defer.resolve(response, options);
+        } else {
+          defer.reject('Empty offer');
         }
-        if (options.timeout) {
-          offer.timeout = options.timeout;
-        }
-        adobe.target.getOffer(offer); // Target call
-        return defer.promise;
       },
-      applyOffer: function () {
-        log('service.applyOffer');
-        var data = self.data;
-        if (data && data.length > 0) {
-          var offer = {offer: data};
-          // add optional selector if defined
-          if (options.selector) {
-            offer.selector = options.selector;
-          }
-          log('applyOffer', offer);
-          // adobe.target API call method to inject data to DOM
-          adobe.target.applyOffer(offer);
-          // clear data after use
-          self.data = null;
-        }
+      error: function (status, error) {
+        defer.reject(error);
       }
-    };
+    });
+    return defer.promise;
+  }
+
+  function applyOffer(offer, options) {
+    adobe.target.applyOffer({
+      offer: offer,
+      selector: options.selector
+    });
   }
 
   function getOptions(settings, opts) {
@@ -80,10 +57,10 @@
   }
 
   adobe.target.registerExtension({
-    name: 'angular.directive',
+    name: 'angular.initDirective',
     modules: ['settings', 'logger'],
     register: function (settings, logger) {
-      angular.module('angular.directive.lib', [])
+      angular.module('target-angular.common', [])
         .constant('version', '0.3.0')
         .constant('settings', settings)
         .constant('logger', logger)
@@ -91,7 +68,7 @@
 
         .factory('options', ['settings', 'customOptions', getOptions])
 
-        .service('service', ['options', '$q', 'logger', ServiceFunction]);
+        // .service('service', ['options', '$q', 'logger', ServiceFunction]);
     }
   });
 })();

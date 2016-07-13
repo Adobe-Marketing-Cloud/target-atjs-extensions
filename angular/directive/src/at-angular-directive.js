@@ -20,12 +20,12 @@
     custParams = custParams || {};
     var deferred = promise.defer();
     adobe.target.getOffer({
-      mbox: custParams.mboxAttr || options.mbox,
+      mbox: custParams.mboxname || options.mbox,
       params: options.params,
       timeout: options.timeout,
       success: function (response) {
         if (response && response.length > 0) {
-          deferred.resolve(response, options, promise, custParams);
+          deferred.resolve(response, custParams);
         } else {
           deferred.reject('Empty offer');
         }
@@ -37,39 +37,24 @@
     return deferred.promise;
   }
 
-  function applyOffer(offer, options, promise, custParams) {
-    custParams = custParams || {};
-    adobe.target.applyOffer({
-      offer: offer,
-      selector: custParams.element ? undefined : options.selector,
-      element: custParams.element
-    });
-  }
-
-  function applyOfferPromise(offer, options, promise, custParams) {
+  function applyOfferPromise(options, promise, offer, custParams) {
     return promise(function (resolve, reject) {
-      applyOffer(offer, options, promise, custParams);
+      custParams = custParams || {};
+      adobe.target.applyOffer({
+        offer: offer,
+        selector: custParams.element ? undefined : options.selector,
+        element: custParams.element
+      });
       resolve();
     });
   }
 
-  function OfferServiceAlt(options, promise, logger) {
-    this.getAndApplyOffers = function (finalBlock, custParams) {
-      getOfferPromise(options, promise, custParams)
-        .then(applyOfferPromise)
-        .then(finalBlock, function (reason) {
-          logger.log('getAndApplyOffers() failed: ' + reason);
-        });
-    };
-  }
-
   function OfferService(options, promise, logger) {
-    this.getAndApplyOffers = function (finalBlock, custParams) {
-      getOfferPromise(options, promise, custParams)
-        .then(applyOffer, function (reason) {
-          logger.log('getOffer() failed: ' + reason);
-        })
-        .finally(finalBlock);
+    this.getOfferPromise = function (custParams) {
+      return getOfferPromise(options, promise, custParams);
+    };
+    this.applyOfferPromise = function (offer, custParams) {
+      return applyOfferPromise(options, promise, offer, custParams);
     };
   }
 
@@ -120,13 +105,17 @@
                 element.css('visibility', 'hidden');
               },
               post: function postLink(scope, element, attributes, controller) {
-                offerService.getAndApplyOffers(
-                  function () {
-                    element.css('visibility', 'visible');
-                  }, {
-                    mboxname: attributes.mboxname,
-                    element: element[0]
-                  });
+                offerService.getOfferPromise({
+                  mboxname: attributes.mboxname,
+                  element: element[0]
+                })
+                .then(offerService.applyOfferPromise)
+                .then(function () {
+                  element.css('visibility', 'visible');
+                })
+                .catch(function (reason) {
+                  logger.log('initDirective error: ' + reason);
+                });
               }
             }
           };

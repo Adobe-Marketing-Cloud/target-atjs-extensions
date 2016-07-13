@@ -16,15 +16,16 @@
 /* global adobe, angular */
 'use strict';
 (function () {
-  function getOfferPromise(options, promise) {
+  function getOfferPromise(options, promise, custParams) {
+    custParams = custParams || {};
     var deferred = promise.defer();
     adobe.target.getOffer({
-      mbox: options.mbox,
+      mbox: custParams.mboxAttr || options.mbox,
       params: options.params,
       timeout: options.timeout,
       success: function (response) {
         if (response && response.length > 0) {
-          deferred.resolve(response, options);
+          deferred.resolve(response, options, custParams);
         } else {
           deferred.reject('Empty offer');
         }
@@ -36,19 +37,22 @@
     return deferred.promise;
   }
 
-  function applyOffer(offer, options) {
+  function applyOffer(offer, options, custParams) {
+    custParams = custParams || {};
     adobe.target.applyOffer({
       offer: offer,
-      selector: options.selector
+      selector: custParams.element ? undefined : options.selector,
+      element: custParams.element
     });
   }
 
   function OfferService(options, promise, logger) {
-    this.getAndApplyOffers = function () {
-      getOfferPromise(options, promise)
-        .then(applyOffer, function (reason) {
-          logger.log('getAndApplyOffers() failed: ' + reason);
-        });
+    this.getAndApplyOffers = function (finalBlock, custParams) {
+      getOfferPromise(options, promise, custParams)
+        .done(applyOffer, function (reason) {
+          logger.log('getOffer() failed: ' + reason);
+        })
+        .finally(finalBlock);
     };
   }
 
@@ -91,7 +95,7 @@
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
         addDependencies(appModule, ['target-angular.common']);
 
-        /* appModule.directive('mbox', function () {
+        appModule.directive('mbox', function () {
           return {
             restrict: 'AE',
             link: {
@@ -99,27 +103,17 @@
                 element.css('visibility', 'hidden');
               },
               post: function postLink(scope, element, attributes, controller) {
-                  log('getOffer');
-                  adobe.target.getOffer({
-                      mbox: attributes.mboxname,
-                      params: options.params,
-                      timeout: options.timeout,
-                      success: function(response) {
-                          log('applyOffer',response);
-                          adobe.target.applyOffer({
-                              element: element[0],
-                              offer: response
-                          });
-                          element.css('visibility', 'visible');
-                      },
-                      error: function(status, response) {
-                          element.css('visibility', 'visible');
-                      }
+                offerService.getAndApplyOffers(
+                  function () {
+                    element.css('visibility', 'visible');
+                  }, {
+                    mboxname: attributes.mboxname,
+                    element: element[0]
                   });
               }
-                }
-            };
-        }); */
+            }
+          };
+        });
       };
     }
   });

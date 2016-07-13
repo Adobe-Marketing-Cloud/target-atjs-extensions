@@ -48,7 +48,7 @@
 
   function applyOfferPromise(offer, options, promise, custParams) {
     return promise(function (resolve, reject) {
-      applyOffer(offer, options, custParams);
+      applyOffer(offer, options, promise, custParams);
       resolve();
     });
   }

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-/* global adobe, angular */
+/* global adobe, angular, offerService */
 'use strict';
 (function () {
   function getOfferPromise(options, promise, custParams) {
@@ -25,7 +25,7 @@
       timeout: options.timeout,
       success: function (response) {
         if (response && response.length > 0) {
-          deferred.resolve(response, options, custParams);
+          deferred.resolve(response, options, promise, custParams);
         } else {
           deferred.reject('Empty offer');
         }
@@ -37,13 +37,30 @@
     return deferred.promise;
   }
 
-  function applyOffer(offer, options, custParams) {
+  function applyOffer(offer, options, promise, custParams) {
     custParams = custParams || {};
     adobe.target.applyOffer({
       offer: offer,
       selector: custParams.element ? undefined : options.selector,
       element: custParams.element
     });
+  }
+
+  function applyOfferPromise(offer, options, promise, custParams) {
+    return promise(function (resolve, reject) {
+      applyOffer(offer, options, custParams);
+      resolve();
+    });
+  }
+
+  function OfferServiceAlt(options, promise, logger) {
+    this.getAndApplyOffers = function (finalBlock, custParams) {
+      getOfferPromise(options, promise, custParams)
+        .then(applyOfferPromise)
+        .done(finalBlock, function (reason) {
+          logger.log('getAndApplyOffers() failed: ' + reason);
+        });
+    };
   }
 
   function OfferService(options, promise, logger) {

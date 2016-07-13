@@ -57,7 +57,7 @@
     this.getAndApplyOffers = function (finalBlock, custParams) {
       getOfferPromise(options, promise, custParams)
         .then(applyOfferPromise)
-        .done(finalBlock, function (reason) {
+        .then(finalBlock, function (reason) {
           logger.log('getAndApplyOffers() failed: ' + reason);
         });
     };
@@ -66,7 +66,7 @@
   function OfferService(options, promise, logger) {
     this.getAndApplyOffers = function (finalBlock, custParams) {
       getOfferPromise(options, promise, custParams)
-        .done(applyOffer, function (reason) {
+        .then(applyOffer, function (reason) {
           logger.log('getOffer() failed: ' + reason);
         })
         .finally(finalBlock);

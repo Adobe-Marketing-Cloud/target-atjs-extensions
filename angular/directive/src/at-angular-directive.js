@@ -43,11 +43,13 @@
     });
   }
 
-  function getAndApplyOffers(options, promise, logger) {
-    getOfferPromise(options, promise)
-      .then(applyOffer, function (reason) {
-        logger.log('getAndApplyOffers() failed: ' + reason);
-      });
+  function OfferService(options, promise, logger) {
+    this.getAndApplyOffers = function () {
+      getOfferPromise(options, promise)
+        .then(applyOffer, function (reason) {
+          logger.log('getAndApplyOffers() failed: ' + reason);
+        });
+    };
   }
 
   function getOptions(settings, opts) {
@@ -63,6 +65,14 @@
     };
   }
 
+  function addDependencies(module, dependencies) {
+    dependencies.forEach(function (dependency) {
+      if (module.requires.indexOf(dependency) === -1) {
+        module.requires.push(dependency);
+      }
+    });
+  }
+
   adobe.target.registerExtension({
     name: 'angular.initDirective',
     modules: ['settings', 'logger'],
@@ -76,8 +86,41 @@
 
           .factory('options', ['settings', 'customOptions', getOptions])
 
-          .factory('getAndApplyOffers', ['options', '$q', 'logger', getAndApplyOffers]);
-      }
+          .service('offerService', ['options', '$q', 'logger', OfferService]);
+
+        var appModule = (typeof app === 'string') ? angular.module(app) : app;
+        addDependencies(appModule, ['target-angular.common']);
+
+        /* appModule.directive('mbox', function () {
+          return {
+            restrict: 'AE',
+            link: {
+              pre: function preLink(scope, element, attributes, controller) {
+                element.css('visibility', 'hidden');
+              },
+              post: function postLink(scope, element, attributes, controller) {
+                  log('getOffer');
+                  adobe.target.getOffer({
+                      mbox: attributes.mboxname,
+                      params: options.params,
+                      timeout: options.timeout,
+                      success: function(response) {
+                          log('applyOffer',response);
+                          adobe.target.applyOffer({
+                              element: element[0],
+                              offer: response
+                          });
+                          element.css('visibility', 'visible');
+                      },
+                      error: function(status, response) {
+                          element.css('visibility', 'visible');
+                      }
+                  });
+              }
+                }
+            };
+        }); */
+      };
     }
   });
 })();

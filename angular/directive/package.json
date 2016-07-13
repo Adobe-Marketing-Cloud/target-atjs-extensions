@@ -11,6 +11,9 @@
       "browser": true,
       "jasmine": true,
       "phantomjs": true
+    },
+    "rules": {
+      "no-unused-vars": "warn"
     }
   },
   "repository": "/at-angular-directive",

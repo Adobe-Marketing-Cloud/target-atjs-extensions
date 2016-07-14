@@ -64,7 +64,19 @@
     };
   }
 
-  function addDependencies(module, dependencies) {
+  function setupCommonModule(settings, logger, opts) {
+    angular.module('target-angular.common', [])
+      .constant('version', '0.3.0')
+      .constant('settings', settings)
+      .constant('logger', logger)
+      .constant('customOptions', opts)
+
+      .factory('options', ['settings', 'customOptions', getOptions])
+
+      .service('offerService', ['$q', OfferService]);
+  }
+
+  function addModuleDependencies(module, dependencies) {
     dependencies.forEach(function (dependency) {
       if (module.requires.indexOf(dependency) === -1) {
         module.requires.push(dependency);
@@ -72,49 +84,48 @@
     });
   }
 
+  function addMboxDirective(module, logger) {
+    module.directive('mbox', function () {
+      return {
+        restrict: 'AE',
+        link: {
+          pre: function preLink(scope, element, attributes, controller) {
+            element.css('visibility', 'hidden');
+          },
+          post: function postLink(scope, element, attributes, controller) {
+            offerService.getOfferPromise({
+              mbox: attributes.mboxname,
+              params: options.params,
+              timeout: options.timeout,
+              element: element[0]
+            })
+            .then(offerService.applyOfferPromise)
+            .catch(function (reason) {
+              logger.log('mboxDirective error: ' + reason);
+            })
+            .finally(function () {
+              element.css('visibility', 'visible');
+            });
+          }
+        }
+      };
+    });
+  }
+
+  function initializeModule(module) {
+
+  }
+
   adobe.target.registerExtension({
     name: 'angular.initDirective',
     modules: ['settings', 'logger'],
     register: function (settings, logger) {
       return function (app, opts) {
-        angular.module('target-angular.common', [])
-          .constant('version', '0.3.0')
-          .constant('settings', settings)
-          .constant('logger', logger)
-          .constant('customOptions', opts)
-
-          .factory('options', ['settings', 'customOptions', getOptions])
-
-          .service('offerService', ['$q', OfferService]);
-
+        setupCommonModule(settings, logger, opts);
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addDependencies(appModule, ['target-angular.common']);
-
-        appModule.directive('mbox', function () {
-          return {
-            restrict: 'AE',
-            link: {
-              pre: function preLink(scope, element, attributes, controller) {
-                element.css('visibility', 'hidden');
-              },
-              post: function postLink(scope, element, attributes, controller) {
-                offerService.getOfferPromise({
-                  mbox: attributes.mboxname,
-                  params: options.params,
-                  timeout: options.timeout,
-                  element: element[0]
-                })
-                .then(offerService.applyOfferPromise)
-                .catch(function (reason) {
-                  logger.log('initDirective error: ' + reason);
-                })
-                .finally(function () {
-                  element.css('visibility', 'visible');
-                });
-              }
-            }
-          };
-        });
+        addModuleDependencies(appModule, ['target-angular.common']);
+        addMboxDirective(appModule, logger);
+        initializeModule(appModule);
       };
     }
   });

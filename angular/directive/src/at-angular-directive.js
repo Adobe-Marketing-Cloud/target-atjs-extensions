@@ -51,11 +51,9 @@
     };
   }
 
-  function RouteService() {
-    this.isRouteAllowed = function (routeName, allowed, disallowed) {
-      return (allowed.length === 0 || allowed.indexOf(routeName) !== -1) &&
-        !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
-    };
+  function isRouteAllowed(routeName, allowed, disallowed) {
+    return (allowed.length === 0 || allowed.indexOf(routeName) !== -1) &&
+      !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
   }
 
   function getOptions(settings, opts) {
@@ -77,11 +75,11 @@
       .constant('settings', settings)
       .constant('logger', logger)
       .constant('customOptions', opts)
+      .constant('routeUtil', {isRouteAllowed: isRouteAllowed})
 
       .factory('options', ['settings', 'customOptions', getOptions])
 
       .service('offerService', ['$q', OfferService])
-      .service('routeService', RouteService);
   }
 
   function addModuleDependencies(module, dependencies) {
@@ -92,8 +90,8 @@
     });
   }
 
-  function addMboxDirective(module, logger) {
-    module.directive('mbox', function () {
+  function addMboxDirective(module) {
+    module.directive('mbox', ['logger', function () {
       return {
         restrict: 'AE',
         link: {
@@ -117,10 +115,47 @@
           }
         }
       };
-    });
+    }]);
   }
 
   function initializeModule(module) {
+    /* module.run(['$rootScope', '$injector', '$location' // TODO: try moving these to addModuleDependencies
+      function($rootScope, $injector, $location) {
+        // When DOM is updated, inject Mbox directive for Target call 
+        $rootScope.$on("$viewContentLoaded", function (event, next, current) {
+          var currentPath = $location.path();
+
+          logger.log('$viewContentLoaded ' + currentPath);
+
+          // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
+          var mboxId = options.mbox + '-dir';
+
+          // Validate if mbox should be injected
+          if (utils.isRouteAllowed(currentPath, options.allowedRoutesFilter, options.disallowedRoutesFilter) && //allowed route
+            document.getElementById(mboxId) == null && // mbox does not exist
+            document.querySelectorAll(options.selector).length > 0 // element to append to exists
+          ){
+            // Create mbox and compile
+            $injector.invoke(['$compile', function ($compile) {
+              var el = document.querySelector( options.selector )
+              var $el = angular.element(el);
+              if (options.appendToSelector) {
+                var $scope = $el.scope();
+                var $compiled = $compile('<div id="'+mboxId+'" mbox data-mboxname="'+options.mbox+'"></div>')($scope);
+                $el.append($compiled);
+              } else {
+                $el.attr('mbox',''); // turns el into mbox directive
+                $el.attr('data-mboxname', options.mbox);
+                $el.attr('id',mboxId);
+                var $scope = $el.scope();
+                var $compiled = $compile($el)($scope);
+              };
+              log(((options.appendToSelector)?'appended':'created') + ' mbox directive',options.mbox);
+            }]);
+            }
+        });
+      }
+    ]); */
   }
 
   adobe.target.registerExtension({
@@ -131,7 +166,7 @@
         setupCommonModule(settings, logger, opts);
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
         addModuleDependencies(appModule, ['target-angular.common']);
-        addMboxDirective(appModule, logger);
+        addMboxDirective(appModule);
         initializeModule(appModule);
       };
     }

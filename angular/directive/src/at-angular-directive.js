@@ -51,6 +51,13 @@
     };
   }
 
+  function RouteService() {
+    this.isRouteAllowed = function (routeName, allowed, disallowed) {
+      return (allowed.length === 0 || allowed.indexOf(routeName) !== -1) &&
+        !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
+    };
+  }
+
   function getOptions(settings, opts) {
     return {
       mbox: opts.mbox || settings.globalMboxName,
@@ -73,7 +80,8 @@
 
       .factory('options', ['settings', 'customOptions', getOptions])
 
-      .service('offerService', ['$q', OfferService]);
+      .service('offerService', ['$q', OfferService])
+      .service('routeService', RouteService);
   }
 
   function addModuleDependencies(module, dependencies) {
@@ -113,7 +121,6 @@
   }
 
   function initializeModule(module) {
-
   }
 
   adobe.target.registerExtension({

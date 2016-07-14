@@ -41,7 +41,10 @@ gulp.task('clean', () => {
 });
 
 gulp.task('build:dist', () => {
-  return gulp.src('src/**/!(*.testutil).js')
+  return gulp.src([
+      '../common/dist/at-angular-common.js',
+      'src/at-angular-directive.js'
+    ])
     // .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(concat('at-angular-directive.js'))

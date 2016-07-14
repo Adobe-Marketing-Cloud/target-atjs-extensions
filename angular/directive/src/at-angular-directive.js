@@ -119,6 +119,24 @@
       }]);
   }
 
+  function isMboxInjectionAllowed(routeUtil, path, options, mboxId) {
+    return routeUtil.isRouteAllowed(path, options.allowedRoutesFilter, options.disallowedRoutesFilter) && // allowed route
+      document.getElementById(mboxId) === null && // mbox does not exist
+      document.querySelectorAll(options.selector).length > 0; // element to append to exists
+  }
+
+  function compileMbox($compile, element, scope, options, mboxId) {
+    if (options.appendToSelector) {
+      var compiled = $compile('<div id="' + mboxId + '" mbox data-mboxname="' + options.mbox + '"></div>')(scope);
+      element.append(compiled);
+    } else {
+      element.attr('mbox', ''); // turns element into mbox directive
+      element.attr('data-mboxname', options.mbox);
+      element.attr('id', mboxId);
+      $compile(element)(scope);
+    }
+  }
+
   function initializeModule(module) {
     module.run(['$rootScope', '$injector', '$location', '$compile',
       'routeUtil', 'options', 'logger',
@@ -127,27 +145,11 @@
         $rootScope.$on('$viewContentLoaded', function (event, next, current) {
           var currentPath = $location.path();
           logger.log('$viewContentLoaded ' + currentPath);
-
           // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
           var mboxId = options.mbox + '-dir';
-
-          // Validate if mbox should be injected
-          if (routeUtil.isRouteAllowed(currentPath, options.allowedRoutesFilter, options.disallowedRoutesFilter) && // allowed route
-            document.getElementById(mboxId) === null && // mbox does not exist
-            document.querySelectorAll(options.selector).length > 0) { // element to append to exists
-            // Create mbox and compile
-            var $el = angular.element(document.querySelector(options.selector));
-            var $scope = $el.scope();
-            var $compiled;
-            if (options.appendToSelector) {
-              $compiled = $compile('<div id="' + mboxId + '" mbox data-mboxname="' + options.mbox + '"></div>')($scope);
-              $el.append($compiled);
-            } else {
-              $el.attr('mbox', ''); // turns el into mbox directive
-              $el.attr('data-mboxname', options.mbox);
-              $el.attr('id', mboxId);
-              $compiled = $compile($el)($scope);
-            }
+          if (isMboxInjectionAllowed(routeUtil, currentPath, options, mboxId)) {
+            var el = angular.element(document.querySelector(options.selector));
+            compileMbox($compile, el, el.scope(), options, mboxId);
             logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
           }
         });

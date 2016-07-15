@@ -42,12 +42,12 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
-      '../common/dist/at-angular-common.js',
-      'src/at-angular-directive.js'
+      'src/header.js',
+      'src/at-angular-common.js'
     ])
     // .pipe(sourcemaps.init())
     .pipe(plumber())
-    .pipe(concat('at-angular-directive.js'))
+    .pipe(concat('at-angular-common.js'))
     .pipe(gulp.dest('dist')) // save .js
     .pipe(uglify({
       preserveComments: 'license'

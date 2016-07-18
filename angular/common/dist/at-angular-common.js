@@ -23,7 +23,11 @@
     var deferred = promise.defer();
     options.success = function (response) {
       if (response && response.length > 0) {
-        deferred.resolve(response, options);
+        options.offer = response;
+        deferred.resolve({
+          offer: response,
+          element: options.element
+        });
       } else {
         deferred.reject('Empty offer');
       }
@@ -35,10 +39,8 @@
     return deferred.promise;
   }
 
-  function applyOfferPromise(promise, offer, options) {
+  function applyOfferPromise(promise, options) {
     return promise(function (resolve, reject) {
-      options = options || {};
-      options.offer = offer;
       at.applyOffer(options);
       resolve();
     });
@@ -48,8 +50,8 @@
     this.getOfferPromise = function (options) {
       return getOfferPromise(promise, options);
     };
-    this.applyOfferPromise = function (offer, options) {
-      return applyOfferPromise(promise, offer, options);
+    this.applyOfferPromise = function (options) {
+      return applyOfferPromise(promise, options);
     };
   }
 

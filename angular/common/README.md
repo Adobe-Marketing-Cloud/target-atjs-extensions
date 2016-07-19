@@ -1,10 +1,10 @@
 # at-angular-common
 > Angular Common Adobe Target at.js extension  
-> This is a helper extension, containing utils and wrappers, which aids the development of Angular extensions/apps
+> This is a helper extension, containing utils and wrappers, which aids the development of Angular at.js extensions/apps
 
 ## Overview
 
-This extension registers the **target-angular.common** Angular module, which wraps at.js API as well as exposes several helper providers, to be used in Angular extension/app development.
+This extension registers the **target-angular.common** Angular module, which wraps **at.js** API as well as exposes several helper providers, to be used in Angular extension/app development.
 
 ## Usage
 

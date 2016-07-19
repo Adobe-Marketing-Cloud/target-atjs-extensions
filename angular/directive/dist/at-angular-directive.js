@@ -160,18 +160,20 @@
   function initializeModule(module, dom) {
     module.run(['$rootScope', '$injector', '$location', '$compile',
       'routeUtil', 'options', 'logger',
-      function ($rootScope, $injector, $location, $compile, routeUtil, options, logger) {
+      function ($rootScope, $injector, $location, $compile, $timeout, routeUtil, options, logger) {
         // When DOM is updated, inject Mbox directive for Target call
         $rootScope.$on('$viewContentLoaded', function (event, next, current) {
-          var currentPath = $location.path();
-          logger.log('$viewContentLoaded ' + currentPath);
-          // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
-          var mboxId = options.mbox + '-dir';
-          if (isMboxInjectionAllowed(dom, routeUtil, currentPath, options, mboxId)) {
-            var el = angular.element(dom.find(options.selector));
-            compileMbox($compile, el, el.scope(), options, mboxId);
-            logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
-          }
+          $timeout(function () {
+            var currentPath = $location.path();
+            logger.log('$viewContentLoaded ' + currentPath);
+            // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
+            var mboxId = options.mbox + '-dir';
+            if (isMboxInjectionAllowed(dom, routeUtil, currentPath, options, mboxId)) {
+              var el = angular.element(dom.find(options.selector));
+              compileMbox($compile, el, el.scope(), options, mboxId);
+              logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
+            }
+          }, 0);
         });
       }
     ]);

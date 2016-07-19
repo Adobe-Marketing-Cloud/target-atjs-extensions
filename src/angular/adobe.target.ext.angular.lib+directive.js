@@ -1,8 +1,8 @@
 /*!
- * adobe.target.ext.lib.js v0.2.0
+ * adobe.target.ext.lib.js v0.2.1
  *
  * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
- * 
+ *
  */
  !(function(A){
     "use strict";
@@ -11,27 +11,28 @@
     A.target = A.target || {};
     A.target.ext = A.target.ext || {};
     A.target.ext.lib = A.target.ext.lib || {};
-    A.target.ext.lib.VERSION = '0.2.0';
+    A.target.ext.lib.VERSION = '0.2.1';
 
     // Define user set or default options
     A.target.ext.lib.getOptions = function(opts){
-        var settings = A.target.getSettings();
+        var settings = (typeof A.target.getSettings==='function') ?
+                        A.target.getSettings() :
+                        {globalMboxName:'target-global-mbox',timeout:500};
         return {
             mbox:                     opts.mbox     ||settings.globalMboxName,
-            timeout:                  opts.timeout  ||settings.timeout,  
-            globalMboxAutoCreate:     settings.globalMboxAutoCreate,
+            timeout:                  opts.timeout  ||settings.timeout,
             params:                   opts.params   ||null,
             selector:                 opts.selector ||null,
-            allowedRoutesFilter:      opts.allowedRoutesFilter   ||[], 
+            allowedRoutesFilter:      opts.allowedRoutesFilter   ||[],
             disallowedRoutesFilter:   opts.disallowedRoutesFilter||[],
-            appendToSelector:         opts.appendToSelector ||false, 
+            appendToSelector:         opts.appendToSelector ||false,
             debug:                    opts.debug            ||false
         }
     };
 
     // Define reusable service for Target calls.
     // Usage: var service = new adobe.target.ext.lib.Service(userOptions, promiseHandler, logFnReference)
-    A.target.ext.lib.Service = function(options, promise, log){  
+    A.target.ext.lib.Service = function(options, promise, log){
         var self = this;
         promise=promise||{'defer':function(){return {'resolve':function(){},'promise':function(){}}}}; //empty promise
         return {
@@ -73,10 +74,10 @@
                     self.data = null;
                 }
             }
-        };        
+        };
     };
 
-    A.target.ext.lib.Util = function(){         
+    A.target.ext.lib.Util = function(){
         return {
             isRouteAllowed: function(routeName, allowed, disallowed){
                 var result = (allowed.length==0) ? true : false;

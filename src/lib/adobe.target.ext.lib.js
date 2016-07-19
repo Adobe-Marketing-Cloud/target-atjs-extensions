@@ -1,8 +1,8 @@
 /*!
- * adobe.target.ext.lib.js v0.1.1
+ * adobe.target.ext.lib.js v0.2.1
  *
  * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
- * 
+ *
  */
  !(function(A){
     "use strict";
@@ -11,42 +11,46 @@
     A.target = A.target || {};
     A.target.ext = A.target.ext || {};
     A.target.ext.lib = A.target.ext.lib || {};
+    A.target.ext.lib.VERSION = '0.2.1';
 
-    // Define default options
+    // Define user set or default options
     A.target.ext.lib.getOptions = function(opts){
+        var settings = (typeof A.target.getSettings==='function') ?
+                        A.target.getSettings() :
+                        {globalMboxName:'target-global-mbox',timeout:500};
         return {
-            mbox:                     opts.mbox     ||A.target.getSettings().globalMboxName,
-            timeout:                  opts.timeout  ||A.target.getSettings().timeout,
+            mbox:                     opts.mbox     ||settings.globalMboxName,
+            timeout:                  opts.timeout  ||settings.timeout,
             params:                   opts.params   ||null,
             selector:                 opts.selector ||null,
-            allowedRoutesFilter:      opts.allowedRoutesFilter   ||[], 
+            allowedRoutesFilter:      opts.allowedRoutesFilter   ||[],
             disallowedRoutesFilter:   opts.disallowedRoutesFilter||[],
-            debug:                    opts.debug    ||false   
+            appendToSelector:         opts.appendToSelector ||false,
+            debug:                    opts.debug            ||false
         }
-        
     };
 
     // Define reusable service for Target calls.
     // Usage: var service = new adobe.target.ext.lib.Service(userOptions, promiseHandler, logFnReference)
-    A.target.ext.lib.Service = function(options, $q, log){  
+    A.target.ext.lib.Service = function(options, promise, log){
         var self = this;
-        $q=$q||{'defer':function(){return {'resolve':function(){},'promise':function(){}}}};
+        promise=promise||{'defer':function(){return {'resolve':function(){},'promise':function(){}}}}; //empty promise
         return {
             data: null, // temporarily store Target response
             // promise resolver
             getOffer: function() {
                 log('service.getOffer');
-                var defer = $q.defer();
+                var defer = promise.defer();
                 // adobe.target API call to get a Target offer
                 var offer = {
                     mbox: options.mbox,
                     success: function(response) {
-                        log('getOffer success')
+                        log('getOffer success',response)
                         self.data = response;
                         defer.resolve(response); //promise is resolved
                     },
                     error: function(status, error) {
-                        log('getOffer error')
+                        log('getOffer error',error)
                         defer.resolve(); //promise is resolved to continue app execution
                     }
                 };
@@ -63,16 +67,17 @@
                     var offer = {'offer': data};
                     // add optional selector if defined
                     if (options.selector) offer.selector = options.selector;
+                    log('applyOffer',offer);
                     // adobe.target API call method to inject data to DOM
                     A.target.applyOffer(offer);
                     // clear data after use
                     self.data = null;
                 }
             }
-        };        
+        };
     };
 
-    A.target.ext.lib.Util = function(){         
+    A.target.ext.lib.Util = function(){
         return {
             isRouteAllowed: function(routeName, allowed, disallowed){
                 var result = (allowed.length==0) ? true : false;
@@ -80,8 +85,9 @@
                 result = (disallowed.length>0 && disallowed.indexOf(routeName) != -1) ? false : result;
                 return result;
             },
-            log: function(msg) {
-                if (console && console.info) console.info('AT:' + msg);
+            log: function() {
+                Array.prototype.unshift.call(arguments, 'ATX:');
+                if (window.console && console.info) console.info.apply(console,arguments);
             }
         }
     };

@@ -1,6 +1,6 @@
 /* global adobe angular module inject */
 
-describe('angular-common', function () {
+describe('angular-common tests', function () {
   beforeEach(function () {
     spyOn(adobe.target, 'getOffer').and.callThrough();
     spyOn(adobe.target, 'applyOffer');
@@ -43,5 +43,14 @@ describe('angular-common', function () {
     expect(adobe.target.applyOffer).toHaveBeenCalled();
     expect(qDeferred.resolve).toHaveBeenCalled();
     expect(promise).toEqual(qDeferred.promise);
+  }));
+
+  it('isRouteAllowed should check if a route is allowed', inject(function (routeUtil) {
+    var isRouteAllowed = routeUtil.isRouteAllowed;
+
+    expect(isRouteAllowed('r1', [], [])).toBe(true);
+    expect(isRouteAllowed('r1', ['r1'], [])).toBe(true);
+    expect(isRouteAllowed('r1', [], ['r1'])).toBe(false);
+    expect(isRouteAllowed('r1', ['r1'], ['r1'])).toBe(false);
   }));
 });

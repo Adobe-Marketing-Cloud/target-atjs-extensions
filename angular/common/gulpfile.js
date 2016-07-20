@@ -36,6 +36,15 @@ gulp.task('test:run', done => {
   }, done).start();
 });
 
+gulp.task('test:debug', done => {
+  new Server({
+    configFile: path.join(__dirname, '/karma.conf.js'),
+    singleRun: false,
+    browsers: ['Chrome'],
+    reporters: ['kjhtml']
+  }, done).start();
+});
+
 gulp.task('clean', () => {
   return del(['dist/**/*']);
 });

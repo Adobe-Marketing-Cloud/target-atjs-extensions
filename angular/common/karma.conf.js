@@ -28,6 +28,7 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/angular/angular.js',
+      'node_modules/angular-mocks/angular-mocks.js',
       'src/**/*.testutil.js',
       'src/**/*.js',
       'test/**/*.spec.js'
@@ -55,9 +56,11 @@ module.exports = function (config) {
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine',
       'karma-coverage',
-      'karma-spec-reporter'
+      'karma-spec-reporter',
+      'karma-jasmine-textio-html-reporter'
     ],
 
     coverageReporter: {

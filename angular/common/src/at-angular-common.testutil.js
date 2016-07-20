@@ -1,5 +1,15 @@
 'use strict';
 
+function buildNamespace(base, name, value) {
+  var parts = name.split('.');
+  for (var i = 0; i < parts.length - 1; i++) {
+    var part = parts[i];
+    base[part] = base[part] || {};
+    base = base[part];
+  }
+  base[parts[parts.length - 1]] = value;
+}
+
 var adobe = {
   target: {
     ext: {},
@@ -22,7 +32,7 @@ var adobe = {
         args.push(exposedModules[elem]);
       });
 
-      adobe.target.ext[params.name] = params.register.apply(null, args);
+      buildNamespace(adobe.target.ext, params.name, params.register.apply(null, args));
     },
     getOffer: function (opts) {
       var offer = '<p>Sample Offer</p>';

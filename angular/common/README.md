@@ -11,10 +11,11 @@ This extension registers the **target-angular.common** Angular module, which wra
 Create the **target-angular.common** Angular module by calling
 
 ```javascript
-at.ext.angular.setupCommon(options);
+adobe.target.ext.angular.setupCommon(options);
 ```
 
 where `options` object contains custom **at.js** options.  
+
 Next, just inject the `target-angular.common` Angular module dependency into your Angular extension/app.  
   
 **Note**: in case injection at the moment of main app init is tricky, you may find the following function handy:

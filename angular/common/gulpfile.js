@@ -10,7 +10,6 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
-// var sourcemaps = require('gulp-sourcemaps');
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -54,7 +53,6 @@ gulp.task('build:dist', () => {
       'src/header.js',
       'src/at-angular-common.js'
     ])
-    // .pipe(sourcemaps.init())
     .pipe(plumber())
     .pipe(concat('at-angular-common.js'))
     .pipe(gulp.dest('dist')) // save .js
@@ -64,7 +62,6 @@ gulp.task('build:dist', () => {
     .pipe(rename({
       extname: '.min.js'
     }))
-    // .pipe(sourcemaps.write('maps'))
     .pipe(gulp.dest('dist')); // save .min.js
 });
 

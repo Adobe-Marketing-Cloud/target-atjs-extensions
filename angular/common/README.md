@@ -1,6 +1,6 @@
 # at-angular-common
 > Angular Common Adobe Target at.js extension  
-> This is a helper extension, containing utils and wrappers, which aids the development of Angular at.js extensions/apps
+> This is a helper extension, containing utils and wrappers, which aids the development of Angular **at.js** extensions/apps
 
 ## Overview
 
@@ -32,7 +32,7 @@ Next, just inject the `target-angular.common` Angular module dependency into you
 
 ## Providers
 
-> The `target-angular.common` module exposes the following providers
+> The `target-angular.common` module exposes the following providers:
 
 Provider  | Description
 --------- | -----------

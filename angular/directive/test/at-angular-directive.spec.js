@@ -1,24 +1,42 @@
-/* global adobe */
-describe('greeter', function () {
-  beforeAll(function () {
-    spyOn(console, 'log');
+/* global adobe angular module inject offerService */
 
-    adobe.target.ext.myGreetingExtension('Walter');
+var app = angular.module('myApp', []);
+var $compile;
+var $rootScope;
+var offerService;
+
+adobe.target.ext.angular.initDirective(app, {mbox: 'myMbox'});
+
+describe('mbox directive tests', function () {
+  beforeEach(function () {
+    spyOn(adobe.target, 'getOffer').and.callThrough();
+    spyOn(adobe.target, 'applyOffer');
   });
 
-  it('should log to console', function () {
-    expect(console.log).toHaveBeenCalled();
+  beforeEach(module('myApp'));
+
+  beforeEach(inject(['$compile', '$rootScope', 'offerService', function (_$compile_, _$rootScope_, _offerService_) {
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+    $compile = _$compile_;
+    $rootScope = _$rootScope_;
+    offerService = _offerService_;
+    spyOn(offerService, 'getOfferPromise').and.callThrough();
+    spyOn(offerService, 'applyOfferPromise').and.callThrough();
+  }]));
+
+  it('should call getOffer and applyOffer', function () {
+    var element = $compile('<h1 mbox>Hello test!</h1>')($rootScope);
+    $rootScope.$digest();
+    expect(offerService.getOfferPromise).toHaveBeenCalled();
+    expect(offerService.applyOfferPromise).toHaveBeenCalled();
+    expect(adobe.target.getOffer).toHaveBeenCalled();
+    expect(adobe.target.applyOffer).toHaveBeenCalled();
   });
 
-  it('should greet caller', function () {
-    expect(adobe.target.ext.myGreetingExtension('John')).toEqual('Hello, John!');
-  });
-
-  it('should fail', function () {
-    expect(true).toEqual(false);
-  });
-
-  it('should not fail', function () {
-    expect(true).toEqual(true);
+  it('should hide element before getOffer and reveal it after applyOffer', function () {
+    var element = $compile('<h1 mbox>Hello test!</h1>')($rootScope);
+    expect(element.hasClass('mboxDefault')).toBe(true);
+    $rootScope.$digest();
+    expect(element.hasClass('mboxDefault')).toBe(false);
   });
 });

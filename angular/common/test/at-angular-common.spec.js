@@ -1,11 +1,11 @@
 /* global adobe angular module inject */
 
+adobe.target.ext.angular.setupCommon({mbox: 'myMbox'});
+
 describe('angular-common tests', function () {
   beforeEach(function () {
     spyOn(adobe.target, 'getOffer').and.callThrough();
     spyOn(adobe.target, 'applyOffer');
-
-    adobe.target.ext.angular.setupCommon({mbox: 'myMbox'});
   });
 
   var qDeferred;

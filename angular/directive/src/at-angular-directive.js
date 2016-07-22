@@ -69,13 +69,13 @@
         // When DOM is updated, inject Mbox directive for Target call
         $rootScope.$on('$viewContentLoaded', function (event, next, current) {
           var currentPath = $location.path();
-          // logger.log('$viewContentLoaded ' + currentPath);
+          logger.log('$viewContentLoaded ' + currentPath);
           // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
           var mboxId = options.mbox + '-dir';
           if (isMboxInjectionAllowed(routeUtil, currentPath, options, mboxId)) {
             var el = angular.element(select(options.selector));
             compileMbox($compile, el, el.scope(), options, mboxId);
-            // logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
+            logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
           }
         });
       }

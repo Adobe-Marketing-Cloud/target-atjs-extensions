@@ -22,14 +22,14 @@ module.exports = function (config) {
     ],
 
     preprocessors: {
-      'src/**/!(*.testutil).js': ['coverage']
+      'src/**/*.js': ['coverage']
     },
 
     // list of files / patterns to load in the browser
     files: [
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
-      'src/**/*.testutil.js',
+      'test/**/*.testutil.js',
       'src/**/*.js',
       'test/**/*.spec.js'
     ],

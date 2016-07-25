@@ -70,9 +70,9 @@ describe('Automatic element conversion to mbox directive', function () {
 
   it('should replace matched selector with mbox directive', function () {
     setOptionsAndLoadView(false);
-    $rootScope.$digest();
     expect(element[0].attributes.mbox).toBeDefined();
     expect(element[0].attributes['data-mboxname'].value).toEqual('myMbox');
+    $rootScope.$digest();
     expect(adobe.target.getOffer).toHaveBeenCalled();
     expect(adobe.target.applyOffer).toHaveBeenCalled();
     element.remove();

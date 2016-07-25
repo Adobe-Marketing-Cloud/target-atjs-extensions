@@ -22,7 +22,7 @@ gulp.task('lint:src', () => {
 });
 
 gulp.task('lint:test', () => {
-  return gulp.src('test/*.spec.js')
+  return gulp.src('test/*.js')
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslintIfFixed('test'))
@@ -67,7 +67,7 @@ gulp.task('build:dist', () => {
 
 gulp.task('watch', function () {
   gulp.watch('src/**/*.js', ['lint:src', 'test:run']);
-  gulp.watch('test/**/*.spec.js', ['lint:test', 'test:run']);
+  gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
 });
 
 gulp.task('lint', ['lint:src', 'lint:test']);

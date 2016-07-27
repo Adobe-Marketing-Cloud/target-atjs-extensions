@@ -11,17 +11,19 @@
     });
   }
 
-  function setTargetOfferResolve(route, offerPromise) {
+  function setRouteOfferResolve(route, offerPromiseFn) {
     route.resolve = route.resolve || {};
-    route.resolve.offerData = offerPromise;
+    route.resolve.offerData = offerPromiseFn;
   }
 
   function routeServiceDecorator($delegate, options, offerService, logger) {
-    $delegate.applyTargetToRoutes = function (locations) {
-      Object.keys(locations).forEach(function (routeName) {
+    $delegate.applyTargetToRoutes = function (routes) {
+      Object.keys(routes).forEach(function (routeName) {
         logger.debug('location:' + routeName);
         if ($delegate.isRouteAllowed(routeName, options.allowedRoutesFilter, options.disallowedRoutesFilter)) {
-          setTargetOfferResolve(locations[routeName], offerService.getOfferPromise);
+          setRouteOfferResolve(routes[routeName], function () {
+            return offerService.getOfferPromise(options);
+          });
         }
       });
     };
@@ -34,6 +36,18 @@
   }
 
   function initializeModule(module) {
+    module.run(['$rootScope', '$route', 'routeService', 'offerService', 'options', 'logger',
+      function ($rootScope, $route, routeService, offerService, options, logger) {
+        routeService.applyTargetToRoutes($route.routes);
+        $rootScope.$on('$viewContentLoaded', function () {
+          var offerData = $route.current.locals.offerData;
+          offerService.applyOfferPromise(offerData)
+            .catch(function (reason) {
+              logger.log('AT applyOffer error: ' + reason);
+            });
+        });
+      }
+    ]);
   }
 
   at.registerExtension({

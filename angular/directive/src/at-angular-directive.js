@@ -25,6 +25,7 @@
                 mbox: attributes.mboxname,
                 params: options.params,
                 timeout: options.timeout,
+                selector: options.selector,
                 element: element[0]
               })
               .then(offerService.applyOfferPromise)

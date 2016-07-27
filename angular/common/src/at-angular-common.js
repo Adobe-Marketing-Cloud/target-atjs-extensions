@@ -11,6 +11,7 @@
         options.offer = response;
         deferred.resolve({
           offer: response,
+          selector: options.selector,
           element: options.element
         });
       } else {

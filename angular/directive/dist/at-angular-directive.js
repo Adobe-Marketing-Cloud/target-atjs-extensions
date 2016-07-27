@@ -26,6 +26,7 @@
         options.offer = response;
         deferred.resolve({
           offer: response,
+          selector: options.selector,
           element: options.element
         });
       } else {
@@ -128,6 +129,7 @@
                 mbox: attributes.mboxname,
                 params: options.params,
                 timeout: options.timeout,
+                selector: options.selector,
                 element: element[0]
               })
               .then(offerService.applyOfferPromise)

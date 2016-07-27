@@ -45,6 +45,10 @@
       !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
   }
 
+  function RouteService() {
+    this.isRouteAllowed = isRouteAllowed;
+  }
+
   function getOptions(settings, opts) {
     return {
       mbox: opts.mbox || settings.globalMboxName,
@@ -64,10 +68,10 @@
       .constant('settings', settings)
       .constant('logger', logger)
       .constant('customOptions', opts)
-      .constant('routeUtil', {isRouteAllowed: isRouteAllowed})
 
       .factory('options', ['settings', 'customOptions', getOptions])
 
+      .service('routeService', RouteService)
       .service('offerService', ['$q', OfferService]);
   }
 

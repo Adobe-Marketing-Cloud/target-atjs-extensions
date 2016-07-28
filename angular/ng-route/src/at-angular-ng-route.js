@@ -19,7 +19,7 @@
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToRoutes = function (routes) {
       Object.keys(routes).forEach(function (routeName) {
-        logger.debug('location:' + routeName);
+        logger.log('location:' + routeName);
         if ($delegate.isRouteAllowed(routeName, options.allowedRoutesFilter, options.disallowedRoutesFilter)) {
           setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);
@@ -43,7 +43,7 @@
           var offerData = $route.current.locals.offerData;
           offerService.applyOfferPromise(offerData)
             .catch(function (reason) {
-              logger.log('AT applyOffer error: ' + reason);
+              logger.error('AT applyOffer error: ' + reason);
             });
         });
       }

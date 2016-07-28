@@ -56,9 +56,9 @@
     };
   }
 
-  function isRouteAllowed(routeName, allowed, disallowed) {
-    return (allowed.length === 0 || allowed.indexOf(routeName) !== -1) &&
-      !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
+  function isRouteAllowed(routeName, opts) {
+    return (opts.allowedRoutesFilter.length === 0 || opts.allowedRoutesFilter.indexOf(routeName) !== -1) &&
+      !(opts.disallowedRoutesFilter.length > 0 && opts.disallowedRoutesFilter.indexOf(routeName) !== -1);
   }
 
   function RouteService() {
@@ -150,7 +150,7 @@
   }
 
   function isMboxInjectionAllowed(routeService, path, options, mboxId) {
-    return routeService.isRouteAllowed(path, options.allowedRoutesFilter, options.disallowedRoutesFilter) && // allowed route
+    return routeService.isRouteAllowed(path, options) && // allowed route
       !select('#' + mboxId).length && // mbox does not exist
       select(options.selector).length > 0; // element to append to exists
   }

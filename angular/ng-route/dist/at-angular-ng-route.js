@@ -56,9 +56,9 @@
     };
   }
 
-  function isRouteAllowed(routeName, allowed, disallowed) {
-    return (allowed.length === 0 || allowed.indexOf(routeName) !== -1) &&
-      !(disallowed.length > 0 && disallowed.indexOf(routeName) !== -1);
+  function isRouteAllowed(routeName, opts) {
+    return (opts.allowedRoutesFilter.length === 0 || opts.allowedRoutesFilter.indexOf(routeName) !== -1) &&
+      !(opts.disallowedRoutesFilter.length > 0 && opts.disallowedRoutesFilter.indexOf(routeName) !== -1);
   }
 
   function RouteService() {
@@ -123,8 +123,8 @@
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToRoutes = function (routes) {
       Object.keys(routes).forEach(function (routeName) {
-        logger.log('location:' + routeName);
-        if ($delegate.isRouteAllowed(routeName, options.allowedRoutesFilter, options.disallowedRoutesFilter)) {
+        if ($delegate.isRouteAllowed(routeName, options)) {
+          logger.log('location:' + routeName);
           setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);
           });

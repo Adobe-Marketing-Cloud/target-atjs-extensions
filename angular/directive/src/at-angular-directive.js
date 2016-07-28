@@ -46,7 +46,7 @@
   }
 
   function isMboxInjectionAllowed(routeService, path, options, mboxId) {
-    return routeService.isRouteAllowed(path, options.allowedRoutesFilter, options.disallowedRoutesFilter) && // allowed route
+    return routeService.isRouteAllowed(path, options) && // allowed route
       !select('#' + mboxId).length && // mbox does not exist
       select(options.selector).length > 0; // element to append to exists
   }

@@ -48,9 +48,9 @@ describe('angular-common tests', function () {
   it('isRouteAllowed should check if a route is allowed', inject(function (routeService) {
     var isRouteAllowed = routeService.isRouteAllowed;
 
-    expect(isRouteAllowed('r1', [], [])).toBe(true);
-    expect(isRouteAllowed('r1', ['r1'], [])).toBe(true);
-    expect(isRouteAllowed('r1', [], ['r1'])).toBe(false);
-    expect(isRouteAllowed('r1', ['r1'], ['r1'])).toBe(false);
+    expect(isRouteAllowed('r1', {allowedRoutesFilter: [], disallowedRoutesFilter: []})).toBe(true);
+    expect(isRouteAllowed('r1', {allowedRoutesFilter: ['r1'], disallowedRoutesFilter: []})).toBe(true);
+    expect(isRouteAllowed('r1', {allowedRoutesFilter: [], disallowedRoutesFilter: ['r1']})).toBe(false);
+    expect(isRouteAllowed('r1', {allowedRoutesFilter: ['r1'], disallowedRoutesFilter: ['r1']})).toBe(false);
   }));
 });

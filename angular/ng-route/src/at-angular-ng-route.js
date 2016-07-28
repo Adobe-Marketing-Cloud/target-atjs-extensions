@@ -19,8 +19,8 @@
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToRoutes = function (routes) {
       Object.keys(routes).forEach(function (routeName) {
-        logger.log('location:' + routeName);
-        if ($delegate.isRouteAllowed(routeName, options.allowedRoutesFilter, options.disallowedRoutesFilter)) {
+        if ($delegate.isRouteAllowed(routeName, options)) {
+          logger.log('location:' + routeName);
           setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);
           });

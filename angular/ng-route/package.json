@@ -26,6 +26,8 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "angular": "^1.5.8",
+    "angular-mocks": "^1.5.8",
     "del": "^2.2.1",
     "eslint-config-xo-space": "^0.14.0",
     "gulp": "^3.9.1",

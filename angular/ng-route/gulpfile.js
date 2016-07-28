@@ -50,7 +50,7 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
-      'src/header.js',
+      '../common/dist/at-angular-common.js',
       'src/at-angular-ng-route.js'
     ])
     .pipe(plumber())

@@ -65,7 +65,7 @@ gulp.task('build:dist', () => {
     .pipe(gulp.dest('dist')); // save .min.js
 });
 
-gulp.task('watch', function () {
+gulp.task('watch', () => {
   gulp.watch('src/**/*.js', ['lint:src', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
 });

@@ -68,6 +68,10 @@ describe('Automatic element conversion to mbox directive', function () {
       };
     }]));
 
+  afterEach(function () {
+    element.remove();
+  });
+
   it('should replace matched selector with mbox directive', function () {
     setOptionsAndLoadView(false);
     expect(element[0].attributes.mbox).toBeDefined();
@@ -75,7 +79,6 @@ describe('Automatic element conversion to mbox directive', function () {
     $rootScope.$digest();
     expect(adobe.target.getOffer).toHaveBeenCalled();
     expect(adobe.target.applyOffer).toHaveBeenCalled();
-    element.remove();
   });
 
   it('should append mbox directive to matched selector', function () {

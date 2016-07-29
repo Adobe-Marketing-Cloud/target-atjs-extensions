@@ -22,14 +22,20 @@ module.exports = function (config) {
     ],
 
     preprocessors: {
-      'src/**/*.js': ['coverage']
+      'src/**/*.js': ['coverage'],
+      'test/*.html': ['ng-html2js']
     },
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/angular/angular.js',
+      'node_modules/angular-route/angular-route.js',
+      'node_modules/angular-mocks/angular-mocks.js',
       'test/**/*.testutil.js',
+      '../common/dist/at-angular-common.js',
       'src/**/*.js',
-      'test/**/*.spec.js'
+      'test/**/*.spec.js',
+      'test/*.html'
     ],
 
     // list of files / patterns to exclude
@@ -58,7 +64,8 @@ module.exports = function (config) {
       'karma-jasmine',
       'karma-coverage',
       'karma-spec-reporter',
-      'karma-jasmine-textio-html-reporter'
+      'karma-jasmine-textio-html-reporter',
+      'karma-ng-html2js-preprocessor'
     ],
 
     coverageReporter: {

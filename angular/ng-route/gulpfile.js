@@ -58,7 +58,7 @@ gulp.task('build:dist', () => {
     ])
     .pipe(plumber())
     .pipe(save('before'))
-    .pipe(filter(['**/*!(at-angular-common).js']))
+    .pipe(filter(['**/*']))
     .pipe(concat('at-angular-ng-route.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
@@ -69,7 +69,7 @@ gulp.task('build:dist', () => {
     }))
     .pipe(gulp.dest('dist'))
     .pipe(save.restore('before'))
-    .pipe(filter(['**/*!(header).js']))
+    .pipe(filter(['../**/*', '*/**/!(header.js)']))
     .pipe(concat('at-angular-ng-route+common.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({

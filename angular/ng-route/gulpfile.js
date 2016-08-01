@@ -41,7 +41,7 @@ gulp.task('test:debug', done => {
   new Server({
     configFile: path.join(__dirname, '/karma.conf.js'),
     singleRun: false,
-    browsers: ['ChromeCanary'],
+    browsers: ['Chrome'],
     reporters: ['kjhtml']
   }, done).start();
 });

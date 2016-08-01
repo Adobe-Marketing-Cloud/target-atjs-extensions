@@ -10,6 +10,8 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var filter = require('gulp-filter');
+var save = require('gulp-save');
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -50,19 +52,33 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
+      '../common/dist/at-angular-common.js',
       'src/header.js',
       'src/at-angular-ui-router.js'
     ])
     .pipe(plumber())
+    .pipe(save('before'))
+    .pipe(filter(['**/*']))
     .pipe(concat('at-angular-ui-router.js'))
-    .pipe(gulp.dest('dist')) // save .js
+    .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'
     }))
     .pipe(rename({
       extname: '.min.js'
     }))
-    .pipe(gulp.dest('dist')); // save .min.js
+    .pipe(gulp.dest('dist'))
+    .pipe(save.restore('before'))
+    .pipe(filter(['../**/*', '*/**/!(header.js)']))
+    .pipe(concat('at-angular-ui-router+common.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(uglify({
+      preserveComments: 'license'
+    }))
+    .pipe(rename({
+      extname: '.min.js'
+    }))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('watch', () => {

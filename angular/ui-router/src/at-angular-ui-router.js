@@ -18,12 +18,12 @@
 
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToState = function (state) {
-	    if ($delegate.isRouteAllowed(state.url, options)) {
-	      logger.log('location:' + state.url);
-	      setStateOfferResolve(state, function () {
-	        return offerService.getOfferPromise(options);
-	      });
-	    }
+      if ($delegate.isRouteAllowed(state.url, options)) {
+        logger.log('location: ' + state.url);
+        setStateOfferResolve(state, function () {
+          return offerService.getOfferPromise(options);
+        });
+      }
     };
     return $delegate;
   }
@@ -34,12 +34,14 @@
   }
 
   function initializeModule(module) {
-    /*
-    module.run(['$rootScope', '$route', 'routeService', 'offerService', 'options', 'logger',
-      function ($rootScope, $route, routeService, offerService, options, logger) {
-        routeService.applyTargetToRoutes($route.routes);
+    module.run(['$rootScope', '$state', 'routeService', 'offerService', 'options', 'logger',
+      function ($rootScope, $state, routeService, offerService, options, logger) {
+        $rootScope.$on('$stateChangeStart', function (event, nextState) {
+          routeService.applyTargetToState(nextState);
+        });
+
         $rootScope.$on('$viewContentLoaded', function () {
-          var offerData = $route.current.locals.offerData;
+          var offerData = $state.$current.locals['@'].offerData;
           offerService.applyOfferPromise(offerData)
             .catch(function (reason) {
               logger.error('AT applyOffer error: ' + reason);
@@ -47,7 +49,6 @@
         });
       }
     ]);
-    */
   }
 
   at.registerExtension({

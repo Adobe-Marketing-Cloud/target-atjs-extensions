@@ -20,7 +20,7 @@
     $delegate.applyTargetToRoutes = function (routes) {
       Object.keys(routes).forEach(function (routeName) {
         if ($delegate.isRouteAllowed(routeName, options)) {
-          logger.log('location:' + routeName);
+          logger.log('location: ' + routeName);
           setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);
           });

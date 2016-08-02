@@ -17,13 +17,15 @@
   }
 
   function routeServiceDecorator($delegate, options, offerService, logger) {
-    $delegate.applyTargetToState = function (state) {
-      if ($delegate.isRouteAllowed(state.url, options)) {
-        logger.log('location: ' + state.url);
-        setStateOfferResolve(state, function () {
-          return offerService.getOfferPromise(options);
-        });
-      }
+    $delegate.applyTargetToStates = function (states) {
+      states.forEach(function (state) {
+        if ($delegate.isRouteAllowed(state.url, options)) {
+          logger.log('location: ' + state.url);
+          setStateOfferResolve(state, function () {
+            return offerService.getOfferPromise(options);
+          });
+        }
+      });
     };
     return $delegate;
   }
@@ -36,9 +38,7 @@
   function initializeModule(module) {
     module.run(['$rootScope', '$state', 'routeService', 'offerService', 'options', 'logger',
       function ($rootScope, $state, routeService, offerService, options, logger) {
-        $rootScope.$on('$stateChangeStart', function (event, nextState) {
-          routeService.applyTargetToState(nextState);
-        });
+        routeService.applyTargetToStates($state.get());
 
         $rootScope.$on('$viewContentLoaded', function () {
           var offerData = $state.$current.locals['@'].offerData;

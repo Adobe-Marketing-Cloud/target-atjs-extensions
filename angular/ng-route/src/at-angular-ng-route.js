@@ -39,6 +39,7 @@
     module.run(['$rootScope', '$route', 'routeService', 'offerService', 'options', 'logger',
       function ($rootScope, $route, routeService, offerService, options, logger) {
         routeService.applyTargetToRoutes($route.routes);
+
         $rootScope.$on('$viewContentLoaded', function () {
           var offerData = $route.current.locals.offerData;
           offerService.applyOfferPromise(offerData)

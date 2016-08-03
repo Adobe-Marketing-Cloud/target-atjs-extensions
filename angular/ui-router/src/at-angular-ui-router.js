@@ -41,11 +41,13 @@
         routeService.applyTargetToStates($state.get());
 
         $rootScope.$on('$viewContentLoaded', function () {
-          var offerData = $state.$current.locals['@'].offerData;
-          offerService.applyOfferPromise(offerData)
-            .catch(function (reason) {
-              logger.error('AT applyOffer error: ' + reason);
-            });
+          var offerData = $state.$current.locals.globals.offerData;
+          if (offerData) {
+            offerService.applyOfferPromise(offerData)
+              .catch(function (reason) {
+                logger.error('AT applyOffer error: ' + reason);
+              });
+          }
         });
       }
     ]);

@@ -1,26 +1,22 @@
-# adobe-target-atjs-extension-demo
-> Sample Adobe Target at.js extension  
-> Use it as a base template for developing your custom at.js extensions
+# at-angular-ui-router
+> Angular UI-Router Adobe Target **at.js** extension  
+> This adds a Target getOffer() resolve to all UI-Router states and applies the resolved offer once a view is loaded.
 
 ## Overview
 
-The sample myGreetingExtension returns and prints a greeting to the console.
+This extension applies a Target getOffer() promise resolve to all of your app's UI-Router states. Thus, when a state is selected, the requested Target offers are fetched via **at.js** API.  
+Once the view corresponding to the current state is fully loaded, the offer is applied to the elements matching the configured Target selector (provided in options parameter).  
+The extension should be used in Angular apps utilizing the UI-Router routing module (`angular-ui-router(.min).js`).  
+  
+**Note:** The extension requires [`at-angular-common extension`](../common/)(`target.angular.common` Angular module). If you're not already loading it separately in your app, just use the `at-angular-ng-route+common.js` version, which has it bundled.
 
-## Syntax
+## Usage
 
 ```javascript
-adobe.target.ext.myGreetingExtension(name);
+adobe.target.ext.angular.initStates(app, options);
 ```
 
-## Parameters
-
-Parameter | Description
---------- | -----------
-`name`    | The name of the person to be greeted
-
-## Return Value
-
-Returns a string message containing the greeting.
+where `options` object contains custom **at.js** options.  
 
 ## License
 

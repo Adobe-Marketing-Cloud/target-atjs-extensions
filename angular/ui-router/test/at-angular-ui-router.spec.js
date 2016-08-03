@@ -48,12 +48,23 @@ describe('ui-router tests', function () {
     expect(adobe.target.applyOffer).toHaveBeenCalled();
   }
 
-  it('should get and apply offer on state change to /', function () {
+  it('should get and apply offer on state change to "home"', function () {
     expect($state.current.name).toBe('');
     $state.go('home');
     $rootScope.$digest();
     expect($state.current.name).toBe('home');
     expect($state.current.templateUrl).toBe('test/home.html');
+    expect($state.$current.locals.globals.offerData.offer).toBeDefined();
+    expect($state.$current.locals.globals.offerData.offer).toEqual('<p>Sample Offer</p>');
+    expectTargetCalls();
+  });
+
+  it('should get and apply offer on state change to "blog"', function () {
+    expect($state.current.name).toBe('');
+    $state.go('blog');
+    $rootScope.$digest();
+    expect($state.current.name).toBe('blog');
+    expect($state.current.templateUrl).toBe('test/blog.html');
     expect($state.$current.locals.globals.offerData.offer).toBeDefined();
     expect($state.$current.locals.globals.offerData.offer).toEqual('<p>Sample Offer</p>');
     expectTargetCalls();

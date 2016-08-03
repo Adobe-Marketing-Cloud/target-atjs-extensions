@@ -52,13 +52,13 @@ var app = angular.module('myApp', ['ui.router'])
       $stateProvider
         .state('home', {
           url: '/',
-          templateUrl: 'pages/home.html',
+          templateUrl: 'test/home.html',
           controller: 'HomeController',
           resolve: {}
         })
         .state('blog', {
           url: '/blog',
-          templateUrl: 'pages/blog.html',
+          templateUrl: 'test/blog.html',
           controller: 'BlogController',
           resolve: {}
         });

@@ -12,10 +12,6 @@ adobe.target.ext.angular.initRoutes(app, {mbox: 'myMbox', selector: 'h3'});
 describe('ng-route tests', function () {
   beforeEach(module('myApp'));
 
-  /* beforeEach(module(function($urlRouterProvider) {
-    $urlRouterProvider.deferIntercept();
-  })); */
-
   beforeEach(module('test/home.html', 'test/blog.html'));
 
   beforeEach(inject(['$rootScope', '$compile', '$route', '$location', 'offerService', 'routeService', 'options',

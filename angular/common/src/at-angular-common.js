@@ -64,7 +64,7 @@
   }
 
   function setupCommonModule(settings, logger, opts) {
-    angular.module('target-angular.common', [])
+    angular.module('target.angular.common', [])
       .constant('version', '0.3.0')
       .constant('settings', settings)
       .constant('logger', logger)

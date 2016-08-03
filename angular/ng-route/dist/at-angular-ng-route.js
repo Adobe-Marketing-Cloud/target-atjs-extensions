@@ -46,7 +46,7 @@
   }
 
   function decorateRouteService() {
-    angular.module('target-angular.common')
+    angular.module('target.angular.common')
       .decorator('routeService', ['$delegate', 'options', 'offerService', 'logger', routeServiceDecorator]);
   }
 
@@ -74,7 +74,7 @@
         at.ext.angular.setupCommon(opts);
         decorateRouteService();
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addModuleDependencies(appModule, ['target-angular.common']);
+        addModuleDependencies(appModule, ['target.angular.common']);
         initializeModule(appModule);
       };
     }

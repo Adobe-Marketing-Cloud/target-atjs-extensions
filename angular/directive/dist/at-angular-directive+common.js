@@ -79,7 +79,7 @@
   }
 
   function setupCommonModule(settings, logger, opts) {
-    angular.module('target-angular.common', [])
+    angular.module('target.angular.common', [])
       .constant('version', '0.3.0')
       .constant('settings', settings)
       .constant('logger', logger)
@@ -194,7 +194,7 @@
       return function (app, opts) {
         at.ext.angular.setupCommon(opts);
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addModuleDependencies(appModule, ['target-angular.common']);
+        addModuleDependencies(appModule, ['target.angular.common']);
         addMboxDirective(appModule);
         initializeModule(appModule);
       };

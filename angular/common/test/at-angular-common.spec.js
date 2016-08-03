@@ -2,7 +2,7 @@
 
 adobe.target.ext.angular.setupCommon({mbox: 'myMbox'});
 
-describe('angular-common tests', function () {
+describe('angular.common tests', function () {
   beforeEach(function () {
     spyOn(adobe.target, 'getOffer').and.callThrough();
     spyOn(adobe.target, 'applyOffer');
@@ -10,7 +10,7 @@ describe('angular-common tests', function () {
 
   var qDeferred;
 
-  beforeEach(module('target-angular.common', function ($provide) {
+  beforeEach(module('target.angular.common', function ($provide) {
     qDeferred = jasmine.createSpyObj('deferred', ['resolve', 'reject', 'promise']);
     var Q = function (resolver) {
       resolver(qDeferred.resolve, qDeferred.reject);
@@ -21,10 +21,10 @@ describe('angular-common tests', function () {
   }));
 
   it('should create common module', function () {
-    var commonModule = angular.module('target-angular.common');
+    var commonModule = angular.module('target.angular.common');
 
     expect(commonModule).toBeDefined();
-    expect(commonModule.name).toEqual('target-angular.common');
+    expect(commonModule.name).toEqual('target.angular.common');
   });
 
   it('getOfferPromise should return getOffer promise', inject(function (offerService, $q) {

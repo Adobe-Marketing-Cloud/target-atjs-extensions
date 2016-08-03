@@ -4,11 +4,11 @@
 
 ## Overview
 
-This extension registers the **target-angular.common** Angular module, which wraps **at.js** API as well as exposes several helper providers, to be used in Angular extension/app development.
+This extension registers the **target.angular.common** Angular module, which wraps **at.js** API as well as exposes several helper providers, to be used in Angular extension/app development.
 
 ## Usage
 
-Create the **target-angular.common** Angular module by calling
+Create the **target.angular.common** Angular module by calling
 
 ```javascript
 adobe.target.ext.angular.setupCommon(options);
@@ -16,7 +16,7 @@ adobe.target.ext.angular.setupCommon(options);
 
 where `options` object contains custom **at.js** options.  
 
-Next, just inject the `target-angular.common` Angular module dependency into your Angular extension/app.  
+Next, just inject the `target.angular.common` Angular module dependency into your Angular extension/app.  
   
 **Note**: in case injection at the moment of main app init is tricky, you may find the following function handy:
 
@@ -32,7 +32,7 @@ Next, just inject the `target-angular.common` Angular module dependency into you
 
 ## Providers
 
-> The `target-angular.common` module exposes the following providers:
+> The `target.angular.common` module exposes the following providers:
 
 Provider  | Description
 --------- | -----------

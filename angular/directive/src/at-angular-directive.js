@@ -90,7 +90,7 @@
       return function (app, opts) {
         at.ext.angular.setupCommon(opts);
         var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addModuleDependencies(appModule, ['target-angular.common']);
+        addModuleDependencies(appModule, ['target.angular.common']);
         addMboxDirective(appModule);
         initializeModule(appModule);
       };

@@ -20,12 +20,15 @@ where `options` object contains custom **at.js** options.
 
 ## Options
 
-> In addition to **at.js** options, the following custom options can also be provided:
+> The following options can be provided in the `options` object:
 
-Property | Description
---------- | -----------
-`selector` | If provided, the extension will attempt to set `mbox` directive in the attributes of elements matched by the selector
-`appendToSelector` | Used together with `selector` option. If true, appends `mbox` directive as a separate `<div>` after each matched element, instead of setting it in element attributes
+Key | Type | Mandatory | Description
+--- | ---- | --------- | -----------
+`mbox` | String | Yes | mbox name. It is mandatory if you want to track clicks. If not provided, an error will be logged and tracking event won't be attached.
+`params` | Object | No | mbox parameters - an object of key-value pairs, that has the following structure:<br>`{`<br>`"param1": "value1",`<br>`"param2": "value2"`<br>`}`
+`timeout` | Number | No | timeout in milliseconds. If not specified, default adobe.target will be used. Default timeout is the one set via mbox.js settings. This value can be configured using mbox.js settings in Target Classic Admin UI Advanced Mode or in Bullseye UI.
+`selector` | String | No | If provided, the extension will attempt to set `mbox` directive in the attributes of elements matched by the selector
+`appendToSelector` | Boolean | No | Used together with `selector` option. If true, appends `mbox` directive as a separate `<div>` after each matched element, instead of setting it in element attributes
 
 ## Notes and known issues
 

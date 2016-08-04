@@ -28,8 +28,7 @@ Key | Type | Mandatory | Description
 `params` | Object | No | mbox parameters - an object of key-value pairs, that has the following structure:<br>`{`<br>`"param1": "value1",`<br>`"param2": "value2"`<br>`}`
 `timeout` | Number | No | timeout in milliseconds. If not specified, default adobe.target will be used. Default timeout is the one set via mbox.js settings. This value can be configured using mbox.js settings in Target Classic Admin UI Advanced Mode or in Bullseye UI.
 `element` | DOM element | No | Dom element to be used as container for the target offer content. This option excludes the usage of `selector` option. If both are specified, an error will be logged and applyOffer() execution will be cancelled.
-`selector` | String | No | CSS selector used to identify the HTML element that shall contain the offer content. If selector is not provided, it shall be assumed that the HTML element to be used is HTML HEAD, or document.documentElement, in case HTML HEAD is not present.
-This option excludes the usage of `element` option. If both are specified, an error will be logged and applyOffer() execution will be cancelled.
+`selector` | String | No | CSS selector used to identify the HTML element that shall contain the offer content. If selector is not provided, it shall be assumed that the HTML element to be used is HTML HEAD, or document.documentElement, in case HTML HEAD is not present. This option excludes the usage of `element` option. If both are specified, an error will be logged and applyOffer() execution will be cancelled.
 
 ## License
 

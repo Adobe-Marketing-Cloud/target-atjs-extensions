@@ -10,6 +10,7 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -54,7 +55,7 @@ gulp.task('build:dist', () => {
       'src/at-angular-common.js'
     ])
     .pipe(plumber())
-    .pipe(concat('at-angular-common.js'))
+    .pipe(concat('at-angular-common-' + version + '.js'))
     .pipe(gulp.dest('dist')) // save .js
     .pipe(uglify({
       preserveComments: 'license'

@@ -32,7 +32,7 @@ module.exports = function (config) {
       'node_modules/angular-ui-router/release/angular-ui-router.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'test/**/*.testutil.js',
-      '../common/dist/at-angular-common.js',
+      '../common/dist/at-angular-common-0.1.0.js',
       'src/**/*.js',
       'test/**/*.spec.js',
       'test/*.html'

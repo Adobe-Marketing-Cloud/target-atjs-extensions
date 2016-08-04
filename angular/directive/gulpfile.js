@@ -12,6 +12,7 @@ var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var filter = require('gulp-filter');
 var save = require('gulp-save');
+var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -52,14 +53,14 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
-      '../common/dist/at-angular-common.js',
+      '../common/dist/at-angular-common-0.1.0.js',
       'src/header.js',
       'src/at-angular-directive.js'
     ])
     .pipe(plumber())
     .pipe(save('before'))
     .pipe(filter(['**/*']))
-    .pipe(concat('at-angular-directive.js'))
+    .pipe(concat('at-angular-directive-' + version + '.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'
@@ -70,7 +71,7 @@ gulp.task('build:dist', () => {
     .pipe(gulp.dest('dist'))
     .pipe(save.restore('before'))
     .pipe(filter(['../**/*', '*/**/!(header.js)']))
-    .pipe(concat('at-angular-directive+common.js'))
+    .pipe(concat('at-angular-directive-' + version + '+common.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'

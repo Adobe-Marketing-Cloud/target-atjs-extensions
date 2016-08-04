@@ -41,7 +41,7 @@ Provider  | Description
 `logger` | **at.js** logger constant wrapper
 `customOptions` | custom options provided on `setupCommon()` constant wrapper
 `options` |  options constant wrapper, providing defaults where customOptions are missing
-`routeUtil` | ngRoute helper utils (e.g.: `routeUtil.isRouteAllowed()`)
+`routeUtil` | routing helper utils (e.g.: `routeUtil.isRouteAllowed()`)
 
 ## License
 

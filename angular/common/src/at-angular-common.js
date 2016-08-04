@@ -5,11 +5,16 @@
 
   function getOfferPromise(promise, options) {
     options = options || {};
+    var atOpts = {
+      mbox: options.mbox,
+      params: options.params,
+      timeout: options.timeout
+    };
     var deferred = promise.defer();
-    options.success = function (response) {
+    atOpts.success = function (response) {
       if (response && response.length > 0) {
-        options.offer = response;
         deferred.resolve({
+          mbox: options.mbox,
           offer: response,
           selector: options.selector,
           element: options.element
@@ -18,10 +23,10 @@
         deferred.reject('Empty offer');
       }
     };
-    options.error = function (status, error) {
+    atOpts.error = function (status, error) {
       deferred.reject(error);
     };
-    at.getOffer(options);
+    at.getOffer(atOpts);
     return deferred.promise;
   }
 

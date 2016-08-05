@@ -156,10 +156,8 @@
               .catch(function (reason) {
                 logger.error('AT applyOffer error: ' + reason);
               });
-          }
-        });
-      }
-    ]);
+          }});
+      }]);
   }
 
   at.registerExtension({

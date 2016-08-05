@@ -151,13 +151,13 @@
 
         $rootScope.$on('$viewContentLoaded', function () {
           var offerData = $route.current.locals.offerData;
-          offerService.applyOfferPromise(offerData)
-            .catch(function (reason) {
-              logger.error('AT applyOffer error: ' + reason);
-            });
-        });
-      }
-    ]);
+          if (offerData) {
+            offerService.applyOfferPromise(offerData)
+              .catch(function (reason) {
+                logger.error('AT applyOffer error: ' + reason);
+              });
+          }});
+      }]);
   }
 
   at.registerExtension({

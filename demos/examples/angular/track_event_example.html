@@ -80,7 +80,7 @@
       onclick="adobe.target.trackEvent({
         mbox: 'myMboxName',
         event: event,
-        usePreventDefault: true,
+        preventDefault: true,
         success: function(){
           alert('example#2. Look at url. It will change after clicking ok');
         }})"&gt;switch to view2 (with prevent default)&lt;/a&gt;
@@ -96,7 +96,7 @@
           mbox: 'myMboxName',
           type: 'click',
           selector: '.trackEventClass',
-          usePreventDefault: true,  // works only for  [a:click, form:submit] element:event combinations
+          preventDefault: true,  // works only for  [a:click, form:submit] element:event combinations
           success: function() {
             alert('example#3. Look at url. It will change after clicking ok');
           }
@@ -127,7 +127,7 @@
                    onclick="adobe.target.trackEvent({
                      mbox: 'myMboxName',
                      event:event,
-                     usePreventDefault: true,
+                     preventDefault: true,
                      success:function(){alert('example#2. Look at url. It will change after clicking ok');}})">switch to view2 (with prevent default)</a>
             </div>
 
@@ -141,7 +141,7 @@
                         mbox: 'myMboxName',
                         type: 'click',
                         selector: '.trackEventClass',
-                        usePreventDefault: true,
+                        preventDefault: true,
                         success: function() {
                             alert('example#3. Look at url. It will change after clicking ok');
                         }

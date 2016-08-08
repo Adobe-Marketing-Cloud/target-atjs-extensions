@@ -65,20 +65,21 @@
                     ol li ol li {list-style-type: lower-alpha}
                     </style>
                     
-                    <h4 style="padding: 1rem 0 0 2.2rem">Adobe Target Angular ngRoute Implementation</h4>
+                    <h4 style="padding: 1rem 0 0 2.2rem">Adobe Target Angular ngRoute Extension</h4>
                    
                     <h5 style="padding: 1rem 0 0 2.2rem">Prerequisites:</h5>
 
                     <ol> 
                         <li>at.js library</li>
                         <li>AngularJS library</li>
+                        <li>Angular ngRoute library</li>
                     </ol>
 
                     <h5 style="padding: 1rem 0 0 2.2rem">NgRoute Extension Integration:</h5>
                     
                     <ol>
                         
-                        <li>Copy <a target="_blank" href="js/adobe.target.ext.angular.lib+ngroute.js">adobe.target.ext.angular.lib+ngroute.js</a> file to your server</li>
+                        <li>Copy <a target="_blank" href="../../at-js-ext/at-angular-ng-route-0.1.0+common.min.js">at-angular-ng-route-0.1.0+common.min.js</a> file to your server</li>
 
 
                         <li>
@@ -121,22 +122,22 @@
 
 
                     <p style="padding-bottom: 0.3rem">
-                        NgRoute extension consists of 2 parts:
+                        The extension distribution consists of:
                     </p>
 
                     <ol>
-                        <li><em>Angular Service</em>
-                            <br />- Service <em>adobeTargetOfferService</em> is a wrapper function that contains at.js API and some utility methods 
-                            <br />- The at.js API methods include <em>adobe.target.getOffer</em> and <em>adobe.target.applyOffer</em>
+                        <li><em>Angular Common Adobe Target at.js extension</em>
+                            <br />- <em>target.angular.common</em> Angular module wraps <em>at.js</em> API as well as exposes several helper providers
+                            <br />- The at.js API methods include <em>adobe.target.getOffer</em> and <em>adobe.target.applyOffer</em>, which are exposed as <em>offerService.getOfferPromise</em> and <em>offerService.applyOfferPromise</em> promise wrappers
                         </li>
-                        <li><em>Angular Run Block</em>
-                            <br />- Uses <em>adobeTargetOfferService</em> to apply Target calls to specified routes
+                        <li><em>Angular ngRoute Adobe Target extension</em>
+                            <br />- Uses <em>target.angular.common</em>'s <em>routeService</em> and <em>offerService</em> to apply Target calls to specified routes.
                             <br />- Uses Angular <em>$viewContentLoaded</em> event to apply Target response. 
                         </li>
                     </ol>
 
                     <p style="padding-bottom: 0.3rem">
-                        All Target calls of at.js are asynchronous. The idea behind this extension implementation is taking advantage of <em>promises</em>, which resolve on Angular application route changes by delivering Target response. This happens before DOM is updated with new content. To inject the new Target response into DOM, we use <em>$viewContentLoaded</em> event. This allows us to avoid page flicker, since the new HTML and new Target response are added to DOM almost at the same time.  
+                        All at.js Target calls are asynchronous. The idea behind this extension implementation is to take advantage of <em>promises</em>, which resolve on Angular application route changes by delivering Target response. This happens before DOM is updated with new content. To inject the new Target response into DOM, we use <em>$viewContentLoaded</em> event. This allows us to avoid page flicker, since the new HTML and new Target response are added to DOM almost at the same time.  
                     </p>
 
                 </div>

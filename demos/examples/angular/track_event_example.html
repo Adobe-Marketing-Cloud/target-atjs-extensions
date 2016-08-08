@@ -53,7 +53,7 @@
 </header>
 <main>
     <div class="container">
-        <blockquote>In the example below, we have two links that will track events. And one trackEvent defined inline. Check Description.</blockquote>
+        <blockquote>In the example below, we have two links that will track events and one trackEvent defined inline.</blockquote>
         <blockquote>
             Note: choose View1 or View2 from the top right corner. Notice network tab for json?... requests 
         </blockquote>
@@ -62,7 +62,7 @@
                 <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
                 <div class="collapsible-body">
                     <p>
-                        You can define inline (no prevent default):
+                        You can define event tracking inline (no prevent default):
                     </p>
 <pre>
     &lt;a onclick="adobe.target.trackEvent({
@@ -86,7 +86,7 @@
         }})"&gt;switch to view2 (with prevent default)&lt;/a&gt;
 </pre>
                     <p>
-                        or assign it to multiple elements by selector,type parameters
+                        or assign it to multiple elements by using <em>selector, type</em> parameters
                     </p>
 <pre>
     &lt;a href="#view1" class="trackEventClass"&gt;switch to view1 (with prevent default)&lt;/a&gt;

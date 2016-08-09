@@ -1,5 +1,6 @@
-var sampleApp = angular.module('sampleApp', ['ngRoute', 'adobe.target.directives']);
+var sampleApp = angular.module('sampleApp', ['ngRoute']);
 
+adobe.target.ext.angular.initDirective(sampleApp, {});
 
 sampleApp.config(['$routeProvider', function($routeProvider) {
   $routeProvider.

@@ -14,7 +14,7 @@ var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
-  return gulp.src('src/*.js')
+  return gulp.src('src/*.{js,jsx}')
     .pipe(excludeGitignore())
     .pipe(eslint())
     .pipe(eslint.format())
@@ -67,7 +67,7 @@ gulp.task('build:dist', () => {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*.js', ['lint:src', 'test:run']);
+  gulp.watch('src/**/*.{js,jsx}', ['lint:src', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
 });
 

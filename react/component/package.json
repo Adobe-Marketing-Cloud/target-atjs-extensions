@@ -1,0 +1,52 @@
+{
+  "name": "at-react-component",
+  "version": "0.1.0",
+  "description": "",
+  "homepage": "",
+  "dependencies": {},
+  "eslintConfig": {
+    "extends": "xo-space",
+    "fix": true,
+    "env": {
+      "browser": true,
+      "jasmine": true,
+      "phantomjs": true
+    },
+    "rules": {
+      "no-unused-vars": "warn"
+    }
+  },
+  "repository": "/at-react-component",
+  "scripts": {
+    "lint": "gulp lint",
+    "watch": "gulp watch",
+    "test": "gulp",
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "del": "^2.2.1",
+    "eslint-config-xo-space": "^0.14.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-eslint-if-fixed": "^1.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sequence": "^0.4.5",
+    "gulp-uglify": "^2.0.0",
+    "jasmine-core": "^2.4.1",
+    "karma": "^1.1.2",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-textio-html-reporter": "^1.0.0",
+    "karma-phantomjs-launcher": "^1.0.1",
+    "karma-spec-reporter": "0.0.26",
+    "phantomjs-prebuilt": "^2.1.11",
+    "react": "^15.3.0"
+  }
+}

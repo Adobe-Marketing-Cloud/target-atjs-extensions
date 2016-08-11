@@ -55,19 +55,19 @@
     register: function (settings, logger) {
       return function (opts) {
         return React.createClass({
-          getDefaultProps: function () {
+          getDefaultProps: () => {
             return getDefaultProps(opts, settings);
           },
 
-          render: function () {
+          render: () => {
             return onRender(this);
           },
 
-          componentDidMount: function () {
+          componentDidMount: () => {
             return onComponentMounted(this, logger);
           },
 
-          componentDidUpdate: function () {
+          componentDidUpdate: () => {
             return onComponentUpdated(this, logger);
           }
         });

@@ -76,21 +76,23 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     modules: ['settings', 'logger'],
     register: function register(settings, logger) {
       return function (opts) {
+        var _this = this;
+
         return React.createClass({
           getDefaultProps: function getDefaultProps() {
             return _getDefaultProps(opts, settings);
           },
 
           render: function render() {
-            return onRender(this);
+            return onRender(_this);
           },
 
           componentDidMount: function componentDidMount() {
-            return onComponentMounted(this, logger);
+            return onComponentMounted(_this, logger);
           },
 
           componentDidUpdate: function componentDidUpdate() {
-            return onComponentUpdated(this, logger);
+            return onComponentUpdated(_this, logger);
           }
         });
       };

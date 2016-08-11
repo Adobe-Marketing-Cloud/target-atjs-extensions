@@ -1,6 +1,7 @@
 'use strict';
 var gulp = require('gulp');
 var gulpSequence = require('gulp-sequence');
+var babel = require('gulp-babel');
 var del = require('del');
 var path = require('path');
 var excludeGitignore = require('gulp-exclude-gitignore');
@@ -52,9 +53,14 @@ gulp.task('clean', () => {
 gulp.task('build:dist', () => {
   return gulp.src([
       'src/header.js',
-      'src/at-react-component.js'
+      'src/at-react-component.jsx'
     ])
     .pipe(plumber())
+    .pipe(babel({
+      only: ['src/*.jsx'],
+      presets: ['es2015', 'react'],
+      compact: false
+    }))
     .pipe(concat('at-react-component-' + version + '.js'))
     .pipe(gulp.dest('dist')) // save .js
     .pipe(uglify({

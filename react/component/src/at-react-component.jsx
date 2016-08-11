@@ -3,6 +3,48 @@
 (function (React, at) {
   'use strict';
 
+  function getDefaultProps(opts, settings) {
+    return {
+      mbox: opts.mbox || settings.globalMboxName,
+      params: opts.params || null,
+      timeout: opts.timeout || settings.timeout
+    };
+  }
+
+  function onRender(component) {
+    return <div ref={ref => {
+      component.mboxDiv = ref;
+    }} {...component.props}>{component.props.children}</div>;
+  }
+
+  function onComponentMounted(component, logger) {
+    logger.log('MboxComponentDidMount');
+
+    at.getOffer({
+      mbox: component.props.mbox,
+      params: component.props.params,
+      timeout: component.props.timeout,
+      success: function (response) {
+        component.setState({
+          offerData: response
+        });
+      },
+      error: function (status, error) {
+        logger.log('getOffer error: ', error, status);
+      }
+    });
+  }
+
+  function onComponentUpdated(component, logger) {
+    logger.log('MboxComponentDidUpdate');
+
+    adobe.target.applyOffer({
+      mbox: component.props.mbox,
+      offer: component.state.offerData,
+      element: component.mboxDiv
+    });
+  }
+
   at.registerExtension({
     name: 'react.createMboxComponent',
     modules: ['settings', 'logger'],
@@ -10,46 +52,19 @@
       return function (opts) {
         return React.createClass({
           getDefaultProps: function () {
-            return {
-              mbox: opts.mbox || settings.globalMboxName,
-              params: opts.params || null,
-              timeout: opts.timeout || settings.timeout
-            }
+            return getDefaultProps(opts, settings);
           },
 
           render: function () {
-            return <div ref={ref => {
-              this.mboxDiv = ref;
-            }} {...this.props}>{this.props.children}</div>;
+            return onRender(this);
           },
 
           componentDidMount: function () {
-            logger.log('MboxComponentDidMount');
-
-            var component = this;
-            at.getOffer({
-              mbox: component.props.mbox,
-              params: component.props.params,
-              timeout: component.props.timeout,
-              success: function (response) {
-                component.setState({
-                  offerData: response
-                });
-              },
-              error: function (status, error) {
-                logger.log('getOffer error: ', error, status);
-              }
-            });
+            return onComponentMounted(this, logger);
           },
 
           componentDidUpdate: function () {
-            logger.log('MboxComponentDidUpdate');
-
-            adobe.target.applyOffer({
-              mbox: this.props.mbox,
-              offer: this.state.offerData,
-              element: this.mboxDiv
-            });
+            return onComponentUpdated(this, logger);
           }
         });
       };

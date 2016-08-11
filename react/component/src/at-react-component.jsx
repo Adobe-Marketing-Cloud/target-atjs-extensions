@@ -9,6 +9,14 @@
     register: function (settings, logger) {
       return function (opts) {
         return React.createClass({
+          getDefaultProps: function () {
+            return {
+              mbox: opts.mbox || settings.globalMboxName,
+              params: opts.params || null,
+              timeout: opts.timeout || settings.timeout
+            }
+          },
+
           render: function () {
             return <div ref={ref => {
               this.mboxDiv = ref;
@@ -22,6 +30,7 @@
             at.getOffer({
               mbox: component.props.mbox,
               params: component.props.params,
+              timeout: component.props.timeout,
               success: function (response) {
                 component.setState({
                   offerData: response

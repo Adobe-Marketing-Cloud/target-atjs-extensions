@@ -29,12 +29,16 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     };
   }
 
+  function appendMboxClass(className) {
+    return (className ? className + ' ' : '') + 'mboxDefault';
+  }
+
   function onRender(component) {
     return React.createElement(
       'div',
       _extends({ ref: function ref(_ref) {
           component.mboxDiv = _ref;
-        } }, component.props),
+        } }, component.props, { className: appendMboxClass(this.props.className) }),
       component.props.children
     );
   }

@@ -11,10 +11,14 @@
     };
   }
 
+  function appendMboxClass(className) {
+    return (className ? className + ' ' : '') + 'mboxDefault';
+  }
+
   function onRender(component) {
     return <div ref={ref => {
       component.mboxDiv = ref;
-    }} {...component.props}>{component.props.children}</div>;
+    }} {...component.props} className={appendMboxClass(this.props.className)}>{component.props.children}</div>;
   }
 
   function onComponentMounted(component, logger) {

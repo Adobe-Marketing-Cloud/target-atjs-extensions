@@ -1,24 +1,15 @@
-/* global adobe */
-describe('greeter', function () {
-  beforeAll(function () {
-    spyOn(console, 'log');
+/* global adobe React */
 
-    adobe.target.ext.myGreetingExtension('Walter');
-  });
+var Utils = React.addons.TestUtils;
+var Mbox = adobe.target.ext.react.createMboxComponent({mbox: 'myMbox'});
+var component;
+var element;
 
-  it('should log to console', function () {
-    expect(console.log).toHaveBeenCalled();
-  });
-
-  it('should greet caller', function () {
-    expect(adobe.target.ext.myGreetingExtension('John')).toEqual('Hello, John!');
-  });
-
-  it('should fail', function () {
-    expect(true).toEqual(false);
-  });
-
-  it('should not fail', function () {
-    expect(true).toEqual(true);
+describe('Mbox component', function () {
+  it('can render without errors', function () {
+    element = React.createElement(Mbox, {mbox: 'myMbox'});
+    expect(function () {
+      component = Utils.renderIntoDocument(element);
+    }).not.toThrow();
   });
 });

@@ -18,7 +18,7 @@
   function onRender(component) {
     return <div ref={ref => {
       component.mboxDiv = ref;
-    }} {...component.props} className={appendMboxClass(this.props.className)}>{component.props.children}</div>;
+    }} {...component.props} className={appendMboxClass(component.props.className)}>{component.props.children}</div>;
   }
 
   function onComponentMounted(component, logger) {

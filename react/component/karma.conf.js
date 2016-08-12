@@ -22,14 +22,14 @@ module.exports = function (config) {
     ],
 
     preprocessors: {
-      'dist/**/!(*.min).js': ['coverage']
+      'src/**/*.js': ['coverage']
     },
 
     // list of files / patterns to load in the browser
     files: [
       'node_modules/react/dist/react-with-addons.js',
       'test/**/*.testutil.js',
-      'dist/**/!(*.min).js',
+      'src/**/*.js',
       'test/**/*.spec.js'
     ],
 

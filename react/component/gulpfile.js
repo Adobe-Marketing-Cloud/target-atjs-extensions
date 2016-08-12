@@ -15,7 +15,7 @@ var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
-  return gulp.src('src/*.{js,jsx}')
+  return gulp.src('src/*.jsx')
     .pipe(excludeGitignore())
     .pipe(eslint())
     .pipe(eslint.format())
@@ -29,6 +29,16 @@ gulp.task('lint:test', () => {
     .pipe(eslint.format())
     .pipe(eslintIfFixed('test'))
     .pipe(eslint.failAfterError());
+});
+
+gulp.task('babel', () => {
+  return gulp.src('src/*.jsx')
+    .pipe(plumber())
+    .pipe(babel({
+      presets: ['es2015', 'react'],
+      compact: false
+    }))
+    .pipe(gulp.dest('src'));
 });
 
 gulp.task('test:run', done => {
@@ -53,34 +63,29 @@ gulp.task('clean', () => {
 gulp.task('build:dist', () => {
   return gulp.src([
       'src/header.js',
-      'src/at-react-component.jsx'
+      'src/at-react-component.js'
     ])
     .pipe(plumber())
-    .pipe(babel({
-      only: ['src/*.jsx'],
-      presets: ['es2015', 'react'],
-      compact: false
-    }))
     .pipe(concat('at-react-component-' + version + '.js'))
-    .pipe(gulp.dest('dist')) // save .js
+    .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'
     }))
     .pipe(rename({
       extname: '.min.js'
     }))
-    .pipe(gulp.dest('dist')); // save .min.js
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*.{js,jsx}', ['lint:src', 'test:run']);
+  gulp.watch('src/**/*.{js,jsx}', ['lint:src', 'babel', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
 });
 
 gulp.task('lint', ['lint:src', 'lint:test']);
 
-gulp.task('test', gulpSequence('lint', 'test:run'));
+gulp.task('test', gulpSequence('lint', 'babel', 'test:run'));
 
-gulp.task('build', gulpSequence('clean', 'default', 'build:dist'));
+gulp.task('build', gulpSequence('clean', 'babel', 'test', 'build:dist'));
 
 gulp.task('default', ['test']);

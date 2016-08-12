@@ -15,6 +15,10 @@
     return (className ? className + ' ' : '') + 'mboxDefault';
   }
 
+  function removeMboxClass(className) {
+    return className.replace(/\bmboxDefault\b/, '');
+  }
+
   function onRender(component) {
     return <div ref={ref => {
       component.mboxDiv = ref;
@@ -35,6 +39,7 @@
       },
       error: function (status, error) {
         logger.log('getOffer error: ', error, status);
+        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       }
     });
   }
@@ -47,6 +52,7 @@
       offer: component.state.offerData,
       element: component.mboxDiv
     });
+    component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
   }
 
   at.registerExtension({

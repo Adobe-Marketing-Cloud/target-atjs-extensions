@@ -33,6 +33,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     return (className ? className + ' ' : '') + 'mboxDefault';
   }
 
+  function removeMboxClass(className) {
+    return className.replace(/\bmboxDefault\b/, '');
+  }
+
   function onRender(component) {
     return React.createElement(
       'div',
@@ -57,6 +61,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       },
       error: function error(status, _error) {
         logger.log('getOffer error: ', _error, status);
+        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       }
     });
   }
@@ -69,6 +74,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
       offer: component.state.offerData,
       element: component.mboxDiv
     });
+    component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
   }
 
   at.registerExtension({

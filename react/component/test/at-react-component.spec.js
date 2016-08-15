@@ -12,7 +12,7 @@ describe('Mbox component', function () {
   });
 
   it('should call getOffer and applyOffer', function () {
-    element = React.createElement(Mbox, {mbox: 'myMbox'});
+    element = React.createElement(Mbox, {'data-mbox': 'myMbox'});
     expect(function () {
       component = Utils.renderIntoDocument(element);
     }).not.toThrow();

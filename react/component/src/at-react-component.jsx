@@ -5,9 +5,9 @@
 
   function getDefaultProps(opts, settings) {
     return {
-      mbox: opts.mbox || settings.globalMboxName,
-      params: opts.params || null,
-      timeout: opts.timeout || settings.timeout
+      'data-mbox': opts.mbox || settings.globalMboxName,
+      'data-params': opts.params || null,
+      'data-timeout': opts.timeout || settings.timeout
     };
   }
 
@@ -29,9 +29,9 @@
     logger.log('MboxComponentDidMount');
 
     at.getOffer({
-      mbox: component.props.mbox,
-      params: component.props.params,
-      timeout: component.props.timeout,
+      mbox: component.props['data-mbox'],
+      params: JSON.parse(component.props['data-params']),
+      timeout: parseInt(component.props['data-timeout'], 10),
       success: function (response) {
         component.setState({
           offerData: response
@@ -48,7 +48,7 @@
     logger.log('MboxComponentDidUpdate');
 
     adobe.target.applyOffer({
-      mbox: component.props.mbox,
+      mbox: component.props['data-mbox'],
       offer: component.state.offerData,
       element: component.mboxDiv
     });

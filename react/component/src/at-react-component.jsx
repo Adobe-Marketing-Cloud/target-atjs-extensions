@@ -4,6 +4,7 @@
   'use strict';
 
   function getDefaultProps(opts, settings) {
+    opts = opts || {};
     return {
       'data-mbox': opts.mbox || settings.globalMboxName,
       'data-params': opts.params || null,
@@ -27,10 +28,11 @@
 
   function onComponentMounted(component, logger) {
     logger.log('MboxComponentDidMount');
+    var dataParams = component.props['data-params'];
 
     at.getOffer({
       mbox: component.props['data-mbox'],
-      params: JSON.parse(component.props['data-params']),
+      params: typeof dataParams === 'string' ? JSON.parse(dataParams) : dataParams,
       timeout: parseInt(component.props['data-timeout'], 10),
       success: function (response) {
         component.setState({

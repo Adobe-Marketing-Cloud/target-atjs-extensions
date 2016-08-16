@@ -22,6 +22,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
   'use strict';
 
   function _getDefaultProps(opts, settings) {
+    opts = opts || {};
     return {
       'data-mbox': opts.mbox || settings.globalMboxName,
       'data-params': opts.params || null,
@@ -49,10 +50,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
   function onComponentMounted(component, logger) {
     logger.log('MboxComponentDidMount');
+    var dataParams = component.props['data-params'];
 
     at.getOffer({
       mbox: component.props['data-mbox'],
-      params: JSON.parse(component.props['data-params']),
+      params: typeof dataParams === 'string' ? JSON.parse(dataParams) : dataParams,
       timeout: parseInt(component.props['data-timeout'], 10),
       success: function success(response) {
         component.setState({

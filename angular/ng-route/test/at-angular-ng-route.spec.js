@@ -4,8 +4,6 @@ var $route;
 var $location;
 var element;
 var offerService;
-var routeService;
-var options;
 
 adobe.target.ext.angular.initRoutes(app, {mbox: 'myMbox', selector: 'h3'});
 
@@ -14,8 +12,8 @@ describe('ng-route tests', function () {
 
   beforeEach(module('test/home.html', 'test/blog.html'));
 
-  beforeEach(inject(['$rootScope', '$compile', '$route', '$location', 'offerService', 'routeService', 'options',
-    function (_$rootScope_, $compile, _$route_, _$location_, _offerService_, _routeService_, _options_) {
+  beforeEach(inject(['$rootScope', '$compile', '$route', '$location', 'offerService',
+    function (_$rootScope_, $compile, _$route_, _$location_, _offerService_) {
       spyOn(adobe.target, 'getOffer').and.callThrough();
       spyOn(adobe.target, 'applyOffer');
 
@@ -23,8 +21,6 @@ describe('ng-route tests', function () {
       $route = _$route_;
       $location = _$location_;
       offerService = _offerService_;
-      routeService = _routeService_;
-      options = _options_;
 
       element = $compile('<div ng-view></div>')($rootScope);
       var rootElement = angular.element(document.querySelectorAll('body'));

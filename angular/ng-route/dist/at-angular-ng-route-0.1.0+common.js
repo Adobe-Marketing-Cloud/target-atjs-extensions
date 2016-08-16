@@ -66,8 +66,10 @@
       !(opts.disallowedRoutesFilter.length > 0 && opts.disallowedRoutesFilter.indexOf(routeName) !== -1);
   }
 
-  function RouteService() {
-    this.isRouteAllowed = isRouteAllowed;
+  function RouteService(options) {
+    this.isRouteAllowed = function (routeName) {
+      return isRouteAllowed(routeName, options);
+    };
   }
 
   function getOptions(settings, opts) {
@@ -88,11 +90,11 @@
       .constant('version', '0.3.0')
       .constant('settings', settings)
       .constant('logger', logger)
-      .constant('customOptions', opts)
+      .constant('customOptions', opts || {})
 
       .factory('options', ['settings', 'customOptions', getOptions])
 
-      .service('routeService', RouteService)
+      .service('routeService', ['options', RouteService])
       .service('offerService', ['$q', OfferService]);
   }
 
@@ -128,7 +130,7 @@
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToRoutes = function (routes) {
       Object.keys(routes).forEach(function (routeName) {
-        if ($delegate.isRouteAllowed(routeName, options)) {
+        if ($delegate.isRouteAllowed(routeName)) {
           logger.log('location: ' + routeName);
           setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);

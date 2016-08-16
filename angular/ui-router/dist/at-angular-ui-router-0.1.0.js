@@ -34,7 +34,7 @@
   function routeServiceDecorator($delegate, options, offerService, logger) {
     $delegate.applyTargetToStates = function (states) {
       states.forEach(function (state) {
-        if ($delegate.isRouteAllowed(state.url, options)) {
+        if ($delegate.isRouteAllowed(state.url)) {
           logger.log('location: ' + state.url);
           setStateOfferResolve(state, function () {
             return offerService.getOfferPromise(options);

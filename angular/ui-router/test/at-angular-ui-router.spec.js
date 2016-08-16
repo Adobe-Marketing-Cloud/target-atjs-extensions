@@ -3,8 +3,6 @@ var $rootScope;
 var $state;
 var element;
 var offerService;
-var routeService;
-var options;
 
 adobe.target.ext.angular.initStates(app, {mbox: 'myMbox', selector: 'h3'});
 
@@ -17,16 +15,14 @@ describe('ui-router tests', function () {
 
   beforeEach(module('test/home.html', 'test/blog.html'));
 
-  beforeEach(inject(['$rootScope', '$compile', '$state', 'offerService', 'routeService', 'options',
-    function (_$rootScope_, $compile, _$state_, _offerService_, _routeService_, _options_) {
+  beforeEach(inject(['$rootScope', '$compile', '$state', 'offerService',
+    function (_$rootScope_, $compile, _$state_, _offerService_) {
       spyOn(adobe.target, 'getOffer').and.callThrough();
       spyOn(adobe.target, 'applyOffer');
 
       $rootScope = _$rootScope_;
       $state = _$state_;
       offerService = _offerService_;
-      routeService = _routeService_;
-      options = _options_;
 
       element = $compile('<div ui-view></div>')($rootScope);
       var rootElement = angular.element(document.querySelectorAll('body'));

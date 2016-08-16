@@ -45,12 +45,14 @@ describe('angular.common tests', function () {
     expect(promise).toEqual(qDeferred.promise);
   }));
 
-  it('isRouteAllowed should check if a route is allowed', inject(function (routeService) {
+  it('isRouteAllowed should check if a route is allowed', inject(function (routeService, options) {
     var isRouteAllowed = routeService.isRouteAllowed;
-
-    expect(isRouteAllowed('r1', {allowedRoutesFilter: [], disallowedRoutesFilter: []})).toBe(true);
-    expect(isRouteAllowed('r1', {allowedRoutesFilter: ['r1'], disallowedRoutesFilter: []})).toBe(true);
-    expect(isRouteAllowed('r1', {allowedRoutesFilter: [], disallowedRoutesFilter: ['r1']})).toBe(false);
-    expect(isRouteAllowed('r1', {allowedRoutesFilter: ['r1'], disallowedRoutesFilter: ['r1']})).toBe(false);
+    expect(isRouteAllowed('route')).toBe(true);
+    options.allowedRoutesFilter = ['route'];
+    expect(isRouteAllowed('route')).toBe(true);
+    options.disallowedRoutesFilter = ['route'];
+    expect(isRouteAllowed('route')).toBe(false);
+    options.allowedRoutesFilter = [];
+    expect(isRouteAllowed('route')).toBe(false);
   }));
 });

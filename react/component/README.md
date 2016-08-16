@@ -11,7 +11,7 @@ The returned React component is to be composed into React apps, e.g.: `<Mbox />`
 ## Usage
 
 ```javascript
-var Mbox = adobe.target.ext.react.createMboxComponent(opts);
+var Mbox = adobe.target.ext.react.createMboxComponent(options);
 ```
 
 where `options` object contains custom **at.js** options.  

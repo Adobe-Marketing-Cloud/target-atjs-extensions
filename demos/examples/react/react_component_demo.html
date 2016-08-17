@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>at.js examples | Adobe Target</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="../../../assets/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../../assets/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../../assets/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../../assets/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../../assets/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../../assets/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../../assets/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../../assets/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../../assets/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/icon/favicon-16x16.png">
+    <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script src="../common-js/page-params.js"></script>
+    <script src="../../jquery/jquery.min.js"></script>
+    <script src="../../react/react.min.js"></script>
+    <script src="../../react/react-dom.min.js"></script>
+    <script src="../../materialize/materialize.min.js"></script>
+    <script src="../../at-js/mangoapp.at.0.9.1.min.js"></script>
+    <script src="../../at-js-ext/at-react-component-0.1.0.min.js"></script>
+</head>
+<body>
+<header>
+    <div class="container">
+        <nav class="teal darken-1">
+            <div class="nav-wrapper">
+                <div class=" -pad-left1">
+                    <a href="../../"><i class="fa fa-home left"></i></a>
+                    <a class="brand-logo">React Component Example</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <blockquote>In the example below, an Mbox React component's content is being replaced with a fetched Target offer</blockquote>
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
+                <div class="collapsible-body">
+                    <p>
+                        The Mbox React component can be used like this inside your React app's render() function:
+                    </p>
+                    <pre>
+                        &lt;<b>Mbox</b> <b>data-mbox="</b>simpleDirective<b>"</b>&gt;
+                            Default content.
+                        &lt;/<b>Mbox</b>&gt;
+                    </pre>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Additional Target params can also be passed as data attributes:
+                    <pre>
+                        &lt;<b>Mbox</b> <b>data-mbox="</b>simpleDirective<b>" data-params='</b>{"param1": "val1", "param2": "val2"}<b>' data-timeout="</b>7000<b>"</b>&gt;
+                            Default content.
+                        &lt;/<b>Mbox</b>&gt;
+                    </pre>
+                </div>
+            </li>
+        </ul>
+
+        <div id="app"></div>
+    </div>
+</main>
+<script src="js/react-component-example.js"></script>
+<script src="js/widgets.js"></script>
+</body>
+</html>

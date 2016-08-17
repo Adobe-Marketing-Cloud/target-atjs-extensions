@@ -24,6 +24,7 @@
     <script src="../common-js/page-params.js"></script>
     <script src="../../jquery/jquery.min.js"></script>
     <script src="../../react/react.min.js"></script>
+    <script src="../../react/react-dom.min.js"></script>
     <script src="../../materialize/materialize.min.js"></script>
     <script src="../../at-js/mangoapp.at.0.9.1.min.js"></script>
     <script src="../../at-js-ext/at-react-component-0.1.0.min.js"></script>
@@ -57,7 +58,7 @@
                         &lt;/<b>Mbox</b>&gt;
                     </pre>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        Additional Target params can also be passed like this:
+                        Additional Target params can also be passed as data attributes:
                     <pre>
                         &lt;<b>Mbox</b> <b>data-mbox="</b>simpleDirective<b>" data-params='</b>{"param1": "val1", "param2": "val2"}<b>' data-timeout="</b>7000<b>"</b>&gt;
                             Default content.
@@ -67,34 +68,7 @@
             </li>
         </ul>
 
-        <div class="valign-wrapper">
-            <div class="card-content white-text">
-                <span class="card-title">profile 1</span>
-                <div class="card-panel grey lighten-5 z-depth-1">
-                    <div class="row valign-wrapper">
-                        <div class="col s3">
-                            <img src="https://placeholdit.imgix.net/~text?txtsize=23&txt=avatar1&w=100&h=100" alt=""
-                                 class="circle ">
-                        </div>
-                        <div class="col s9">
-                            <span class="black-text ">
-                                Lorem ipsum dolor sit amet, consectetuer adipiscing elit.'<br>
-                                Aenean commodo ligula eget dolor. Aenean massa.
-                                <div class="offer">
-                                    <h2>Welcome</h2>
-                                </div>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <h4>
-                Unfortunately, we have no offer for the moment.
-            </h4>
-        </div>
-
+        <div id="app"></div>
     </div>
 </main>
 <script src="js/react-component-example.js"></script>

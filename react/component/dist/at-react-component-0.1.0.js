@@ -21,15 +21,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 (function (React, at) {
   'use strict';
 
-  function _getDefaultProps(opts, settings) {
-    opts = opts || {};
-    return {
-      'data-mbox': opts.mbox || settings.globalMboxName,
-      'data-params': opts.params || null,
-      'data-timeout': opts.timeout || settings.timeout
-    };
-  }
-
   function appendMboxClass(className) {
     return (className ? className + ' ' : '') + 'mboxDefault';
   }
@@ -38,26 +29,33 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     return className.replace(/\bmboxDefault\b/, '');
   }
 
-  function onRender(component) {
-    return React.createElement(
-      'div',
-      _extends({ ref: function ref(_ref) {
-          component.mboxDiv = _ref;
-        } }, component.props, { className: appendMboxClass(component.props.className) }),
-      component.props.children
-    );
+  function getParams(props) {
+    props = props || {};
+    var params = null;
+    Object.keys(props).filter(function (k) {
+      return k.startsWith('data-') && !['data-mbox', 'data-timeout'].includes(k);
+    }).forEach(function (k, i) {
+      if (i === 0) {
+        params = {};
+      }
+      params[k] = props[k];
+    });
+    return params;
   }
 
-  function onComponentMounted(component, logger) {
-    logger.log('MboxComponentDidMount');
-    var dataParams = component.props['data-params'];
+  function atOptsHaveChanged(component, mbox, timeout, params) {
+    return !Object.is(component.state.atParams, params) || mbox && component.state.mbox !== mbox || timeout && component.state.timeout !== timeout;
+  }
 
+  function getOffers(component, logger) {
+    console.log('getOffers');
     at.getOffer({
-      mbox: component.props['data-mbox'],
-      params: typeof dataParams === 'string' ? JSON.parse(dataParams) : dataParams,
-      timeout: parseInt(component.props['data-timeout'], 10),
+      mbox: component.state.mbox,
+      params: component.state.atParams,
+      timeout: component.state.timeout,
       success: function success(response) {
         component.setState({
+          gotOffers: true,
           offerData: response
         });
       },
@@ -68,15 +66,73 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     });
   }
 
+  function _getInitialState(opts) {
+    opts = opts || {};
+    return {
+      atParams: opts.params || null
+    };
+  }
+
+  function _getDefaultProps(opts, settings) {
+    opts = opts || {};
+    return {
+      'className': 'mboxDefault',
+      'data-mbox': opts.mbox || settings.globalMboxName,
+      'data-timeout': opts.timeout || settings.timeout
+    };
+  }
+
+  function onRender(component) {
+    return React.createElement(
+      'div',
+      _extends({
+        ref: function ref(_ref) {
+          component.mboxDiv = _ref;
+        }
+      }, component.props, {
+        className: appendMboxClass(component.props.className) }),
+      component.props.children
+    );
+  }
+
+  function onComponentMounted(component, logger) {
+    logger.log('MboxComponentDidMount');
+  }
+
+  function onComponentWillReceiveProps(component, newProps) {
+    console.log('Mbox componentWillReceiveProps');
+    var newMbox = newProps['data-mbox'];
+    var newTimeout = parseInt(newProps['data-timeout'], 10);
+    var newParams = getParams(newProps);
+    if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
+      component.setState({
+        atParams: newParams || component.state.atParams,
+        mbox: newMbox || component.state.mbox,
+        timeout: newTimeout || component.state.timeout,
+        shouldRefresh: true
+      });
+    }
+  }
+
   function onComponentUpdated(component, logger) {
     logger.log('MboxComponentDidUpdate');
-
-    adobe.target.applyOffer({
-      mbox: component.props['data-mbox'],
-      offer: component.state.offerData,
-      element: component.mboxDiv
-    });
-    component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+    if (component.state) {
+      if (component.state.gotOffers) {
+        console.log('Applying');
+        adobe.target.applyOffer({
+          mbox: component.state.mbox,
+          offer: component.state.offerData,
+          element: component.mboxDiv
+        });
+        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+        component.setState({ gotOffers: false });
+      }
+      if (component.state.shouldRefresh) {
+        console.log('Refreshing');
+        getOffers(component, logger);
+        component.setState({ shouldRefresh: false });
+      }
+    }
   }
 
   at.registerExtension({
@@ -85,6 +141,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
     register: function register(settings, logger) {
       return function (opts) {
         return React.createClass({
+          getInitialState: function getInitialState() {
+            return _getInitialState(opts);
+          },
+
           getDefaultProps: function getDefaultProps() {
             return _getDefaultProps(opts, settings);
           },
@@ -95,6 +155,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
           componentDidMount: function componentDidMount() {
             return onComponentMounted(this, logger);
+          },
+
+          componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+            return onComponentWillReceiveProps(this, newProps);
           },
 
           componentDidUpdate: function componentDidUpdate() {

@@ -7,6 +7,8 @@ var path = require('path');
 var excludeGitignore = require('gulp-exclude-gitignore');
 var eslint = require('gulp-eslint');
 var eslintIfFixed = require('gulp-eslint-if-fixed');
+var webpack = require('webpack-stream');
+var lodashWebpackPlugin = require('lodash-webpack-plugin');
 var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
@@ -35,10 +37,25 @@ gulp.task('babel', () => {
   return gulp.src('src/*.jsx')
     .pipe(plumber())
     .pipe(babel({
+      plugins: ['lodash'],
       presets: ['es2015', 'react'],
       compact: false
     }))
     .pipe(gulp.dest('src'));
+});
+
+gulp.task('pack', () => {
+  return gulp.src('src/at-react-component.js')
+    .pipe(plumber())
+    .pipe(webpack({
+      output: {
+        filename: 'at-react-component.js'
+      },
+      plugins: [
+        new lodashWebpackPlugin
+      ]
+    }))
+    .pipe(gulp.dest('src/'));
 });
 
 gulp.task('test:run', done => {
@@ -84,8 +101,8 @@ gulp.task('watch', function () {
 
 gulp.task('lint', ['lint:src', 'lint:test']);
 
-gulp.task('test', gulpSequence('lint', 'babel', 'test:run'));
+gulp.task('test', gulpSequence('lint', 'babel', 'pack', 'test:run'));
 
-gulp.task('build', gulpSequence('clean', 'babel', 'test', 'build:dist'));
+gulp.task('build', gulpSequence('clean', 'test', 'build:dist'));
 
 gulp.task('default', ['test']);

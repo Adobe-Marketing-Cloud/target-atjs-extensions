@@ -1,5 +1,7 @@
 
 /* global adobe, React */
+import _ from 'lodash';
+
 (function (React, at) {
   'use strict';
 
@@ -16,7 +18,7 @@
     let params = null;
     Object.keys(props)
       .filter(k => {
-        return k.startsWith('data-') && !['data-mbox', 'data-timeout'].includes(k);
+        return k.startsWith('data-') && !_.includes(['data-mbox', 'data-timeout'], k);
       })
       .forEach((k, i) => {
         if (i === 0) {
@@ -28,16 +30,16 @@
   }
 
   function atOptsHaveChanged(component, mbox, timeout, params) {
-    return !Object.is(component.state.atParams, params) ||
+    return !_.isEqual(component.state.atParams, params) ||
       (mbox && component.state.mbox !== mbox) ||
       (timeout && component.state.timeout !== timeout);
   }
 
   function getOffers(component, logger) {
-    console.log('getOffers');
+    logger.log('getOffers');
     at.getOffer({
       mbox: component.state.mbox,
-      params: component.state.atParams,
+      params: _.clone(component.state.atParams),
       timeout: component.state.timeout,
       success: function (response) {
         component.setState({
@@ -46,7 +48,7 @@
         });
       },
       error: function (status, error) {
-        logger.log('getOffer error: ', error, status);
+        logger.error('getOffer error: ', error, status);
         component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       }
     });
@@ -80,10 +82,15 @@
 
   function onComponentMounted(component, logger) {
     logger.log('MboxComponentDidMount');
+    component.setState({
+      atParams: getParams(component.props),
+      mbox: component.props['data-mbox'],
+      timeout: parseInt(component.props['data-timeout'], 10),
+      shouldRefresh: true
+    });
   }
 
   function onComponentWillReceiveProps(component, newProps) {
-    console.log('Mbox componentWillReceiveProps');
     let newMbox = newProps['data-mbox'];
     let newTimeout = parseInt(newProps['data-timeout'], 10);
     let newParams = getParams(newProps);
@@ -101,7 +108,7 @@
     logger.log('MboxComponentDidUpdate');
     if (component.state) {
       if (component.state.gotOffers) {
-        console.log('Applying');
+        logger.log('Applying');
         adobe.target.applyOffer({
           mbox: component.state.mbox,
           offer: component.state.offerData,
@@ -111,7 +118,7 @@
         component.setState({gotOffers: false});
       }
       if (component.state.shouldRefresh) {
-        console.log('Refreshing');
+        logger.log('Refreshing');
         getOffers(component, logger);
         component.setState({shouldRefresh: false});
       }

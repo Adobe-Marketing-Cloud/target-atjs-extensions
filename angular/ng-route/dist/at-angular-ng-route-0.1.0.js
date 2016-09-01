@@ -15,7 +15,7 @@
 
 
 /* global adobe, angular */
-(function (document, angular, at) {
+(function (angular, at) {
   'use strict';
 
   function addModuleDependencies(module, dependencies) {
@@ -79,4 +79,4 @@
       };
     }
   });
-})(document, angular, adobe.target);
+})(angular, adobe.target);

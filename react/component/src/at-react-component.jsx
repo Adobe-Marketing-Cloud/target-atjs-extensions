@@ -39,7 +39,7 @@ import _ from 'lodash';
     logger.log('getOffers');
     at.getOffer({
       mbox: component.state.mbox,
-      params: _.clone(component.state.atParams),
+      params: component.state.atParams,
       timeout: component.state.timeout,
       success: function (response) {
         component.setState({

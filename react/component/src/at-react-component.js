@@ -79,7 +79,7 @@
 	      if (i === 0) {
 	        params = {};
 	      }
-	      params[k] = props[k];
+	      params[k.substring(5)] = props[k];
 	    });
 	    return params;
 	  }

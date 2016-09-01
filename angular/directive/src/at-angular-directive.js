@@ -43,8 +43,8 @@
 
   function isMboxInjectionAllowed(routeService, dom, path, options, mboxId) {
     return routeService.isRouteAllowed(path) && // allowed route
-      !dom.find('#' + mboxId).length && // mbox does not exist
-      dom.find(options.selector).length > 0; // element to append to exists
+      !dom('#' + mboxId).length && // mbox does not exist
+      dom(options.selector).length > 0; // element to append to exists
   }
 
   function compileMbox($compile, element, scope, options, mboxId) {
@@ -70,7 +70,7 @@
           // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
           var mboxId = options.mbox + '-dir';
           if (isMboxInjectionAllowed(routeService, dom, currentPath, options, mboxId)) {
-            var el = angular.element(dom.find(options.selector));
+            var el = angular.element(dom(options.selector));
             compileMbox($compile, el, el.scope(), options, mboxId);
             logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
           }

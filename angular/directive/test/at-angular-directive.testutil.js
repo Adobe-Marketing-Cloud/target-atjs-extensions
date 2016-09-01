@@ -25,10 +25,8 @@ var adobe = {
           pollingAfterDomReadyTimeout: 2000
         },
         logger: console,
-        dom: {
-          find: function (selector) {
-            return document.querySelectorAll(selector);
-          }
+        dom: function (selector) {
+          return document.querySelectorAll(selector);
         }
       };
 

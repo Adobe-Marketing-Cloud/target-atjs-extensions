@@ -2,9 +2,11 @@
 cd "${0%/*}"
 git add . && git stash
 git checkout master
+git pull
 tmpdir=`mktemp -d`
 cp -r demos/* $tmpdir/
 git checkout gh-pages
+git pull
 cp -r $tmpdir/* .
 git add .
 git commit -m "Update Github Pages with latest demos"

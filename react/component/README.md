@@ -28,7 +28,7 @@ Key | Type | Mandatory | Description
 
 ## Notes
 
-Besides being passed as a parameter to `createMboxComponent`, options can also be specified as component attributes prefixed by `data-` in your React app's `render` function, for example: `<Mbox data-mbox="myMbox" data-params='{"param1": "val1", "param2": "val2"}' data-timeout="1"/>`
+Besides being passed as a parameter to `createMboxComponent`, options can also be specified as component attributes prefixed by `data-` in your React app's `render` function, for example: `<Mbox data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="1"/>`
 
 ## License
 

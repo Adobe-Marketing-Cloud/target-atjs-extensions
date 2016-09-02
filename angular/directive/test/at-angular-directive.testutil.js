@@ -24,7 +24,10 @@ var adobe = {
           timeout: 5000,
           pollingAfterDomReadyTimeout: 2000
         },
-        logger: console
+        logger: console,
+        dom: function (selector) {
+          return document.querySelectorAll(selector);
+        }
       };
 
       var args = [];

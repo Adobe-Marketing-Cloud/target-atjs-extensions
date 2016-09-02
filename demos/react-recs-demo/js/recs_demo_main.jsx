@@ -87,7 +87,7 @@ const SessionList = withRouter(React.createClass({
          </div>
          <hr/>
          <Mbox data-mbox="recsDemoLeftBar">
-           <img src={`/img/${this.props.recsSettings.clientCode}/left_default.jpg`}/>
+           <img src={`img/${this.props.recsSettings.clientCode}/left_default.jpg`}/>
          </Mbox>
        </div>
        <div className="col-md-9">
@@ -97,7 +97,7 @@ const SessionList = withRouter(React.createClass({
          <hr/>
          <div className="row">
            <Mbox data-mbox="recsDemoHero">
-             <img src={`/img/${this.props.recsSettings.clientCode}/list_default.jpeg`}/>
+             <img src={`img/${this.props.recsSettings.clientCode}/list_default.jpeg`}/>
            </Mbox>
          </div>
          <hr/>
@@ -119,7 +119,7 @@ const SessionCategory = React.createClass({
 
   fetchCategory(component) {
     if (component.state.currentCategory !== component.props.params.category) {
-      $.getJSON('/api/category', {category: component.props.params.category}, function (data) {
+      $.getJSON(`json/${component.props.params.category}${Math.floor(Math.random() * 3) + 1}`, function (data) {
         component.setState({
           currentCategory: component.props.params.category,
           products: data
@@ -196,7 +196,7 @@ const SessionProduct = React.createClass({
   componentDidMount() {
     console.log('SessionProduct mounted');
     const component = this;
-    $.getJSON('/api/product', {productId: component.props.params.productId}, function (data) {
+    $.getJSON(`json/${component.props.params.productId}`, function (data) {
       component.setState({
         product: data
       })
@@ -254,7 +254,7 @@ const App = React.createClass({
   componentDidMount() {
     console.log('App mounted');
     const component = this;
-    $.getJSON('/api/settings', function(data) {
+    $.getJSON('json/settings', function(data) {
       component.setState({recsSettings: data})
     });
   },

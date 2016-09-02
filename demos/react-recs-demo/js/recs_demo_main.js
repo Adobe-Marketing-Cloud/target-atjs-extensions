@@ -109,7 +109,7 @@ var SessionList = withRouter(React.createClass({
         React.createElement(
           Mbox,
           { "data-mbox": "recsDemoLeftBar" },
-          React.createElement("img", { src: "/img/" + this.props.recsSettings.clientCode + "/left_default.jpg" })
+          React.createElement("img", { src: "img/" + this.props.recsSettings.clientCode + "/left_default.jpg" })
         )
       ),
       React.createElement(
@@ -127,7 +127,7 @@ var SessionList = withRouter(React.createClass({
           React.createElement(
             Mbox,
             { "data-mbox": "recsDemoHero" },
-            React.createElement("img", { src: "/img/" + this.props.recsSettings.clientCode + "/list_default.jpeg" })
+            React.createElement("img", { src: "img/" + this.props.recsSettings.clientCode + "/list_default.jpeg" })
           )
         ),
         React.createElement("hr", null),
@@ -150,7 +150,7 @@ var SessionCategory = React.createClass({
   },
   fetchCategory: function fetchCategory(component) {
     if (component.state.currentCategory !== component.props.params.category) {
-      $.getJSON('/api/category', { category: component.props.params.category }, function (data) {
+      $.getJSON("json/" + component.props.params.category + (Math.floor(Math.random() * 3) + 1), function (data) {
         component.setState({
           currentCategory: component.props.params.category,
           products: data
@@ -254,7 +254,7 @@ var SessionProduct = React.createClass({
   componentDidMount: function componentDidMount() {
     console.log('SessionProduct mounted');
     var component = this;
-    $.getJSON('/api/product', { productId: component.props.params.productId }, function (data) {
+    $.getJSON("json/" + component.props.params.productId, function (data) {
       component.setState({
         product: data
       });
@@ -344,7 +344,7 @@ var App = React.createClass({
   componentDidMount: function componentDidMount() {
     console.log('App mounted');
     var component = this;
-    $.getJSON('/api/settings', function (data) {
+    $.getJSON('json/settings', function (data) {
       component.setState({ recsSettings: data });
     });
   },

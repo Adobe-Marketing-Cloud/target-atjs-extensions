@@ -51,17 +51,11 @@
       }]);
   }
 
-  at.registerExtension({
-    name: 'angular.initStates',
-    modules: [],
-    register: function () {
-      return function (app, opts) {
-        at.ext.angular.setupCommon(opts);
-        decorateRouteService();
-        var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addModuleDependencies(appModule, ['target.angular.common']);
-        initializeModule(appModule);
-      };
-    }
-  });
+  at.ext.angular.initStates = function (app, opts) {
+    at.ext.angular.setupCommon(opts);
+    decorateRouteService();
+    var appModule = (typeof app === 'string') ? angular.module(app) : app;
+    addModuleDependencies(appModule, ['target.angular.common']);
+    initializeModule(appModule);
+  };
 })(angular, adobe.target);

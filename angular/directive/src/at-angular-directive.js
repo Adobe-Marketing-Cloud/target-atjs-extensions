@@ -1,6 +1,6 @@
 
 /* global adobe, angular */
-(function (angular, at) {
+(function (document, angular, at) {
   'use strict';
 
   function addModuleDependencies(module, dependencies) {
@@ -41,10 +41,14 @@
       }]);
   }
 
-  function isMboxInjectionAllowed(routeService, dom, path, options, mboxId) {
+  function select(selector) {
+    return document.querySelectorAll(selector);
+  }
+
+  function isMboxInjectionAllowed(routeService, path, options, mboxId) {
     return routeService.isRouteAllowed(path) && // allowed route
-      !dom('#' + mboxId).length && // mbox does not exist
-      dom(options.selector).length > 0; // element to append to exists
+      !select('#' + mboxId).length && // mbox does not exist
+      select(options.selector).length > 0; // element to append to exists
   }
 
   function compileMbox($compile, element, scope, options, mboxId) {
@@ -59,7 +63,7 @@
     }
   }
 
-  function initializeModule(module, dom) {
+  function initializeModule(module) {
     module.run(['$rootScope', '$injector', '$location', '$compile',
       'routeService', 'options', 'logger',
       function ($rootScope, $injector, $location, $compile, routeService, options, logger) {
@@ -69,8 +73,8 @@
           logger.log('$viewContentLoaded ' + currentPath);
           // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
           var mboxId = options.mbox + '-dir';
-          if (isMboxInjectionAllowed(routeService, dom, currentPath, options, mboxId)) {
-            var el = angular.element(dom(options.selector));
+          if (isMboxInjectionAllowed(routeService, currentPath, options, mboxId)) {
+            var el = angular.element(select(options.selector));
             compileMbox($compile, el, el.scope(), options, mboxId);
             logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
           }
@@ -79,17 +83,11 @@
     ]);
   }
 
-  at.registerExtension({
-    name: 'angular.initDirective',
-    modules: ['dom'],
-    register: function (dom) {
-      return function (app, opts) {
-        at.ext.angular.setupCommon(opts);
-        var appModule = (typeof app === 'string') ? angular.module(app) : app;
-        addModuleDependencies(appModule, ['target.angular.common']);
-        addMboxDirective(appModule);
-        initializeModule(appModule, dom);
-      };
-    }
-  });
-})(angular, adobe.target);
+  at.ext.angular.initDirective = function (app, opts) {
+    at.ext.angular.setupCommon(opts);
+    var appModule = (typeof app === 'string') ? angular.module(app) : app;
+    addModuleDependencies(appModule, ['target.angular.common']);
+    addMboxDirective(appModule);
+    initializeModule(appModule);
+  };
+})(document, angular, adobe.target);

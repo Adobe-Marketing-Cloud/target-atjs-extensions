@@ -25,35 +25,35 @@
   'use strict';
   var nanoajax = require('nanoajax');
 
-  function makeVisible(elements) {
-    elements.forEach(function (el) {
-      el.style.visibility = 'visible';
-    });
+  function unhideElements(cssNode) {
+    if (cssNode) {
+      cssNode.parentNode.removeChild(cssNode);
+    }
   }
 
-  function onMutation(mutations, observer, getobjs, callback) {
+  function onMutation(mutations, cssNode, observer, getobjs, callback) {
     if (getobjs().length) {
       callback();
-      // TODO -  remove css style from head
+      unhideElements(cssNode);
       observer.disconnect();
     }
   }
 
-  function onReady(getobjs, callback, logger) {
+  function onReady(getobjs, callback, cssNode, logger) {
     var timeout = 30000;
     var observerConfig = {
       childList: true,
       subtree: true
     };
     var observer = new window.MutationObserver(function (mutations) {
-      return onMutation(mutations, observer, getobjs, callback);
+      return onMutation(mutations, cssNode, observer, getobjs, callback);
     });
 
     observer.observe(document.documentElement, observerConfig);
     window.setTimeout(function () {
       logger.error('Timed out');
       observer.disconnect();
-      makeVisible(getobjs());
+      unhideElements(cssNode);
     }, timeout);
   }
 
@@ -68,14 +68,14 @@
       } else {
         style.appendChild(document.createTextNode(css));
       }
-      head.insertBefore(style, head.firstChild);
+      return head.insertBefore(style, head.firstChild);
     }
   }
 
   function getOffer(path, selector, success, error, method, logger) {
     logger.log('getOffer');
     var prehide = selector + '{visibility:hidden}';
-    addCssToHead(prehide);
+    var cssNode = addCssToHead(prehide);
 
     nanoajax.ajax({url: path}, function (code, responseText) {
       if (code === 200 && responseText) {
@@ -100,10 +100,11 @@
               success();
             }
           },
+          cssNode,
           logger);
       } else {
         logger.error('Error loading content for ' + path + ', status: ' + code);
-        makeVisible(document.querySelectorAll(selector));
+        unhideElements(cssNode);
         if (typeof error === 'function') {
           logger.error('Error handler');
           error();

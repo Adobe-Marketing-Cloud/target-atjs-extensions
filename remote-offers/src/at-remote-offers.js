@@ -20,110 +20,114 @@
     ]
     );
  */
-(function(window, document, at){
+ /* global adobe */
+(function (window, document, at) {
   'use strict';
+  var nanoajax = require('nanoajax');
 
-  var onReady = function(getobjs,callback,error, logger){
-    var interval = 400, timeout = 30000;
-    var checker = setInterval(function () {
-      var objs = getobjs();
-      if(timeout <= 0) {
-        clearInterval(checker);
-        if(typeof error==='function') error();
-        return;
-      }
-      var isMissing=false;
-      for(var i=0; i<objs.length; i++)
-        if(!objs[i])
-          isMissing=true;
-      if(isMissing===false){
-        clearInterval(checker);
-        logger.log('el is ready');
-        if(typeof callback==='function') callback();
-        return;
-      }
-      timeout -= interval;
-    }, interval);
-  };
+  function makeVisible(elements) {
+    elements.forEach(function (el) {
+      el.style.visibility = 'visible';
+    });
+  }
 
-  var makeAjaxCall = function(url,callback,error) {
-      log('XHR to '+url);
-      var xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = function() {
-          if (xmlhttp.readyState == 4 ) {
-              if(xmlhttp.status == 200)
-                  callback(xmlhttp.responseText);
-              else error(xmlhttp.status);
-          }
-      }
-      xmlhttp.open("GET", url, true);
-      xmlhttp.send();
-  };
-  //injecting CSS to hide containers
-  var addCssToHead = function(css) {
-      var head = document.getElementsByTagName("head")[0];
-      if (head) {
-          var style = document.createElement("style");
-          style.setAttribute("type", "text/css");
-          if (style.styleSheet) {
-              style.styleSheet.cssText = css;
-          } else {
-              style.appendChild(document.createTextNode(css));
-          }
-          head.insertBefore(style, head.firstChild);
-      }
-  };
+  function onMutation(mutations, observer, getobjs, callback) {
+    if (getobjs().length) {
+      callback();
+      // TODO -  remove css style from head
+      observer.disconnect();
+    }
+  }
 
-  var getOffer = function(path, selector, success, error, method, logger) {
-      logger.log('getOffer');
-      var prehide = selector + '{visibility:hidden}';
-      addCssToHead(prehide);
-      makeAjaxCall(path, function(result){
-          logger.log('Call success, will applyOffer ' + path + ' to ' + selector);
-          onReady(function(){ return [document.querySelector(selector)] },
-                  function(){
-                      var element = document.querySelector(selector);
-                      if(typeof method === 'string' && method === 'replace'){
-                          var newNode = document.createElement('div');
-                          element.parentNode.replaceChild(newNode, element);
-                          element = newNode;
-                          logger.log('method:'+method);
-                      }
-                      at.applyOffer({
-                        'element': element,
-                        'offer': [{
-                          'type': 'html',
-                          'content': result
-                        }]
-                      });
-                      logger.log('Offer applied to '+selector);
-                      if(typeof success==='function'){ logger.log('Success handler'); success(); }
-                  },
-                  logger);
-      }, function(status){
-          logger.error("Error loading content for '" + path + "', status: '" + status);
-          var element = document.querySelector(selector);
-          if(element) element.style.visibility = 'visible';
-          if(typeof error==='function') { logger.error('Error handler'); error(); }
-      });
+  function onReady(getobjs, callback, logger) {
+    var timeout = 30000;
+    var observerConfig = {
+      childList: true,
+      subtree: true
+    };
+    var observer = new window.MutationObserver(function (mutations) {
+      return onMutation(mutations, observer, getobjs, callback);
+    });
 
-  };
+    observer.observe(document.documentElement, observerConfig);
+    window.setTimeout(function () {
+      logger.error('Timed out');
+      observer.disconnect();
+      makeVisible(getobjs());
+    }, timeout);
+  }
+
+  // injecting CSS to hide containers
+  function addCssToHead(css) {
+    var head = document.getElementsByTagName('head')[0];
+    if (head) {
+      var style = document.createElement('style');
+      style.setAttribute('type', 'text/css');
+      if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+      head.insertBefore(style, head.firstChild);
+    }
+  }
+
+  function getOffer(path, selector, success, error, method, logger) {
+    logger.log('getOffer');
+    var prehide = selector + '{visibility:hidden}';
+    addCssToHead(prehide);
+
+    nanoajax.ajax({url: path}, function (code, responseText) {
+      if (code === 200 && responseText) {
+        onReady(
+          function () {
+            return document.querySelectorAll(selector);
+          },
+          function () {
+            at.applyOffer({
+              offer: [{
+                type: 'actions',
+                content: [{
+                  selector: selector,
+                  content: responseText,
+                  action: (method ? method : 'append') + 'Content'
+                }]
+              }]
+            });
+            logger.log('Offer applied to ' + selector);
+            if (typeof success === 'function') {
+              logger.log('Success handler');
+              success();
+            }
+          },
+          logger);
+      } else {
+        logger.error('Error loading content for ' + path + ', status: ' + code);
+        makeVisible(document.querySelectorAll(selector));
+        if (typeof error === 'function') {
+          logger.error('Error handler');
+          error();
+        }
+      }
+    });
+  }
 
   function fetchOffers(data, logger) {
-    data.filter(function (el) {
+    data
+      .filter(function (el) {
         if (!el.url || !el.selector) {
           logger.error('Missing URL or selector');
           return false;
         }
         return true;
       })
-      .forEach(function(el) {
+      .forEach(function (el) {
         getOffer(el.url, el.selector, el.success, el.error, el.method, logger);
       });
   }
 
   adobe.target.registerExtension({
-    name:'remoteoffers',
+    name: 'remoteoffers',
     modules: ['logger'],
     register: function (logger) {
       return function (data) {

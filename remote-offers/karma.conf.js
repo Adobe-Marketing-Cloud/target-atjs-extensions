@@ -22,13 +22,13 @@ module.exports = function (config) {
     ],
 
     preprocessors: {
-      'src/**/*.js': ['coverage']
+      'src/**/*.packed.js': ['coverage']
     },
 
     // list of files / patterns to load in the browser
     files: [
       'test/**/*.testutil.js',
-      'src/**/*.js',
+      'src/**/*.packed.js',
       'test/**/*.spec.js'
     ],
 

@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "description": "",
   "homepage": "",
-  "dependencies": {},
+  "dependencies": {
+    "nanoajax": "^0.4.3"
+  },
   "eslintConfig": {
     "extends": "xo-space",
     "fix": true,
@@ -45,6 +47,8 @@
     "karma-jasmine-textio-html-reporter": "^1.0.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-spec-reporter": "0.0.26",
-    "phantomjs-prebuilt": "^2.1.12"
+    "phantomjs-prebuilt": "^2.1.12",
+    "raw-loader": "^0.5.1",
+    "webpack-stream": "^3.2.0"
   }
 }

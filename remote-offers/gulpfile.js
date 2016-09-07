@@ -10,11 +10,12 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var webpack = require('webpack-stream');
 var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
-  return gulp.src('src/*.js')
+  return gulp.src('src/at-remote-offers.js')
     .pipe(excludeGitignore())
     .pipe(eslint())
     .pipe(eslint.format())
@@ -28,6 +29,21 @@ gulp.task('lint:test', () => {
     .pipe(eslint.format())
     .pipe(eslintIfFixed('test'))
     .pipe(eslint.failAfterError());
+});
+
+gulp.task('pack', () => {
+  return gulp.src([
+    'src/WeakMap.js',
+    'src/MutationObserver.js',
+    'src/at-remote-offers.js'
+    ])
+    .pipe(plumber())
+    .pipe(webpack({
+      output: {
+        filename: 'at-remote-offers.packed.js'
+      }
+    }))
+    .pipe(gulp.dest('src/'));
 });
 
 gulp.task('test:run', done => {
@@ -52,7 +68,7 @@ gulp.task('clean', () => {
 gulp.task('build:dist', () => {
   return gulp.src([
       'src/header.js',
-      'src/at-remote-offers.js'
+      'src/at-remote-offers.packed.js'
     ])
     .pipe(plumber())
     .pipe(concat('at-remote-offers-' + version + '.js'))
@@ -67,13 +83,13 @@ gulp.task('build:dist', () => {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*.js', ['lint:src', 'test:run']);
+  gulp.watch('src/**/*.js', ['lint:src', 'pack', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
 });
 
 gulp.task('lint', ['lint:src', 'lint:test']);
 
-gulp.task('test', gulpSequence('lint', 'test:run'));
+gulp.task('test', gulpSequence('lint', 'pack', 'test:run'));
 
 gulp.task('build', gulpSequence('clean', 'default', 'build:dist'));
 

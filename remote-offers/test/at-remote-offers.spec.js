@@ -8,7 +8,7 @@ describe('remote-offers', function () {
 
     document.body.insertAdjacentHTML('afterbegin', fixture);
 
-    adobe.target.ext.remoteoffers([{
+    adobe.target.ext.getRemoteOffers([{
       url: '/base/test/promo1.html',
       selector: '#one',
       success: function () {

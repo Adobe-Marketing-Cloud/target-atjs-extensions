@@ -884,10 +884,10 @@
 	  var nanoajax = __webpack_require__(4);
 	  var logger;
 	  var offers;
-	  var observerRunning = false;
+	  var observing = false;
 
 	  function unhideElements(hideCss) {
-	    if (hideCss) {
+	    if (hideCss && hideCss.parentNode) {
 	      hideCss.parentNode.removeChild(hideCss);
 	    }
 	  }
@@ -925,6 +925,8 @@
 	  }
 
 	  function setupObserver() {
+	    observing = true;
+
 	    var timeout = 30000;
 	    var observerConfig = {
 	      childList: true,
@@ -934,13 +936,13 @@
 
 	    observer.observe(document.documentElement, observerConfig);
 	    window.setTimeout(function () {
-	      logger.error('Timed out');
+	      logger.log('Observer timed out');
 	      observer.disconnect();
 	      offers.forEach(function (offer) {
 	        unhideElements(offer.hideCss);
 	      });
+	      observing = false;
 	    }, timeout);
-	    observerRunning = true;
 	  }
 
 	  // injecting CSS to hide containers
@@ -968,7 +970,7 @@
 	          offer.responseText = responseText;
 	          if (document.querySelectorAll(offer.selector).length) {
 	            applyOffer(offer);
-	          } else if (!observerRunning) {
+	          } else if (!observing) {
 	            setupObserver();
 	          }
 	        } else {
@@ -999,7 +1001,7 @@
 	  }
 
 	  adobe.target.registerExtension({
-	    name: 'remoteoffers',
+	    name: 'getRemoteOffers',
 	    modules: ['logger'],
 	    register: function (pLogger) {
 	      return function (data) {

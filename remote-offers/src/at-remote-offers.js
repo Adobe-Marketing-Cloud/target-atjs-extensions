@@ -68,7 +68,7 @@
 
   function setupObserver() {
     observing = true;
-    
+
     var timeout = 30000;
     var observerConfig = {
       childList: true,
@@ -143,7 +143,7 @@
   }
 
   adobe.target.registerExtension({
-    name: 'remoteoffers',
+    name: 'getRemoteOffers',
     modules: ['logger'],
     register: function (pLogger) {
       return function (data) {

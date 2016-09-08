@@ -1,25 +1,3 @@
-/*!
- * adobe.target.ext.remoteoffers.js v0.3.0
- *
- * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
- *
- * Example:
-    adobe.target.ext.remoteoffers(
-    [
-        {
-            'url': '/promotion1.html',          //remote offer url (required, must be same domain)
-            'selector': '.menu a',              //CSS selector of element to deliver offer to
-            'success': function(){},      //successful callback
-            'error':   function(){},      //error handler
-            'method': 'replace'                 //method to handle offer injection into DOM: 'append' (default) or 'replace'
-        },
-        {
-            'url': '/promotion2.html',
-            'selector': '#banner'
-        }
-    ]
-    );
- */
  /* global adobe */
 (function (window, document, at) {
   'use strict';

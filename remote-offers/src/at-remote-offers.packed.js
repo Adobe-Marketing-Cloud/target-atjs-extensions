@@ -867,114 +867,130 @@
 	(function (window, document, at) {
 	  'use strict';
 	  var nanoajax = __webpack_require__(4);
+	  var logger;
+	  var offers;
+	  var observerRunning = false;
 
-	  function makeVisible(elements) {
-	    elements.forEach(function (el) {
-	      el.style.visibility = 'visible';
-	    });
-	  }
-
-	  function onMutation(mutations, observer, getobjs, callback) {
-	    if (getobjs().length) {
-	      callback();
-	      // TODO -  remove css style from head
-	      observer.disconnect();
+	  function unhideElements(hideCss) {
+	    if (hideCss) {
+	      hideCss.parentNode.removeChild(hideCss);
 	    }
 	  }
 
-	  function onReady(getobjs, callback, logger) {
+	  function applyOffer(offer) {
+	    at.applyOffer({
+	      offer: [{
+	        type: 'actions',
+	        content: [{
+	          selector: offer.selector,
+	          content: offer.responseText,
+	          action: (offer.method ? offer.method : 'append') + 'Content'
+	        }]
+	      }]
+	    });
+	    if (typeof offer.success === 'function') {
+	      logger.log('Success handler');
+	      offer.success();
+	    }
+	    unhideElements(offer.hideCss);
+	    offer.applied = true;
+	    logger.log('Offer applied to ' + offer.selector);
+	  }
+
+	  function onMutation(mutations) {
+	    offers
+	      .filter(function (offer) {
+	        return offer.fetched && !offer.applied;
+	      })
+	      .forEach(function (offer) {
+	        if (document.querySelectorAll(offer.selector).length) {
+	          applyOffer(offer);
+	        }
+	      });
+	  }
+
+	  function setupObserver() {
 	    var timeout = 30000;
 	    var observerConfig = {
 	      childList: true,
 	      subtree: true
 	    };
-	    var observer = new window.MutationObserver(function (mutations) {
-	      return onMutation(mutations, observer, getobjs, callback);
-	    });
+	    var observer = new window.MutationObserver(onMutation);
 
 	    observer.observe(document.documentElement, observerConfig);
 	    window.setTimeout(function () {
 	      logger.error('Timed out');
 	      observer.disconnect();
-	      makeVisible(getobjs());
+	      offers.forEach(function (offer) {
+	        unhideElements(offer.hideCss);
+	      });
 	    }, timeout);
+	    observerRunning = true;
 	  }
 
 	  // injecting CSS to hide containers
-	  function addCssToHead(css) {
+	  function addHideCssToHead(selector) {
+	    var hideCss = selector + '{visibility:hidden}';
 	    var head = document.getElementsByTagName('head')[0];
+
 	    if (head) {
 	      var style = document.createElement('style');
 	      style.setAttribute('type', 'text/css');
 	      if (style.styleSheet) {
-	        style.styleSheet.cssText = css;
+	        style.styleSheet.cssText = hideCss;
 	      } else {
-	        style.appendChild(document.createTextNode(css));
+	        style.appendChild(document.createTextNode(hideCss));
 	      }
-	      head.insertBefore(style, head.firstChild);
+	      return head.insertBefore(style, head.firstChild);
 	    }
 	  }
 
-	  function getOffer(path, selector, success, error, method, logger) {
-	    logger.log('getOffer');
-	    var prehide = selector + '{visibility:hidden}';
-	    addCssToHead(prehide);
-
-	    nanoajax.ajax({url: path}, function (code, responseText) {
-	      if (code === 200 && responseText) {
-	        onReady(
-	          function () {
-	            return document.querySelectorAll(selector);
-	          },
-	          function () {
-	            at.applyOffer({
-	              offer: [{
-	                type: 'actions',
-	                content: [{
-	                  selector: selector,
-	                  content: responseText,
-	                  action: (method ? method : 'append') + 'Content'
-	                }]
-	              }]
-	            });
-	            logger.log('Offer applied to ' + selector);
-	            if (typeof success === 'function') {
-	              logger.log('Success handler');
-	              success();
-	            }
-	          },
-	          logger);
-	      } else {
-	        logger.error('Error loading content for ' + path + ', status: ' + code);
-	        makeVisible(document.querySelectorAll(selector));
-	        if (typeof error === 'function') {
-	          logger.error('Error handler');
-	          error();
+	  function fetchOffer(offer) {
+	    nanoajax.ajax({url: offer.url},
+	      function (code, responseText) {
+	        if (code === 200 && responseText) {
+	          offer.fetched = true;
+	          offer.responseText = responseText;
+	          if (document.querySelectorAll(offer.selector).length) {
+	            applyOffer(offer);
+	          } else if (!observerRunning) {
+	            setupObserver();
+	          }
+	        } else {
+	          logger.error('Error loading content for ' + offer.url + ', status: ' + code);
+	          unhideElements(offer.hideCss);
+	          if (typeof offer.error === 'function') {
+	            logger.error('Error handler');
+	            offer.error();
+	          }
 	        }
-	      }
-	    });
+	      });
 	  }
 
-	  function fetchOffers(data, logger) {
-	    data
-	      .filter(function (el) {
-	        if (!el.url || !el.selector) {
+	  function fetchOffers() {
+	    offers
+	      .filter(function (offer) {
+	        if (!offer.url || !offer.selector) {
 	          logger.error('Missing URL or selector');
 	          return false;
 	        }
 	        return true;
 	      })
-	      .forEach(function (el) {
-	        getOffer(el.url, el.selector, el.success, el.error, el.method, logger);
+	      .forEach(function (offer) {
+	        offer.hideCss = addHideCssToHead(offer.selector);
+	        offer.fetched = false;
+	        fetchOffer(offer);
 	      });
 	  }
 
 	  adobe.target.registerExtension({
 	    name: 'remoteoffers',
 	    modules: ['logger'],
-	    register: function (logger) {
+	    register: function (pLogger) {
 	      return function (data) {
-	        fetchOffers(data, logger);
+	        logger = pLogger;
+	        offers = data;
+	        fetchOffers();
 	      };
 	    }
 	  });

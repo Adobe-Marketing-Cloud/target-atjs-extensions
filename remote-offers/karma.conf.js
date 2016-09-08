@@ -27,7 +27,8 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/**/*.testutil.js',
+      {pattern: 'test/*.html', include: false},
+      '../demos/at-js/mangoapp.at.0.9.2.min.js',
       'src/**/*.packed.js',
       'test/**/*.spec.js'
     ],

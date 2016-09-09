@@ -856,28 +856,6 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/*!
-	 * adobe.target.ext.remoteoffers.js v0.3.0
-	 *
-	 * Copyright 1996-2016. Adobe Systems Incorporated. All rights reserved.
-	 *
-	 * Example:
-	    adobe.target.ext.remoteoffers(
-	    [
-	        {
-	            'url': '/promotion1.html',          //remote offer url (required, must be same domain)
-	            'selector': '.menu a',              //CSS selector of element to deliver offer to
-	            'success': function(){},      //successful callback
-	            'error':   function(){},      //error handler
-	            'method': 'replace'                 //method to handle offer injection into DOM: 'append' (default) or 'replace'
-	        },
-	        {
-	            'url': '/promotion2.html',
-	            'selector': '#banner'
-	        }
-	    ]
-	    );
-	 */
 	 /* global adobe */
 	(function (window, document, at) {
 	  'use strict';
@@ -892,6 +870,13 @@
 	    }
 	  }
 
+	  function execHandler(name, handler) {
+	    if (typeof handler === 'function') {
+	      logger.log(name, 'handler');
+	      handler();
+	    }
+	  }
+
 	  function applyOffer(offer) {
 	    at.applyOffer({
 	      offer: [{
@@ -903,13 +888,10 @@
 	        }]
 	      }]
 	    });
-	    if (typeof offer.success === 'function') {
-	      logger.log('Success handler');
-	      offer.success();
-	    }
+	    execHandler('Success', offer.success);
 	    unhideElements(offer.hideCss);
 	    offer.applied = true;
-	    logger.log('Offer applied to ' + offer.selector);
+	    logger.log('Offer applied to ', offer.selector);
 	  }
 
 	  function onMutation(mutations) {
@@ -974,12 +956,9 @@
 	            setupObserver();
 	          }
 	        } else {
-	          logger.error('Error loading content for ' + offer.url + ', status: ' + code);
+	          logger.error('Error loading content for', offer.url, ', status:', code);
 	          unhideElements(offer.hideCss);
-	          if (typeof offer.error === 'function') {
-	            logger.error('Error handler');
-	            offer.error();
-	          }
+	          execHandler('Error', offer.error);
 	        }
 	      });
 	  }

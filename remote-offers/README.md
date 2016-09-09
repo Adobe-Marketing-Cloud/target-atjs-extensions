@@ -47,7 +47,7 @@ adobe.target.ext.getRemoteOffers([
 		method: 'replace'
 	},
 	{
-		url: '/base/test/promo2.html',
+		url: '/promo2.html',
 		selector: '.two p'
 	}
 ]);

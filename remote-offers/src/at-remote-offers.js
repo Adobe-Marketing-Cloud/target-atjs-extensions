@@ -12,6 +12,13 @@
     }
   }
 
+  function execHandler(name, handler) {
+    if (typeof handler === 'function') {
+      logger.log(name, 'handler');
+      handler();
+    }
+  }
+
   function applyOffer(offer) {
     at.applyOffer({
       offer: [{
@@ -23,13 +30,10 @@
         }]
       }]
     });
-    if (typeof offer.success === 'function') {
-      logger.log('Success handler');
-      offer.success();
-    }
+    execHandler('Success', offer.success);
     unhideElements(offer.hideCss);
     offer.applied = true;
-    logger.log('Offer applied to ' + offer.selector);
+    logger.log('Offer applied to ', offer.selector);
   }
 
   function onMutation(mutations) {
@@ -94,12 +98,9 @@
             setupObserver();
           }
         } else {
-          logger.error('Error loading content for ' + offer.url + ', status: ' + code);
+          logger.error('Error loading content for', offer.url, ', status:', code);
           unhideElements(offer.hideCss);
-          if (typeof offer.error === 'function') {
-            logger.error('Error handler');
-            offer.error();
-          }
+          execHandler('Error', offer.error);
         }
       });
   }

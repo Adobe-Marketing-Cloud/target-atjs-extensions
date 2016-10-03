@@ -13,7 +13,9 @@
       "phantomjs": true
     },
     "rules": {
-      "no-unused-vars": "warn"
+      "no-unused-vars": "warn",
+      "no-extend-native": "warn",
+      "no-self-compare": "warn"
     },
     "ecmaFeatures": {
       "jsx": true

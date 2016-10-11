@@ -4847,17 +4847,34 @@
 
   /* eslint-enable */
 
-  adobe.target.registerExtension({
+  at.registerExtension({
     name: 'getSecureOffer',
     modules: ['logger'],
     register: function (logger) {
-      return function (name) {
-        var message = 'Hello, ' + name + '!';
-        logger.log(message);
-        return message;
+      return function (opts, sanitizerOpts) {
+        sanitizerOpts = sanitizerOpts || {};
+        at.getOffer({
+          mbox: opts.mbox,
+          params: opts.params,
+          timeout: opts.timeout,
+          success: function (response) {
+            switch (response.type) {
+              case 'html':
+                response.content = html_sanitize(response.content, sanitizerOpts.urlTransformer, sanitizerOpts.nameIdClassTransformer);
+                opts.success(response);
+                break;
+              case 'redirect':
+                break;
+              case 'actions':
+                break;
+              case 'default':
+                break;
+            }
+          },
+          error: opts.error
+        });
       };
     }
   });
 
-  adobe.target.ext.myGreetingExtension('Geronimo');
 })(window, adobe.target);

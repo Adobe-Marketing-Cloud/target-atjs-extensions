@@ -4858,23 +4858,26 @@
           params: opts.params,
           timeout: opts.timeout,
           success: function (response) {
+            if (response.plugins && response.plugins.length) {
+              response.plugins = undefined;
+            }
             switch (response.type) {
               case 'html':
+                logger.log('Sanitizing HTML offer');
                 response.content = html_sanitize(response.content, sanitizerOpts.urlTransformer, sanitizerOpts.nameIdClassTransformer);
-                opts.success(response);
                 break;
               case 'redirect':
                 break;
               case 'actions':
                 break;
-              case 'default':
+              default:
                 break;
             }
+            opts.success(response);
           },
           error: opts.error
         });
       };
     }
   });
-
 })(window, adobe.target);

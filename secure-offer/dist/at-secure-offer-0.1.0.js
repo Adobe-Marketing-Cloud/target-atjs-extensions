@@ -3826,7 +3826,7 @@
     // TODO(kpreid): This retrieval is a kludge and leads to silent loss of
     // functionality if the document isn't available.
     var entityLookupElement =
-      ('undefined' !== typeof window && window['document'])
+      (window && window['document'])
         ? window['document'].createElement('textarea') : null;
 
     /**
@@ -4863,17 +4863,37 @@
 
   /* eslint-enable */
 
-  adobe.target.registerExtension({
-    name: 'myGreetingExtension',
+  at.registerExtension({
+    name: 'getSecureOffer',
     modules: ['logger'],
     register: function (logger) {
-      return function (name) {
-        var message = 'Hello, ' + name + '!';
-        logger.log(message);
-        return message;
+      return function (opts, sanitizerOpts) {
+        sanitizerOpts = sanitizerOpts || {};
+        at.getOffer({
+          mbox: opts.mbox,
+          params: opts.params,
+          timeout: opts.timeout,
+          success: function (response) {
+            if (response.plugins && response.plugins.length) {
+              response.plugins = undefined;
+            }
+            switch (response.type) {
+              case 'html':
+                logger.log('Sanitizing HTML offer');
+                response.content = html_sanitize(response.content, sanitizerOpts.urlTransformer, sanitizerOpts.nameIdClassTransformer);
+                break;
+              case 'redirect':
+                break;
+              case 'actions':
+                break;
+              default:
+                break;
+            }
+            opts.success(response);
+          },
+          error: opts.error
+        });
       };
     }
   });
-
-  adobe.target.ext.myGreetingExtension('Geronimo');
 })(window, adobe.target);

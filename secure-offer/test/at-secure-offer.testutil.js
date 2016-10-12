@@ -10,7 +10,7 @@ function buildNamespace(base, name, value) {
   base[parts[parts.length - 1]] = value;
 }
 
-var testOfferContent = '<p>Sample Offer</p>';
+var testOffer;
 
 var adobe = {
   target: {
@@ -37,21 +37,7 @@ var adobe = {
       buildNamespace(adobe.target.ext, params.name, params.register.apply(null, args));
     },
     getOffer: function (opts) {
-      var offer;
-      switch (opts.mbox) {
-        case 'htmlTest' :
-          offer = '{\
-            "type": "html",\
-            "content": "' + testOfferContent + '"\
-          }';
-          break;
-        default:
-          offer = '{\
-            "type": "html",\
-            "content": "' + testOfferContent + '"\
-          }';
-      }
-      opts.success(JSON.parse(offer));
+      opts.success(JSON.parse(testOffer));
     },
     applyOffer: function (opts) {
     }

@@ -4868,9 +4868,14 @@
                 logger.log('Sanitizing HTML offer');
                 response.content = html_sanitize(response.content, allowAllUrls);
                 break;
-              case 'redirect':
-                break;
               case 'actions':
+                logger.log('Sanitizing action offers');
+                response.content
+                  .forEach(function (action) {
+                    if (action.content) {
+                      action.content = html_sanitize(action.content, allowAllUrls);
+                    }
+                  });
                 break;
               default:
                 break;

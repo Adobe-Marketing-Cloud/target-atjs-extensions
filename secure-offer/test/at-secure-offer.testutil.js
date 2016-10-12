@@ -1,10 +1,31 @@
 'use strict';
 
+function buildNamespace(base, name, value) {
+  var parts = name.split('.');
+  for (var i = 0; i < parts.length - 1; i++) {
+    var part = parts[i];
+    base[part] = base[part] || {};
+    base = base[part];
+  }
+  base[parts[parts.length - 1]] = value;
+}
+
+var testOfferContent = '<p>Sample Offer</p>';
+
 var adobe = {
   target: {
     ext: {},
     registerExtension: function (params) {
       var exposedModules = {
+        settings: {
+          defaultContentHiddenStyle: 'visibility:hidden;',
+          defaultContentVisibleStyle: 'visibility:visible;',
+          bodyHiddenStyle: 'body{display:none}',
+          bodyHidingEnabled: true,
+          globalMboxAutoCreate: false,
+          timeout: 5000,
+          pollingAfterDomReadyTimeout: 2000
+        },
         logger: console
       };
 
@@ -13,7 +34,26 @@ var adobe = {
         args.push(exposedModules[elem]);
       });
 
-      adobe.target.ext[params.name] = params.register.apply(null, args);
+      buildNamespace(adobe.target.ext, params.name, params.register.apply(null, args));
+    },
+    getOffer: function (opts) {
+      var offer;
+      switch (opts.mbox) {
+        case 'htmlTest' :
+          offer = '{\
+            "type": "html",\
+            "content": "' + testOfferContent + '"\
+          }';
+          break;
+        default:
+          offer = '{\
+            "type": "html",\
+            "content": "' + testOfferContent + '"\
+          }';
+      }
+      opts.success(JSON.parse(offer));
+    },
+    applyOffer: function (opts) {
     }
   }
 };

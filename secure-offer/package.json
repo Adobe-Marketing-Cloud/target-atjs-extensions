@@ -13,7 +13,10 @@
       "phantomjs": true
     },
     "rules": {
-      "no-unused-vars": "warn"
+      "no-unused-vars": "warn",
+      "no-multi-str": "off",
+      "no-useless-escape": "off",
+      "no-global-assign": "off"
     }
   },
   "repository": "/at-secure-offer",

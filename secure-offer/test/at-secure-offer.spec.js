@@ -10,7 +10,7 @@ describe('greeter', function () {
   var sanitizedHtml = '<b style="color: red">hello</b><div id="1">1</div><div id="2">2</div><img src="http://adobe.com/1.png"><a></a>';
 
   it('should sanitize HTML offers', function () {
-    testOffer = '{"type":"html","content":"' + maliciousHtml + '"}';
+    testOffer = '[{"type":"html","content":"' + maliciousHtml + '"}]';
 
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
@@ -18,15 +18,15 @@ describe('greeter', function () {
         offer = response;
       }
     });
-    expect(offer.content).toEqual(sanitizedHtml);
+    expect(offer[0].content).toEqual(sanitizedHtml);
   });
 
   it('should sanitize Action offers', function () {
-    testOffer = '{"type":"actions","content":[{"selector":"#aaa","cssSelector":"#aaa","content":"' +
+    testOffer = '[{"type":"actions","content":[{"selector":"#aaa","cssSelector":"#aaa","content":"' +
     maliciousHtml + '","action":"setContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
     maliciousHtml + '","action":"prependContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
     maliciousHtml + '","action":"appendContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
-    maliciousHtml + '","action":"replaceContent"}]}';
+    maliciousHtml + '","action":"replaceContent"}]}]';
 
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
@@ -34,7 +34,7 @@ describe('greeter', function () {
         offer = response;
       }
     });
-    offer.content
+    offer[0].content
       .forEach(function (action) {
         expect(action.content).toEqual(sanitizedHtml);
       });

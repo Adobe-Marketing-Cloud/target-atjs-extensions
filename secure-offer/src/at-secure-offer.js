@@ -4860,26 +4860,28 @@
           params: opts.params,
           timeout: opts.timeout,
           success: function (response) {
-            if (response.plugins && response.plugins.length) {
-              response.plugins = undefined;
-            }
-            switch (response.type) {
-              case 'html':
-                logger.log('Sanitizing HTML offer');
-                response.content = html_sanitize(response.content, allowAllUrls);
-                break;
-              case 'actions':
-                logger.log('Sanitizing action offers');
-                response.content
-                  .forEach(function (action) {
-                    if (action.content) {
-                      action.content = html_sanitize(action.content, allowAllUrls);
-                    }
-                  });
-                break;
-              default:
-                break;
-            }
+            response.forEach(function (offer) {
+              if (offer.plugins && offer.plugins.length) {
+                offer.plugins = undefined;
+              }
+              switch (offer.type) {
+                case 'html':
+                  logger.log('Sanitizing HTML offer');
+                  offer.content = html_sanitize(offer.content, allowAllUrls);
+                  break;
+                case 'actions':
+                  logger.log('Sanitizing action offers');
+                  offer.content
+                    .forEach(function (action) {
+                      if (action.content) {
+                        action.content = html_sanitize(action.content, allowAllUrls);
+                      }
+                    });
+                  break;
+                default:
+                  break;
+              }
+            });
             opts.success(response);
           },
           error: opts.error

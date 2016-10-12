@@ -4851,8 +4851,10 @@
     name: 'getSecureOffer',
     modules: ['logger'],
     register: function (logger) {
-      return function (opts, sanitizerOpts) {
-        sanitizerOpts = sanitizerOpts || {};
+      return function (opts) {
+        var allowAllUrls = function (url) {
+          return url;
+        };
         at.getOffer({
           mbox: opts.mbox,
           params: opts.params,
@@ -4864,7 +4866,7 @@
             switch (response.type) {
               case 'html':
                 logger.log('Sanitizing HTML offer');
-                response.content = html_sanitize(response.content, sanitizerOpts.urlTransformer, sanitizerOpts.nameIdClassTransformer);
+                response.content = html_sanitize(response.content, allowAllUrls);
                 break;
               case 'redirect':
                 break;

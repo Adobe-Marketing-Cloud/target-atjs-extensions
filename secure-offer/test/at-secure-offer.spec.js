@@ -10,10 +10,6 @@ describe('greeter', function () {
         offer = response;
         console.log('Content: ', response);
       }
-    }, {
-      urlTransformer: function (url) {
-        return url;
-      }
     });
     expect(offer.content).toEqual('<b style="color: red">hello</b><img src="http://asdf"><a></a>');
   });

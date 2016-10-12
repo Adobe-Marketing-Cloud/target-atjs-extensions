@@ -1,7 +1,7 @@
 /* global adobe testOffer */
 
 describe('greeter', function () {
-  var offer;
+  var offers;
   var maliciousHtml = '<b style=\\"color: red;\\" onclick=\\"alert(1)\\">hello</b>\
 <div id=\\"1\\" style=\\"width: expression(alert(2));\\">1</div>\
 <div id=\\"2\\" style=\\"background-image: url(javascript:alert(3))\\">2</div>\
@@ -15,10 +15,10 @@ describe('greeter', function () {
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
       success: function (response) {
-        offer = response;
+        offers = response;
       }
     });
-    expect(offer[0].content).toEqual(sanitizedHtml);
+    expect(offers[0].content).toEqual(sanitizedHtml);
   });
 
   it('should sanitize Action offers', function () {
@@ -31,13 +31,28 @@ describe('greeter', function () {
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
       success: function (response) {
-        offer = response;
+        offers = response;
       }
     });
-    offer[0].content
+    offers[0].content
       .forEach(function (action) {
         expect(action.content).toEqual(sanitizedHtml);
       });
   });
-});
 
+  it('should sanitize multiple offers', function () {
+    testOffer = '[{"type":"html","content":"' +
+    maliciousHtml + '"},{"type":"html","content":"' + maliciousHtml + '"}]';
+
+    adobe.target.ext.getSecureOffer({
+      mbox: 'multiHtmlTest',
+      success: function (response) {
+        offers = response;
+      }
+    });
+    offers
+      .forEach(function (offer) {
+        expect(offer.content).toEqual(sanitizedHtml);
+      });
+  });
+});

@@ -17,16 +17,20 @@
         return {
           restrict: 'AE',
           link: {
-            pre: function preLink(scope, element, attributes, controller) {
+            pre: function preLink(scope, element) {
               element.addClass('mboxDefault');
             },
-            post: function postLink(scope, element, attributes, controller) {
+            post: function postLink(scope, element, attributes) {
+              var elem;
+              if (!options.selector) {
+                elem = element[0];
+              }
               offerService.getOfferPromise({
                 mbox: attributes.mboxname,
                 params: options.params,
                 timeout: options.timeout,
                 selector: options.selector,
-                element: element[0]
+                element: elem
               })
               .then(offerService.applyOfferPromise)
               .catch(function (reason) {

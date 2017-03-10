@@ -28,6 +28,7 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/react/dist/react-with-addons.js',
+      'node_modules/react-dom/dist/react-dom.js',
       'test/**/*.testutil.js',
       'src/**/*.js',
       'test/**/*.spec.js'

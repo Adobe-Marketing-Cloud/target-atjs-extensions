@@ -46,7 +46,9 @@ function isEqual(a, b) {
 }
 
 function appendMboxClass(className) {
-  return (className ? className + ' ' : '') + 'mboxDefault';
+  if (className.indexOf('mboxDefault') === -1) {
+    return (className ? className + ' ' : '') + 'mboxDefault';
+  }
 }
 
 function removeMboxClass(className) {

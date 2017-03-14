@@ -33,21 +33,21 @@ import _ from 'lodash';
   }
 
   function atOptsHaveChanged(component, mbox, timeout, params) {
-    return !_.isEqual(component.state.atParams, params) ||
-      (mbox && component.state.mbox !== mbox) ||
-      (timeout && component.state.timeout !== timeout);
+    return !_.isEqual(component.mboxState.atParams, params) ||
+      (mbox && component.mboxState.mbox !== mbox) ||
+      (timeout && component.mboxState.timeout !== timeout);
   }
 
   function getOffers(component, logger) {
     logger.log('getOffers');
     at.getOffer({
-      mbox: component.state.mbox,
-      params: component.state.atParams,
-      timeout: component.state.timeout,
+      mbox: component.mboxState.mbox,
+      params: component.mboxState.atParams,
+      timeout: component.mboxState.timeout,
       success: function (response) {
         logger.log('Applying');
         adobe.target.applyOffer({
-          mbox: component.state.mbox,
+          mbox: component.mboxState.mbox,
           offer: response,
           element: component.mboxDiv
         });
@@ -58,13 +58,6 @@ import _ from 'lodash';
         component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       }
     });
-  }
-
-  function getInitialState(opts) {
-    opts = opts || {};
-    return {
-      atParams: opts.params || null
-    };
   }
 
   function getDefaultProps(opts, settings) {
@@ -88,11 +81,11 @@ import _ from 'lodash';
 
   function onComponentMounted(component, logger) {
     logger.log('MboxComponentDidMount');
-    component.setState({
+    component.mboxState = {
       atParams: getParams(component.props),
       mbox: component.props['data-mbox'],
       timeout: parseInt(component.props['data-timeout'], 10)
-    });
+    };
     getOffers(component, logger);
   }
 
@@ -101,11 +94,11 @@ import _ from 'lodash';
     let newTimeout = parseInt(newProps['data-timeout'], 10);
     let newParams = getParams(newProps);
     if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-      component.setState({
-        atParams: newParams || component.state.atParams,
-        mbox: newMbox || component.state.mbox,
-        timeout: newTimeout || component.state.timeout
-      });
+      component.mboxState = {
+        atParams: newParams || component.mboxState.atParams,
+        mbox: newMbox || component.mboxState.mbox,
+        timeout: newTimeout || component.mboxState.timeout
+      };
       getOffers(component, logger);
     }
   }
@@ -117,7 +110,7 @@ import _ from 'lodash';
       return function (opts) {
         return React.createClass({
           getInitialState: function () {
-            return getInitialState(opts);
+            return null;
           },
 
           getDefaultProps: function () {

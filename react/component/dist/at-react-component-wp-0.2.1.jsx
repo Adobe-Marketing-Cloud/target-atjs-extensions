@@ -64,6 +64,7 @@ function appendMboxClass(className) {
   if (className.indexOf('mboxDefault') === -1) {
     return (className ? className + ' ' : '') + 'mboxDefault';
   }
+  return className;
 }
 
 function removeMboxClass(className) {

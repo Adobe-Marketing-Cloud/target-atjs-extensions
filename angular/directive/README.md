@@ -7,7 +7,7 @@
 This extension adds a `mbox` **directive** provider to your Angular module, which fetches and applies Target offers via **at.js** API, based on provided options.  
 Additionally, in case a CSS selector is provided in `selector` options property, `mbox` directive will be automatically set in matched elements' attributes (unless `appendToSelector: true` property is also set, in which case it will instead be appended as a separate `<div>` after each element).  
 DOM elements matching the directive will remain hidden, until the offers are applied (or an error occures when fetching/applying them).  
-  
+The extension has been tested with Angular v1.5.8.  
 **Note:** The extension requires [`at-angular-common extension`](../common/)(`target.angular.common` Angular module). If you're not already loading it separately in your app, just use the `at-angular-directive+common.js` version, which has it bundled.
 
 ## Usage

@@ -150,6 +150,10 @@ import _ from 'lodash';
             return onComponentMounted(this, logger);
           },
 
+          shouldComponentUpdate: function () {
+            return false;
+          },
+
           componentWillReceiveProps: function (newProps) {
             return onComponentWillReceiveProps(this, newProps);
           },

@@ -6,7 +6,10 @@ import _ from 'lodash';
   'use strict';
 
   function appendMboxClass(className) {
-    return (className ? className + ' ' : '') + 'mboxDefault';
+    if (className.indexOf('mboxDefault') === -1) {
+      return (className ? className + ' ' : '') + 'mboxDefault';
+    }
+    return className;
   }
 
   function removeMboxClass(className) {

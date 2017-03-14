@@ -7,7 +7,7 @@
 This extension applies a Target getOffer() promise resolve to all of your app's UI-Router states. Thus, when a state is selected, the requested Target offers are fetched via **at.js** API.  
 Once the view corresponding to the current state is fully loaded, the offer is applied to the elements matching the configured Target selector (provided in options parameter).  
 The extension should be used in Angular apps utilizing the UI-Router routing module (`angular-ui-router(.min).js`).  
-  
+The extension has been tested with Angular v1.5.8.  
 **Note:** The extension requires [`at-angular-common extension`](../common/)(`target.angular.common` Angular module). If you're not already loading it separately in your app, just use the `at-angular-ng-route+common.js` version, which has it bundled.
 
 ## Usage

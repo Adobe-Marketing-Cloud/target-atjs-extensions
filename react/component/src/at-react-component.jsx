@@ -33,35 +33,31 @@ import _ from 'lodash';
   }
 
   function atOptsHaveChanged(component, mbox, timeout, params) {
-    return !_.isEqual(component.state.atParams, params) ||
-      (mbox && component.state.mbox !== mbox) ||
-      (timeout && component.state.timeout !== timeout);
+    return !_.isEqual(component.mboxState.atParams, params) ||
+      (mbox && component.mboxState.mbox !== mbox) ||
+      (timeout && component.mboxState.timeout !== timeout);
   }
 
   function getOffers(component, logger) {
     logger.log('getOffers');
     at.getOffer({
-      mbox: component.state.mbox,
-      params: component.state.atParams,
-      timeout: component.state.timeout,
+      mbox: component.mboxState.mbox,
+      params: component.mboxState.atParams,
+      timeout: component.mboxState.timeout,
       success: function (response) {
-        component.setState({
-          gotOffers: true,
-          offerData: response
+        logger.log('Applying');
+        adobe.target.applyOffer({
+          mbox: component.mboxState.mbox,
+          offer: response,
+          element: component.mboxDiv
         });
+        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       },
       error: function (status, error) {
         logger.error('getOffer error: ', error, status);
         component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       }
     });
-  }
-
-  function getInitialState(opts) {
-    opts = opts || {};
-    return {
-      atParams: opts.params || null
-    };
   }
 
   function getDefaultProps(opts, settings) {
@@ -85,46 +81,25 @@ import _ from 'lodash';
 
   function onComponentMounted(component, logger) {
     logger.log('MboxComponentDidMount');
-    component.setState({
+    component.mboxState = {
       atParams: getParams(component.props),
       mbox: component.props['data-mbox'],
-      timeout: parseInt(component.props['data-timeout'], 10),
-      shouldRefresh: true
-    });
+      timeout: parseInt(component.props['data-timeout'], 10)
+    };
+    getOffers(component, logger);
   }
 
-  function onComponentWillReceiveProps(component, newProps) {
+  function onComponentWillReceiveProps(component, newProps, logger) {
     let newMbox = newProps['data-mbox'];
     let newTimeout = parseInt(newProps['data-timeout'], 10);
     let newParams = getParams(newProps);
     if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-      component.setState({
-        atParams: newParams || component.state.atParams,
-        mbox: newMbox || component.state.mbox,
-        timeout: newTimeout || component.state.timeout,
-        shouldRefresh: true
-      });
-    }
-  }
-
-  function onComponentUpdated(component, logger) {
-    logger.log('MboxComponentDidUpdate');
-    if (component.state) {
-      if (component.state.gotOffers) {
-        logger.log('Applying');
-        adobe.target.applyOffer({
-          mbox: component.state.mbox,
-          offer: component.state.offerData,
-          element: component.mboxDiv
-        });
-        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-        component.setState({gotOffers: false});
-      }
-      if (component.state.shouldRefresh) {
-        logger.log('Refreshing');
-        getOffers(component, logger);
-        component.setState({shouldRefresh: false});
-      }
+      component.mboxState = {
+        atParams: newParams || component.mboxState.atParams,
+        mbox: newMbox || component.mboxState.mbox,
+        timeout: newTimeout || component.mboxState.timeout
+      };
+      getOffers(component, logger);
     }
   }
 
@@ -134,10 +109,6 @@ import _ from 'lodash';
     register: function (settings, logger) {
       return function (opts) {
         return React.createClass({
-          getInitialState: function () {
-            return getInitialState(opts);
-          },
-
           getDefaultProps: function () {
             return getDefaultProps(opts, settings);
           },
@@ -150,12 +121,12 @@ import _ from 'lodash';
             return onComponentMounted(this, logger);
           },
 
-          componentWillReceiveProps: function (newProps) {
-            return onComponentWillReceiveProps(this, newProps);
+          shouldComponentUpdate: function () {
+            return false;
           },
 
-          componentDidUpdate: function () {
-            return onComponentUpdated(this, logger);
+          componentWillReceiveProps: function (newProps) {
+            return onComponentWillReceiveProps(this, newProps, logger);
           }
         });
       };

@@ -109,10 +109,6 @@ import _ from 'lodash';
     register: function (settings, logger) {
       return function (opts) {
         return React.createClass({
-          getInitialState: function () {
-            return null;
-          },
-
           getDefaultProps: function () {
             return getDefaultProps(opts, settings);
           },

@@ -5,7 +5,7 @@
 ## Overview
 
 This extension registers the **target.angular.common** Angular module, which wraps **at.js** API as well as exposes several helper providers, to be used in Angular extension/app development.  
-The extension has been tested with Angular v1.5.8.
+The extension has been tested with Angular v1.5.8. Older Angular versions may not be fully supported.
 
 ## Usage
 

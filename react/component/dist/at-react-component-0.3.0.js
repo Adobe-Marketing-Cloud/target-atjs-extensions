@@ -180,10 +180,6 @@
 	    register: function register(settings, logger) {
 	      return function (opts) {
 	        return React.createClass({
-	          getInitialState: function getInitialState() {
-	            return null;
-	          },
-
 	          getDefaultProps: function getDefaultProps() {
 	            return _getDefaultProps(opts, settings);
 	          },

@@ -98,10 +98,13 @@
 	      params: component.state.atParams,
 	      timeout: component.state.timeout,
 	      success: function success(response) {
-	        component.setState({
-	          gotOffers: true,
-	          offerData: response
+	        logger.log('Applying');
+	        adobe.target.applyOffer({
+	          mbox: component.state.mbox,
+	          offer: response,
+	          element: component.mboxDiv
 	        });
+	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
 	      },
 	      error: function error(status, _error) {
 	        logger.error('getOffer error: ', _error, status);
@@ -144,12 +147,12 @@
 	    component.setState({
 	      atParams: getParams(component.props),
 	      mbox: component.props['data-mbox'],
-	      timeout: parseInt(component.props['data-timeout'], 10),
-	      shouldRefresh: true
+	      timeout: parseInt(component.props['data-timeout'], 10)
 	    });
+	    getOffers(component, logger);
 	  }
 
-	  function onComponentWillReceiveProps(component, newProps) {
+	  function onComponentWillReceiveProps(component, newProps, logger) {
 	    var newMbox = newProps['data-mbox'];
 	    var newTimeout = parseInt(newProps['data-timeout'], 10);
 	    var newParams = getParams(newProps);
@@ -157,30 +160,9 @@
 	      component.setState({
 	        atParams: newParams || component.state.atParams,
 	        mbox: newMbox || component.state.mbox,
-	        timeout: newTimeout || component.state.timeout,
-	        shouldRefresh: true
+	        timeout: newTimeout || component.state.timeout
 	      });
-	    }
-	  }
-
-	  function onComponentUpdated(component, logger) {
-	    logger.log('MboxComponentDidUpdate');
-	    if (component.state) {
-	      if (component.state.gotOffers) {
-	        logger.log('Applying');
-	        adobe.target.applyOffer({
-	          mbox: component.state.mbox,
-	          offer: component.state.offerData,
-	          element: component.mboxDiv
-	        });
-	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-	        component.setState({ gotOffers: false });
-	      }
-	      if (component.state.shouldRefresh) {
-	        logger.log('Refreshing');
-	        getOffers(component, logger);
-	        component.setState({ shouldRefresh: false });
-	      }
+	      getOffers(component, logger);
 	    }
 	  }
 
@@ -206,12 +188,12 @@
 	            return onComponentMounted(this, logger);
 	          },
 
-	          componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	            return onComponentWillReceiveProps(this, newProps);
+	          shouldComponentUpdate: function shouldComponentUpdate() {
+	            return false;
 	          },
 
-	          componentDidUpdate: function componentDidUpdate() {
-	            return onComponentUpdated(this, logger);
+	          componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	            return onComponentWillReceiveProps(this, newProps, logger);
 	          }
 	        });
 	      };

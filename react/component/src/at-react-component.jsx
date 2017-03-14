@@ -45,10 +45,13 @@ import _ from 'lodash';
       params: component.state.atParams,
       timeout: component.state.timeout,
       success: function (response) {
-        component.setState({
-          gotOffers: true,
-          offerData: response
+        logger.log('Applying');
+        adobe.target.applyOffer({
+          mbox: component.state.mbox,
+          offer: response,
+          element: component.mboxDiv
         });
+        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
       },
       error: function (status, error) {
         logger.error('getOffer error: ', error, status);
@@ -88,12 +91,12 @@ import _ from 'lodash';
     component.setState({
       atParams: getParams(component.props),
       mbox: component.props['data-mbox'],
-      timeout: parseInt(component.props['data-timeout'], 10),
-      shouldRefresh: true
+      timeout: parseInt(component.props['data-timeout'], 10)
     });
+    getOffers(component, logger);
   }
 
-  function onComponentWillReceiveProps(component, newProps) {
+  function onComponentWillReceiveProps(component, newProps, logger) {
     let newMbox = newProps['data-mbox'];
     let newTimeout = parseInt(newProps['data-timeout'], 10);
     let newParams = getParams(newProps);
@@ -101,30 +104,9 @@ import _ from 'lodash';
       component.setState({
         atParams: newParams || component.state.atParams,
         mbox: newMbox || component.state.mbox,
-        timeout: newTimeout || component.state.timeout,
-        shouldRefresh: true
+        timeout: newTimeout || component.state.timeout
       });
-    }
-  }
-
-  function onComponentUpdated(component, logger) {
-    logger.log('MboxComponentDidUpdate');
-    if (component.state) {
-      if (component.state.gotOffers) {
-        logger.log('Applying');
-        adobe.target.applyOffer({
-          mbox: component.state.mbox,
-          offer: component.state.offerData,
-          element: component.mboxDiv
-        });
-        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-        component.setState({gotOffers: false});
-      }
-      if (component.state.shouldRefresh) {
-        logger.log('Refreshing');
-        getOffers(component, logger);
-        component.setState({shouldRefresh: false});
-      }
+      getOffers(component, logger);
     }
   }
 
@@ -155,11 +137,7 @@ import _ from 'lodash';
           },
 
           componentWillReceiveProps: function (newProps) {
-            return onComponentWillReceiveProps(this, newProps);
-          },
-
-          componentDidUpdate: function () {
-            return onComponentUpdated(this, logger);
+            return onComponentWillReceiveProps(this, newProps, logger);
           }
         });
       };

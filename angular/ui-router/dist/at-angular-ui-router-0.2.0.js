@@ -31,10 +31,10 @@
     state.resolve.offerData = offerPromiseFn;
   }
 
-  function routeServiceDecorator($delegate, options, offerService, logger) {
-    $delegate.applyTargetToStates = function (states) {
+  function NgStateService(routeService, offerService, options, logger) {
+    this.applyTargetToStates = function (states) {
       states.forEach(function (state) {
-        if ($delegate.isRouteAllowed(state.url)) {
+        if (routeService.isRouteAllowed(state.url)) {
           logger.log('location: ' + state.url);
           setStateOfferResolve(state, function () {
             return offerService.getOfferPromise(options);
@@ -42,18 +42,13 @@
         }
       });
     };
-    return $delegate;
-  }
-
-  function decorateRouteService() {
-    angular.module('target.angular.common')
-      .decorator('routeService', ['$delegate', 'options', 'offerService', 'logger', routeServiceDecorator]);
   }
 
   function initializeModule(module) {
-    module.run(['$rootScope', '$state', 'routeService', 'offerService', 'options', 'logger',
-      function ($rootScope, $state, routeService, offerService, options, logger) {
-        routeService.applyTargetToStates($state.get());
+    module.service('ngStateService', ['routeService', 'offerService', 'options', 'logger', NgStateService]);
+    module.run(['$rootScope', '$state', 'offerService', 'ngStateService', 'logger',
+      function ($rootScope, $state, offerService, ngStateService, logger) {
+        ngStateService.applyTargetToStates($state.get());
 
         $rootScope.$on('$viewContentLoaded', function () {
           var offerData = $state.$current.locals.globals.offerData;
@@ -62,13 +57,13 @@
               .catch(function (reason) {
                 logger.error('AT applyOffer error: ' + reason);
               });
-          }});
+          }
+        });
       }]);
   }
 
   at.ext.angular.initStates = function (app, opts) {
     at.ext.angular.setupCommon(opts);
-    decorateRouteService();
     var appModule = (typeof app === 'string') ? angular.module(app) : app;
     addModuleDependencies(appModule, ['target.angular.common']);
     initializeModule(appModule);

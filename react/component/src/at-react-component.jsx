@@ -30,21 +30,21 @@ function getParams(props) {
 }
 
 function atOptsHaveChanged(component, mbox, timeout, params) {
-  return !_.isEqual(component.mboxState.atParams, params) ||
-    (mbox && component.mboxState.mbox !== mbox) ||
-    (timeout && component.mboxState.timeout !== timeout);
+  return !_.isEqual(component.state.atParams, params) ||
+    (mbox && component.state.mbox !== mbox) ||
+    (timeout && component.state.timeout !== timeout);
 }
 
 function getOffers(component, at, logger) {
   logger.log('getOffers');
   at.getOffer({
-    mbox: component.mboxState.mbox,
-    params: component.mboxState.atParams,
-    timeout: component.mboxState.timeout,
+    mbox: component.state.mbox,
+    params: component.state.atParams,
+    timeout: component.state.timeout,
     success: function (response) {
       logger.log('Applying');
       at.applyOffer({
-        mbox: component.mboxState.mbox,
+        mbox: component.state.mbox,
         offer: response,
         element: component.mboxDiv
       });
@@ -80,11 +80,11 @@ function onRender(component) {
 
 function onComponentMounted(component, at, logger) {
   logger.log('MboxComponentDidMount');
-  component.mboxState = {
+  component.setState ({
     atParams: getParams(component.props),
     mbox: component.props['data-mbox'],
     timeout: parseInt(component.props['data-timeout'], 10)
-  };
+  });
   getOffers(component, at, logger);
 }
 
@@ -93,11 +93,11 @@ function onComponentWillReceiveProps(component, at, logger, newProps) {
   let newTimeout = parseInt(newProps['data-timeout'], 10);
   let newParams = getParams(newProps);
   if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-    component.mboxState = {
-      atParams: newParams || component.mboxState.atParams,
-      mbox: newMbox || component.mboxState.mbox,
-      timeout: newTimeout || component.mboxState.timeout
-    };
+    component.setState({
+      atParams: newParams || component.state.atParams,
+      mbox: newMbox || component.state.mbox,
+      timeout: newTimeout || component.state.timeout
+    });
     getOffers(component, at, logger);
   }
 }
@@ -109,6 +109,12 @@ export function createMboxComponent(opts) {
   return React.createClass({
     getDefaultProps: function () {
       return getDefaultProps(opts);
+    },
+
+    getInitialState: function () {
+      return {
+        editMode: (location.search.indexOf('mboxEdit') !== -1)
+      }
     },
 
     render: function () {

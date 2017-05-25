@@ -113,6 +113,6 @@ gulp.task('lint', ['lint:src', 'lint:test']);
 
 gulp.task('test', gulpSequence('lint', 'babel', 'pack', 'test:run'));
 
-gulp.task('build', gulpSequence('clean', 'test', 'build:dist', 'build:copywp'));
+gulp.task('build', gulpSequence('clean', 'build:dist', 'build:copywp'));
 
 gulp.task('default', ['test']);

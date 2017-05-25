@@ -59,7 +59,12 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* global adobe, React */
 	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _isEqual2 = __webpack_require__(1);
 
@@ -71,139 +76,135 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+	exports.createMboxComponent = createMboxComponent;
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	/* global adobe, React */
-	(function (React, at) {
-	  'use strict';
+	function appendMboxClass(className) {
+	  if (className.indexOf('mboxDefault') === -1) {
+	    return (className ? className + ' ' : '') + 'mboxDefault';
+	  }
+	  return className;
+	}
 
-	  function appendMboxClass(className) {
-	    if (className.indexOf('mboxDefault') === -1) {
-	      return (className ? className + ' ' : '') + 'mboxDefault';
+	function removeMboxClass(className) {
+	  return className.replace(/\bmboxDefault\b/, '');
+	}
+
+	function getParams(props) {
+	  props = props || {};
+	  var params = null;
+	  Object.keys(props).filter(function (k) {
+	    return k.startsWith('data-') && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
+	  }).forEach(function (k, i) {
+	    if (i === 0) {
+	      params = {};
 	    }
-	    return className;
-	  }
+	    params[k.substring(5)] = props[k];
+	  });
+	  return params;
+	}
 
-	  function removeMboxClass(className) {
-	    return className.replace(/\bmboxDefault\b/, '');
-	  }
+	function atOptsHaveChanged(component, mbox, timeout, params) {
+	  return !(0, _isEqual3.default)(component.mboxState.atParams, params) || mbox && component.mboxState.mbox !== mbox || timeout && component.mboxState.timeout !== timeout;
+	}
 
-	  function getParams(props) {
-	    props = props || {};
-	    var params = null;
-	    Object.keys(props).filter(function (k) {
-	      return k.startsWith('data-') && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
-	    }).forEach(function (k, i) {
-	      if (i === 0) {
-	        params = {};
-	      }
-	      params[k.substring(5)] = props[k];
-	    });
-	    return params;
-	  }
-
-	  function atOptsHaveChanged(component, mbox, timeout, params) {
-	    return !(0, _isEqual3.default)(component.mboxState.atParams, params) || mbox && component.mboxState.mbox !== mbox || timeout && component.mboxState.timeout !== timeout;
-	  }
-
-	  function getOffers(component, logger) {
-	    logger.log('getOffers');
-	    at.getOffer({
-	      mbox: component.mboxState.mbox,
-	      params: component.mboxState.atParams,
-	      timeout: component.mboxState.timeout,
-	      success: function success(response) {
-	        logger.log('Applying');
-	        adobe.target.applyOffer({
-	          mbox: component.mboxState.mbox,
-	          offer: response,
-	          element: component.mboxDiv
-	        });
-	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-	      },
-	      error: function error(status, _error) {
-	        logger.error('getOffer error: ', _error, status);
-	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-	      }
-	    });
-	  }
-
-	  function _getDefaultProps(opts, settings) {
-	    opts = opts || {};
-	    return {
-	      'className': 'mboxDefault',
-	      'data-mbox': opts.mbox || settings.globalMboxName,
-	      'data-timeout': opts.timeout || settings.timeout
-	    };
-	  }
-
-	  function onRender(component) {
-	    return React.createElement(
-	      'div',
-	      _extends({
-	        ref: function ref(_ref) {
-	          component.mboxDiv = _ref;
-	        }
-	      }, component.props, {
-	        className: appendMboxClass(component.props.className) }),
-	      component.props.children
-	    );
-	  }
-
-	  function onComponentMounted(component, logger) {
-	    logger.log('MboxComponentDidMount');
-	    component.mboxState = {
-	      atParams: getParams(component.props),
-	      mbox: component.props['data-mbox'],
-	      timeout: parseInt(component.props['data-timeout'], 10)
-	    };
-	    getOffers(component, logger);
-	  }
-
-	  function onComponentWillReceiveProps(component, newProps, logger) {
-	    var newMbox = newProps['data-mbox'];
-	    var newTimeout = parseInt(newProps['data-timeout'], 10);
-	    var newParams = getParams(newProps);
-	    if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-	      component.mboxState = {
-	        atParams: newParams || component.mboxState.atParams,
-	        mbox: newMbox || component.mboxState.mbox,
-	        timeout: newTimeout || component.mboxState.timeout
-	      };
-	      getOffers(component, logger);
-	    }
-	  }
-
-	  at.registerExtension({
-	    name: 'react.createMboxComponent',
-	    modules: ['settings', 'logger'],
-	    register: function register(settings, logger) {
-	      return function (opts) {
-	        return React.createClass({
-	          getDefaultProps: function getDefaultProps() {
-	            return _getDefaultProps(opts, settings);
-	          },
-
-	          render: function render() {
-	            return onRender(this);
-	          },
-
-	          componentDidMount: function componentDidMount() {
-	            return onComponentMounted(this, logger);
-	          },
-
-	          shouldComponentUpdate: function shouldComponentUpdate() {
-	            return false;
-	          },
-
-	          componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	            return onComponentWillReceiveProps(this, newProps, logger);
-	          }
-	        });
-	      };
+	function getOffers(component, at, logger) {
+	  logger.log('getOffers');
+	  at.getOffer({
+	    mbox: component.mboxState.mbox,
+	    params: component.mboxState.atParams,
+	    timeout: component.mboxState.timeout,
+	    success: function success(response) {
+	      logger.log('Applying');
+	      at.applyOffer({
+	        mbox: component.mboxState.mbox,
+	        offer: response,
+	        element: component.mboxDiv
+	      });
+	      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+	    },
+	    error: function error(status, _error) {
+	      logger.error('getOffer error: ', _error, status);
+	      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
 	    }
 	  });
-	})(React, adobe.target);
+	}
+
+	function _getDefaultProps(opts) {
+	  var DEFAULT_MBOX = 'target-global-mbox';
+	  var DEFAULT_TIMEOUT = 3000;
+	  opts = opts || {};
+	  return {
+	    'className': 'mboxDefault',
+	    'data-mbox': opts.mbox || DEFAULT_MBOX,
+	    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
+	  };
+	}
+
+	function onRender(component) {
+	  return React.createElement(
+	    'div',
+	    _extends({
+	      ref: function ref(_ref) {
+	        component.mboxDiv = _ref;
+	      }
+	    }, component.props, {
+	      className: appendMboxClass(component.props.className) }),
+	    component.props.children
+	  );
+	}
+
+	function onComponentMounted(component, at, logger) {
+	  logger.log('MboxComponentDidMount');
+	  component.mboxState = {
+	    atParams: getParams(component.props),
+	    mbox: component.props['data-mbox'],
+	    timeout: parseInt(component.props['data-timeout'], 10)
+	  };
+	  getOffers(component, at, logger);
+	}
+
+	function onComponentWillReceiveProps(component, at, logger, newProps) {
+	  var newMbox = newProps['data-mbox'];
+	  var newTimeout = parseInt(newProps['data-timeout'], 10);
+	  var newParams = getParams(newProps);
+	  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
+	    component.mboxState = {
+	      atParams: newParams || component.mboxState.atParams,
+	      mbox: newMbox || component.mboxState.mbox,
+	      timeout: newTimeout || component.mboxState.timeout
+	    };
+	    getOffers(component, at, logger);
+	  }
+	}
+
+	function createMboxComponent(opts) {
+	  var at = adobe.target;
+	  var logger = console;
+
+	  return React.createClass({
+	    getDefaultProps: function getDefaultProps() {
+	      return _getDefaultProps(opts);
+	    },
+
+	    render: function render() {
+	      return onRender(this);
+	    },
+
+	    componentDidMount: function componentDidMount() {
+	      return onComponentMounted(this, at, logger);
+	    },
+
+	    shouldComponentUpdate: function shouldComponentUpdate() {
+	      return false;
+	    },
+
+	    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	      return onComponentWillReceiveProps(this, at, logger, newProps);
+	    }
+	  });
+	}
 
 /***/ },
 /* 1 */

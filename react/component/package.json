@@ -1,8 +1,9 @@
 {
   "name": "at-react-component",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
   "homepage": "",
+  "main": "dist/at-react-component-0.4.0.js",
   "dependencies": {},
   "eslintConfig": {
     "extends": "xo-space",

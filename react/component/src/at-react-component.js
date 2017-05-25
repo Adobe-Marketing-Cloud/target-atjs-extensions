@@ -65,7 +65,13 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function appendMboxClass(className) {
+	function appendMboxClass(component) {
+	  var className = component.props.className;
+	  var mboxName = component.props['data-mbox'];
+
+	  if (component.state.editMode) {
+	    return (className ? className + ' ' : '') + 'mbox-name-' + mboxName;
+	  }
 	  if (className.indexOf('mboxDefault') === -1) {
 	    return (className ? className + ' ' : '') + 'mboxDefault';
 	  }
@@ -79,6 +85,7 @@
 	function getParams(props) {
 	  props = props || {};
 	  var params = null;
+
 	  Object.keys(props).filter(function (k) {
 	    return k.startsWith('data-') && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
 	  }).forEach(function (k, i) {
@@ -91,19 +98,19 @@
 	}
 
 	function atOptsHaveChanged(component, mbox, timeout, params) {
-	  return !(0, _isEqual3.default)(component.mboxState.atParams, params) || mbox && component.mboxState.mbox !== mbox || timeout && component.mboxState.timeout !== timeout;
+	  return !(0, _isEqual3.default)(component.state.atParams, params) || mbox && component.state.mbox !== mbox || timeout && component.state.timeout !== timeout;
 	}
 
 	function getOffers(component, at, logger) {
 	  logger.log('getOffers');
 	  at.getOffer({
-	    mbox: component.mboxState.mbox,
-	    params: component.mboxState.atParams,
-	    timeout: component.mboxState.timeout,
+	    mbox: component.state.mbox,
+	    params: component.state.atParams,
+	    timeout: component.state.timeout,
 	    success: function success(response) {
 	      logger.log('Applying');
 	      at.applyOffer({
-	        mbox: component.mboxState.mbox,
+	        mbox: component.state.mbox,
 	        offer: response,
 	        element: component.mboxDiv
 	      });
@@ -120,6 +127,7 @@
 	  var DEFAULT_MBOX = 'target-global-mbox';
 	  var DEFAULT_TIMEOUT = 3000;
 	  opts = opts || {};
+
 	  return {
 	    'className': 'mboxDefault',
 	    'data-mbox': opts.mbox || DEFAULT_MBOX,
@@ -135,42 +143,54 @@
 	        component.mboxDiv = _ref;
 	      }
 	    }, component.props, {
-	      className: appendMboxClass(component.props.className) }),
+	      className: appendMboxClass(component) }),
 	    component.props.children
 	  );
 	}
 
 	function onComponentMounted(component, at, logger) {
 	  logger.log('MboxComponentDidMount');
-	  component.mboxState = {
+	  component.setState({
 	    atParams: getParams(component.props),
 	    mbox: component.props['data-mbox'],
 	    timeout: parseInt(component.props['data-timeout'], 10)
-	  };
-	  getOffers(component, at, logger);
+	  });
+	  if (!component.state.editMode) {
+	    getOffers(component, at, logger);
+	  }
 	}
 
 	function onComponentWillReceiveProps(component, at, logger, newProps) {
 	  var newMbox = newProps['data-mbox'];
 	  var newTimeout = parseInt(newProps['data-timeout'], 10);
 	  var newParams = getParams(newProps);
+
 	  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-	    component.mboxState = {
-	      atParams: newParams || component.mboxState.atParams,
-	      mbox: newMbox || component.mboxState.mbox,
-	      timeout: newTimeout || component.mboxState.timeout
-	    };
-	    getOffers(component, at, logger);
+	    component.setState({
+	      atParams: newParams || component.state.atParams,
+	      mbox: newMbox || component.state.mbox,
+	      timeout: newTimeout || component.state.timeout
+	    });
+	    if (!component.state.editMode) {
+	      getOffers(component, at, logger);
+	    }
 	  }
 	}
 
 	function createMboxComponent(opts) {
 	  var at = adobe.target;
 	  var logger = console;
+	  var queryParams = location.search;
 
 	  return React.createClass({
 	    getDefaultProps: function getDefaultProps() {
 	      return _getDefaultProps(opts);
+	    },
+
+	    getInitialState: function getInitialState() {
+	      return {
+	        editMode: queryParams.indexOf('mboxEdit') !== -1
+	      };
 	    },
 
 	    render: function render() {

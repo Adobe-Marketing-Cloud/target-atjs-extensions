@@ -95,16 +95,6 @@ gulp.task('build:dist', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build:copywp', () => {
-  return gulp.src([
-      'src/header.js',
-      'src/at-react-component-wp.jsx'
-    ])
-    .pipe(plumber())
-    .pipe(concat('at-react-component-wp-' + version + '.jsx'))
-    .pipe(gulp.dest('dist'));
-});
-
 gulp.task('watch', function () {
   gulp.watch('src/**/*.{js,jsx}', ['lint:src', 'babel', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
@@ -114,6 +104,6 @@ gulp.task('lint', ['lint:src', 'lint:test']);
 
 gulp.task('test', gulpSequence('lint', 'babel', 'pack'));
 
-gulp.task('build', gulpSequence('clean', 'test', 'build:dist', 'build:copywp'));
+gulp.task('build', gulpSequence('clean', 'test', 'build:dist'));
 
 gulp.task('default', ['test']);

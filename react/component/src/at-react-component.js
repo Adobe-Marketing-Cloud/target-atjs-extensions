@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -61,7 +71,7 @@
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	exports.createMboxComponent = createMboxComponent;
+	exports.default = createMboxComponent;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -69,8 +79,8 @@
 	  var className = component.props.className;
 	  var mboxName = component.props['data-mbox'];
 
-	  if (component.state.editMode) {
-	    return (className ? className + ' ' : '') + 'mbox-name-' + mboxName;
+	  if (component.atState.editMode) {
+	    return 'mbox-name-' + mboxName;
 	  }
 	  if (className.indexOf('mboxDefault') === -1) {
 	    return (className ? className + ' ' : '') + 'mboxDefault';
@@ -98,19 +108,20 @@
 	}
 
 	function atOptsHaveChanged(component, mbox, timeout, params) {
-	  return !(0, _isEqual3.default)(component.state.atParams, params) || mbox && component.state.mbox !== mbox || timeout && component.state.timeout !== timeout;
+	  var atState = component.atState;
+	  return !(0, _isEqual3.default)(atState.atParams, params) || mbox && atState.mbox !== mbox || timeout && atState.timeout !== timeout;
 	}
 
 	function getOffers(component, at, logger) {
 	  logger.log('getOffers');
 	  at.getOffer({
-	    mbox: component.state.mbox,
-	    params: component.state.atParams,
-	    timeout: component.state.timeout,
+	    mbox: component.atState.mbox,
+	    params: component.atState.atParams,
+	    timeout: component.atState.timeout,
 	    success: function success(response) {
 	      logger.log('Applying');
 	      at.applyOffer({
-	        mbox: component.state.mbox,
+	        mbox: component.atState.mbox,
 	        offer: response,
 	        element: component.mboxDiv
 	      });
@@ -135,7 +146,11 @@
 	  };
 	}
 
-	function onRender(component) {
+	function onRender(React, component, queryParams) {
+	  component.atState = {
+	    editMode: queryParams.indexOf('mboxEdit') !== -1
+	  };
+
 	  return React.createElement(
 	    'div',
 	    _extends({
@@ -150,12 +165,13 @@
 
 	function onComponentMounted(component, at, logger) {
 	  logger.log('MboxComponentDidMount');
-	  component.setState({
-	    atParams: getParams(component.props),
-	    mbox: component.props['data-mbox'],
-	    timeout: parseInt(component.props['data-timeout'], 10)
-	  });
-	  if (!component.state.editMode) {
+	  var atState = component.atState;
+
+	  atState.atParams = getParams(component.props);
+	  atState.mbox = component.props['data-mbox'];
+	  atState.timeout = parseInt(component.props['data-timeout'], 10);
+
+	  if (!atState.editMode) {
 	    getOffers(component, at, logger);
 	  }
 	}
@@ -166,18 +182,18 @@
 	  var newParams = getParams(newProps);
 
 	  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-	    component.setState({
-	      atParams: newParams || component.state.atParams,
-	      mbox: newMbox || component.state.mbox,
-	      timeout: newTimeout || component.state.timeout
-	    });
-	    if (!component.state.editMode) {
+	    var atState = component.atState;
+	    atState.atParams = newParams || atState.atParams;
+	    atState.mbox = newMbox || atState.mbox;
+	    atState.timeout = newTimeout || atState.timeout;
+
+	    if (!atState.editMode) {
 	      getOffers(component, at, logger);
 	    }
 	  }
 	}
 
-	function createMboxComponent(opts) {
+	function createMboxComponent(React, opts) {
 	  var at = adobe.target;
 	  var logger = console;
 	  var queryParams = location.search;
@@ -187,14 +203,8 @@
 	      return _getDefaultProps(opts);
 	    },
 
-	    getInitialState: function getInitialState() {
-	      return {
-	        editMode: queryParams.indexOf('mboxEdit') !== -1
-	      };
-	    },
-
 	    render: function render() {
-	      return onRender(this);
+	      return onRender(React, this, queryParams);
 	    },
 
 	    componentDidMount: function componentDidMount() {
@@ -1180,4 +1190,6 @@
 
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;

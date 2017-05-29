@@ -49,7 +49,8 @@ gulp.task('pack', () => {
     .pipe(plumber())
     .pipe(webpack({
       output: {
-        filename: 'at-react-component.js'
+        filename: 'at-react-component.js',
+        libraryTarget: 'umd'
       },
       plugins: [
         new lodashWebpackPlugin

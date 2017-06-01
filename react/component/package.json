@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "description": "",
   "homepage": "",
-  "main": "dist/at-react-component-0.4.0.js",
+  "main": "dist/at-react-component.js",
   "dependencies": {},
   "eslintConfig": {
     "extends": "xo-space",

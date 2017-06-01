@@ -13,7 +13,6 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
-var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -84,7 +83,7 @@ gulp.task('build:dist', () => {
       'src/at-react-component.js'
     ])
     .pipe(plumber())
-    .pipe(concat('at-react-component-' + version + '.js'))
+    .pipe(concat('at-react-component.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'

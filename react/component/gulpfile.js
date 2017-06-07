@@ -33,7 +33,7 @@ gulp.task('lint:test', () => {
 });
 
 gulp.task('babel', () => {
-  return gulp.src('src/at-react-component.jsx')
+  return gulp.src('src/*.{js6,jsx}')
     .pipe(plumber())
     .pipe(babel({
       plugins: ['lodash'],
@@ -94,6 +94,10 @@ gulp.task('build:dist', () => {
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('build:clean', () => {
+  return del(['src/**/at-react*.js']);
+});
+
 gulp.task('watch', function () {
   gulp.watch('src/**/*.{js,jsx}', ['lint:src', 'babel', 'test:run']);
   gulp.watch('test/**/*.js', ['lint:test', 'test:run']);
@@ -103,6 +107,6 @@ gulp.task('lint', ['lint:src', 'lint:test']);
 
 gulp.task('test', gulpSequence('lint', 'babel', 'pack'));
 
-gulp.task('build', gulpSequence('clean', 'test', 'build:dist'));
+gulp.task('build', gulpSequence('clean', 'test', 'build:dist', 'build:clean'));
 
 gulp.task('default', ['test']);

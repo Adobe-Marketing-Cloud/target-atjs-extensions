@@ -1,7 +1,12 @@
 {
-  "name": "at-react-component",
+  "name": "@adobe/at-react-component",
   "version": "0.4.0",
-  "description": "",
+  "description": "Adobe Target React component",
+  "author": {
+    "name": "Adobe Systems Inc.",
+    "url": "https://www.adobe.com",
+    "email": "anischev@adobe.com"
+  },
   "homepage": "",
   "main": "dist/at-react-component.js",
   "dependencies": {},
@@ -22,7 +27,10 @@
       "jsx": true
     }
   },
-  "repository": "/at-react-component",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Adobe-Marketing-Cloud/target-atjs-extensions.git"
+  },
   "scripts": {
     "lint": "gulp lint",
     "watch": "gulp watch",

@@ -78,14 +78,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	exports.default = createMboxComponent;
+	exports.default = createTargetComponent;
 
 	var _atReactUtil = __webpack_require__(1);
 
 	var _atReactMain = __webpack_require__(28);
 
 	function onRender(React, component, queryParams) {
-	  component.customState = {
+	  component.targetState = {
 	    editMode: queryParams.indexOf('mboxEdit') !== -1
 	  };
 
@@ -93,7 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'div',
 	    _extends({
 	      ref: function ref(_ref) {
-	        component.mboxDiv = _ref;
+	        component.targetDiv = _ref;
 	      }
 	    }, component.props, {
 	      className: (0, _atReactUtil.appendMboxClass)(component) }),
@@ -101,7 +101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  );
 	}
 
-	function createMboxComponent(React, opts) {
+	function createTargetComponent(React, opts) {
 	  var at = adobe.target;
 	  var logger = console;
 	  var queryParams = location.search;
@@ -158,7 +158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var className = component.props.className;
 	  var mboxName = component.props['data-mbox'];
 
-	  if (component.customState.editMode) {
+	  if (component.targetState.editMode) {
 	    return 'mbox-name-' + mboxName;
 	  }
 	  if (className.indexOf('mboxDefault') === -1) {
@@ -187,8 +187,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function atOptsHaveChanged(component, mbox, timeout, params) {
-	  var customState = component.customState;
-	  return !(0, _isEqual3.default)(customState.atParams, params) || mbox && customState.mbox !== mbox || timeout && customState.timeout !== timeout;
+	  var targetState = component.targetState;
+	  return !(0, _isEqual3.default)(targetState.atParams, params) || mbox && targetState.mbox !== mbox || timeout && targetState.timeout !== timeout;
 	}
 
 /***/ },
@@ -1178,27 +1178,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	function getOffers(component, at, logger) {
 	  logger.log('getOffers');
 	  at.getOffer({
-	    mbox: component.customState.mbox,
-	    params: component.customState.atParams,
-	    timeout: component.customState.timeout,
+	    mbox: component.targetState.mbox,
+	    params: component.targetState.atParams,
+	    timeout: component.targetState.timeout,
 	    success: function success(response) {
 	      logger.log('Applying');
 	      at.applyOffer({
-	        mbox: component.customState.mbox,
+	        mbox: component.targetState.mbox,
 	        offer: response,
-	        element: component.mboxDiv
+	        element: component.targetDiv
 	      });
-	      component.mboxDiv.className = (0, _atReactUtil.removeMboxClass)(component.mboxDiv.className);
+	      component.targetDiv.className = (0, _atReactUtil.removeMboxClass)(component.targetDiv.className);
 	    },
 	    error: function error(status, _error) {
 	      logger.error('getOffer error: ', _error, status);
-	      component.mboxDiv.className = (0, _atReactUtil.removeMboxClass)(component.mboxDiv.className);
+	      component.targetDiv.className = (0, _atReactUtil.removeMboxClass)(component.targetDiv.className);
 	    }
 	  });
 	}
 
 	function getDefaultProps(opts) {
-	  var DEFAULT_MBOX = 'target-global-mbox';
+	  var DEFAULT_MBOX = 'default-mbox';
 	  var DEFAULT_TIMEOUT = 3000;
 	  opts = opts || {};
 
@@ -1210,14 +1210,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function onComponentMounted(component, at, logger) {
-	  logger.log('MboxComponentDidMount');
-	  var customState = component.customState;
+	  logger.log('TargetComponentDidMount');
+	  var targetState = component.targetState;
 
-	  customState.atParams = (0, _atReactUtil.getParams)(component.props);
-	  customState.mbox = component.props['data-mbox'];
-	  customState.timeout = parseInt(component.props['data-timeout'], 10);
+	  targetState.atParams = (0, _atReactUtil.getParams)(component.props);
+	  targetState.mbox = component.props['data-mbox'];
+	  targetState.timeout = parseInt(component.props['data-timeout'], 10);
 
-	  if (!customState.editMode) {
+	  if (targetState.mbox === 'default-mbox') {
+	    logger.error('at-react-component:', 'mbox prop must be provided for each Target component!');
+	    return;
+	  }
+
+	  if (!targetState.editMode) {
 	    getOffers(component, at, logger);
 	  }
 	}
@@ -1228,12 +1233,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var newParams = (0, _atReactUtil.getParams)(newProps);
 
 	  if ((0, _atReactUtil.atOptsHaveChanged)(component, newMbox, newTimeout, newParams)) {
-	    var customState = component.customState;
-	    customState.atParams = newParams || customState.atParams;
-	    customState.mbox = newMbox || customState.mbox;
-	    customState.timeout = newTimeout || customState.timeout;
+	    var targetState = component.targetState;
+	    targetState.atParams = newParams || targetState.atParams;
+	    targetState.mbox = newMbox || targetState.mbox;
+	    targetState.timeout = newTimeout || targetState.timeout;
 
-	    if (!customState.editMode) {
+	    if (!targetState.editMode) {
 	      getOffers(component, at, logger);
 	    }
 	  }

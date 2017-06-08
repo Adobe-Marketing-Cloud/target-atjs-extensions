@@ -4,7 +4,7 @@ export function appendMboxClass(component) {
   const className = component.props.className;
   const mboxName = component.props['data-mbox'];
 
-  if (component.customState.editMode) {
+  if (component.targetState.editMode) {
     return 'mbox-name-' + mboxName;
   }
   if (className.indexOf('mboxDefault') === -1) {
@@ -35,8 +35,8 @@ export function getParams(props) {
 }
 
 export function atOptsHaveChanged(component, mbox, timeout, params) {
-  let customState = component.customState;
-  return !_.isEqual(customState.atParams, params) ||
-    (mbox && customState.mbox !== mbox) ||
-    (timeout && customState.timeout !== timeout);
+  let targetState = component.targetState;
+  return !_.isEqual(targetState.atParams, params) ||
+    (mbox && targetState.mbox !== mbox) ||
+    (timeout && targetState.timeout !== timeout);
 }

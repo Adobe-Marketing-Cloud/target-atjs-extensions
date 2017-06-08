@@ -3,21 +3,21 @@ import {removeMboxClass, getParams, atOptsHaveChanged} from './at-react-util';
 export function getOffers(component, at, logger) {
   logger.log('getOffers');
   at.getOffer({
-    mbox: component.customState.mbox,
-    params: component.customState.atParams,
-    timeout: component.customState.timeout,
+    mbox: component.targetState.mbox,
+    params: component.targetState.atParams,
+    timeout: component.targetState.timeout,
     success: function (response) {
       logger.log('Applying');
       at.applyOffer({
-        mbox: component.customState.mbox,
+        mbox: component.targetState.mbox,
         offer: response,
-        element: component.mboxDiv
+        element: component.targetDiv
       });
-      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+      component.targetDiv.className = removeMboxClass(component.targetDiv.className);
     },
     error: function (status, error) {
       logger.error('getOffer error: ', error, status);
-      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+      component.targetDiv.className = removeMboxClass(component.targetDiv.className);
     }
   });
 }
@@ -36,14 +36,14 @@ export function getDefaultProps(opts) {
 
 
 export function onComponentMounted(component, at, logger) {
-  logger.log('MboxComponentDidMount');
-  let customState = component.customState;
+  logger.log('TargetComponentDidMount');
+  let targetState = component.targetState;
 
-  customState.atParams = getParams(component.props);
-  customState.mbox = component.props['data-mbox'];
-  customState.timeout = parseInt(component.props['data-timeout'], 10);
+  targetState.atParams = getParams(component.props);
+  targetState.mbox = component.props['data-mbox'];
+  targetState.timeout = parseInt(component.props['data-timeout'], 10);
 
-  if (!customState.editMode) {
+  if (!targetState.editMode) {
     getOffers(component, at, logger);
   }
 }
@@ -54,12 +54,12 @@ export function onComponentWillReceiveProps(component, at, logger, newProps) {
   let newParams = getParams(newProps);
 
   if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-    let customState = component.customState;
-    customState.atParams = newParams || customState.atParams;
-    customState.mbox = newMbox || customState.mbox;
-    customState.timeout = newTimeout || customState.timeout;
+    let targetState = component.targetState;
+    targetState.atParams = newParams || targetState.atParams;
+    targetState.mbox = newMbox || targetState.mbox;
+    targetState.timeout = newTimeout || targetState.timeout;
 
-    if (!customState.editMode) {
+    if (!targetState.editMode) {
       getOffers(component, at, logger);
     }
   }

@@ -1,19 +1,29 @@
- /**
- * Copyright 2016 Adobe Systems, Inc. http://www.adobe.com
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/******/ (function(modules) { // webpackBootstrap
+/**
+* Copyright 2016 Adobe Systems, Inc. http://www.adobe.com
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+"use strict";
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -59,157 +69,133 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* global adobe, React */
 	'use strict';
 
-	var _isEqual2 = __webpack_require__(1);
-
-	var _isEqual3 = _interopRequireDefault(_isEqual2);
-
-	var _includes2 = __webpack_require__(26);
-
-	var _includes3 = _interopRequireDefault(_includes2);
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	exports.default = createMboxComponent;
 
-	/* global adobe, React */
-	(function (React, at) {
-	  'use strict';
+	var _atReactUtil = __webpack_require__(1);
 
-	  function appendMboxClass(className) {
-	    if (className.indexOf('mboxDefault') === -1) {
-	      return (className ? className + ' ' : '') + 'mboxDefault';
-	    }
-	    return className;
-	  }
+	var _atReactMain = __webpack_require__(28);
 
-	  function removeMboxClass(className) {
-	    return className.replace(/\bmboxDefault\b/, '');
-	  }
+	function onRender(React, component, queryParams) {
+	  component.customState = {
+	    editMode: queryParams.indexOf('mboxEdit') !== -1
+	  };
 
-	  function getParams(props) {
-	    props = props || {};
-	    var params = null;
-	    Object.keys(props).filter(function (k) {
-	      return k.startsWith('data-') && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
-	    }).forEach(function (k, i) {
-	      if (i === 0) {
-	        params = {};
+	  return React.createElement(
+	    'div',
+	    _extends({
+	      ref: function ref(_ref) {
+	        component.mboxDiv = _ref;
 	      }
-	      params[k.substring(5)] = props[k];
-	    });
-	    return params;
-	  }
+	    }, component.props, {
+	      className: (0, _atReactUtil.appendMboxClass)(component) }),
+	    component.props.children
+	  );
+	}
 
-	  function atOptsHaveChanged(component, mbox, timeout, params) {
-	    return !(0, _isEqual3.default)(component.mboxState.atParams, params) || mbox && component.mboxState.mbox !== mbox || timeout && component.mboxState.timeout !== timeout;
-	  }
+	function createMboxComponent(React, opts) {
+	  var at = adobe.target;
+	  var logger = console;
+	  var queryParams = location.search;
 
-	  function getOffers(component, logger) {
-	    logger.log('getOffers');
-	    at.getOffer({
-	      mbox: component.mboxState.mbox,
-	      params: component.mboxState.atParams,
-	      timeout: component.mboxState.timeout,
-	      success: function success(response) {
-	        logger.log('Applying');
-	        adobe.target.applyOffer({
-	          mbox: component.mboxState.mbox,
-	          offer: response,
-	          element: component.mboxDiv
-	        });
-	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-	      },
-	      error: function error(status, _error) {
-	        logger.error('getOffer error: ', _error, status);
-	        component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
-	      }
-	    });
-	  }
+	  return React.createClass({
+	    getDefaultProps: function getDefaultProps() {
+	      return (0, _atReactMain.getDefaultProps)(opts);
+	    },
 
-	  function _getDefaultProps(opts, settings) {
-	    opts = opts || {};
-	    return {
-	      'className': 'mboxDefault',
-	      'data-mbox': opts.mbox || settings.globalMboxName,
-	      'data-timeout': opts.timeout || settings.timeout
-	    };
-	  }
+	    render: function render() {
+	      return onRender(React, this, queryParams);
+	    },
 
-	  function onRender(component) {
-	    return React.createElement(
-	      'div',
-	      _extends({
-	        ref: function ref(_ref) {
-	          component.mboxDiv = _ref;
-	        }
-	      }, component.props, {
-	        className: appendMboxClass(component.props.className) }),
-	      component.props.children
-	    );
-	  }
+	    componentDidMount: function componentDidMount() {
+	      return (0, _atReactMain.onComponentMounted)(this, at, logger);
+	    },
 
-	  function onComponentMounted(component, logger) {
-	    logger.log('MboxComponentDidMount');
-	    component.mboxState = {
-	      atParams: getParams(component.props),
-	      mbox: component.props['data-mbox'],
-	      timeout: parseInt(component.props['data-timeout'], 10)
-	    };
-	    getOffers(component, logger);
-	  }
+	    shouldComponentUpdate: function shouldComponentUpdate() {
+	      return false;
+	    },
 
-	  function onComponentWillReceiveProps(component, newProps, logger) {
-	    var newMbox = newProps['data-mbox'];
-	    var newTimeout = parseInt(newProps['data-timeout'], 10);
-	    var newParams = getParams(newProps);
-	    if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-	      component.mboxState = {
-	        atParams: newParams || component.mboxState.atParams,
-	        mbox: newMbox || component.mboxState.mbox,
-	        timeout: newTimeout || component.mboxState.timeout
-	      };
-	      getOffers(component, logger);
-	    }
-	  }
-
-	  at.registerExtension({
-	    name: 'react.createMboxComponent',
-	    modules: ['settings', 'logger'],
-	    register: function register(settings, logger) {
-	      return function (opts) {
-	        return React.createClass({
-	          getDefaultProps: function getDefaultProps() {
-	            return _getDefaultProps(opts, settings);
-	          },
-
-	          render: function render() {
-	            return onRender(this);
-	          },
-
-	          componentDidMount: function componentDidMount() {
-	            return onComponentMounted(this, logger);
-	          },
-
-	          shouldComponentUpdate: function shouldComponentUpdate() {
-	            return false;
-	          },
-
-	          componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	            return onComponentWillReceiveProps(this, newProps, logger);
-	          }
-	        });
-	      };
+	    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+	      return (0, _atReactMain.onComponentWillReceiveProps)(this, at, logger, newProps);
 	    }
 	  });
-	})(React, adobe.target);
+	}
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(2);
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isEqual2 = __webpack_require__(2);
+
+	var _isEqual3 = _interopRequireDefault(_isEqual2);
+
+	var _includes2 = __webpack_require__(27);
+
+	var _includes3 = _interopRequireDefault(_includes2);
+
+	exports.appendMboxClass = appendMboxClass;
+	exports.removeMboxClass = removeMboxClass;
+	exports.getParams = getParams;
+	exports.atOptsHaveChanged = atOptsHaveChanged;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function appendMboxClass(component) {
+	  var className = component.props.className;
+	  var mboxName = component.props['data-mbox'];
+
+	  if (component.customState.editMode) {
+	    return 'mbox-name-' + mboxName;
+	  }
+	  if (className.indexOf('mboxDefault') === -1) {
+	    return (className ? className + ' ' : '') + 'mboxDefault';
+	  }
+	  return className;
+	}
+
+	function removeMboxClass(className) {
+	  return className.replace(/\bmboxDefault\b/, '');
+	}
+
+	function getParams(props) {
+	  props = props || {};
+	  var params = null;
+
+	  Object.keys(props).filter(function (k) {
+	    return k.indexOf('data-') === 0 && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
+	  }).forEach(function (k, i) {
+	    if (i === 0) {
+	      params = {};
+	    }
+	    params[k.substring(5)] = props[k];
+	  });
+	  return params;
+	}
+
+	function atOptsHaveChanged(component, mbox, timeout, params) {
+	  var customState = component.customState;
+	  return !(0, _isEqual3.default)(customState.atParams, params) || mbox && customState.mbox !== mbox || timeout && customState.timeout !== timeout;
+	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIsEqual = __webpack_require__(3);
 
 	/**
 	 * Performs a deep comparison between two values to determine if they are
@@ -247,11 +233,11 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(3),
-	    isObjectLike = __webpack_require__(25);
+	var baseIsEqualDeep = __webpack_require__(4),
+	    isObjectLike = __webpack_require__(26);
 
 	/**
 	 * The base implementation of `_.isEqual` which supports partial comparisons
@@ -281,17 +267,17 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Stack = __webpack_require__(4),
-	    equalArrays = __webpack_require__(12),
-	    equalByTag = __webpack_require__(18),
-	    equalObjects = __webpack_require__(19),
-	    getTag = __webpack_require__(22),
-	    isArray = __webpack_require__(14),
-	    isBuffer = __webpack_require__(23),
-	    isTypedArray = __webpack_require__(24);
+	var Stack = __webpack_require__(5),
+	    equalArrays = __webpack_require__(13),
+	    equalByTag = __webpack_require__(19),
+	    equalObjects = __webpack_require__(20),
+	    getTag = __webpack_require__(23),
+	    isArray = __webpack_require__(15),
+	    isBuffer = __webpack_require__(24),
+	    isTypedArray = __webpack_require__(25);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -370,14 +356,14 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var listCacheClear = __webpack_require__(5),
-	    listCacheDelete = __webpack_require__(6),
-	    listCacheGet = __webpack_require__(9),
-	    listCacheHas = __webpack_require__(10),
-	    listCacheSet = __webpack_require__(11);
+	var listCacheClear = __webpack_require__(6),
+	    listCacheDelete = __webpack_require__(7),
+	    listCacheGet = __webpack_require__(10),
+	    listCacheHas = __webpack_require__(11),
+	    listCacheSet = __webpack_require__(12);
 
 	/**
 	 * Creates an list cache object.
@@ -408,7 +394,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/**
@@ -427,10 +413,10 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(7);
+	var assocIndexOf = __webpack_require__(8);
 
 	/** Used for built-in method references. */
 	var arrayProto = Array.prototype;
@@ -468,10 +454,10 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(8);
+	var eq = __webpack_require__(9);
 
 	/**
 	 * Gets the index at which the `key` is found in `array` of key-value pairs.
@@ -495,7 +481,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	/**
@@ -538,10 +524,10 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(7);
+	var assocIndexOf = __webpack_require__(8);
 
 	/**
 	 * Gets the list cache value for `key`.
@@ -563,10 +549,10 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(7);
+	var assocIndexOf = __webpack_require__(8);
 
 	/**
 	 * Checks if a list cache value for `key` exists.
@@ -585,10 +571,10 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(7);
+	var assocIndexOf = __webpack_require__(8);
 
 	/**
 	 * Sets the list cache `key` to `value`.
@@ -617,12 +603,12 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var SetCache = __webpack_require__(13),
-	    arraySome = __webpack_require__(15),
-	    cacheHas = __webpack_require__(16);
+	var SetCache = __webpack_require__(14),
+	    arraySome = __webpack_require__(16),
+	    cacheHas = __webpack_require__(17);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -706,10 +692,10 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(14);
+	var isArray = __webpack_require__(15);
 
 	/**
 	 * Casts `value` as an array if it's not one.
@@ -756,7 +742,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/**
@@ -788,7 +774,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/**
@@ -817,10 +803,10 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(17);
+	var baseIndexOf = __webpack_require__(18);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -840,7 +826,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/**
@@ -869,7 +855,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/**
@@ -912,10 +898,10 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getAllKeys = __webpack_require__(20);
+	var getAllKeys = __webpack_require__(21);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -1007,10 +993,10 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(21);
+	var overArg = __webpack_require__(22);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -1019,7 +1005,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	/**
@@ -1040,7 +1026,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -1065,30 +1051,6 @@
 	}
 
 	module.exports = objectToString;
-
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-	/**
-	 * This method returns `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.13.0
-	 * @category Util
-	 * @returns {boolean} Returns `false`.
-	 * @example
-	 *
-	 * _.times(2, _.stubFalse);
-	 * // => [false, false]
-	 */
-	function stubFalse() {
-	  return false;
-	}
-
-	module.exports = stubFalse;
 
 
 /***/ },
@@ -1117,6 +1079,30 @@
 
 /***/ },
 /* 25 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.13.0
+	 * @category Util
+	 * @returns {boolean} Returns `false`.
+	 * @example
+	 *
+	 * _.times(2, _.stubFalse);
+	 * // => [false, false]
+	 */
+	function stubFalse() {
+	  return false;
+	}
+
+	module.exports = stubFalse;
+
+
+/***/ },
+/* 26 */
 /***/ function(module, exports) {
 
 	/**
@@ -1151,10 +1137,10 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(17);
+	var baseIndexOf = __webpack_require__(18);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -1173,5 +1159,87 @@
 	module.exports = arrayIncludes;
 
 
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getOffers = getOffers;
+	exports.getDefaultProps = getDefaultProps;
+	exports.onComponentMounted = onComponentMounted;
+	exports.onComponentWillReceiveProps = onComponentWillReceiveProps;
+
+	var _atReactUtil = __webpack_require__(1);
+
+	function getOffers(component, at, logger) {
+	  logger.log('getOffers');
+	  at.getOffer({
+	    mbox: component.customState.mbox,
+	    params: component.customState.atParams,
+	    timeout: component.customState.timeout,
+	    success: function success(response) {
+	      logger.log('Applying');
+	      at.applyOffer({
+	        mbox: component.customState.mbox,
+	        offer: response,
+	        element: component.mboxDiv
+	      });
+	      component.mboxDiv.className = (0, _atReactUtil.removeMboxClass)(component.mboxDiv.className);
+	    },
+	    error: function error(status, _error) {
+	      logger.error('getOffer error: ', _error, status);
+	      component.mboxDiv.className = (0, _atReactUtil.removeMboxClass)(component.mboxDiv.className);
+	    }
+	  });
+	}
+
+	function getDefaultProps(opts) {
+	  var DEFAULT_MBOX = 'target-global-mbox';
+	  var DEFAULT_TIMEOUT = 3000;
+	  opts = opts || {};
+
+	  return {
+	    'className': 'mboxDefault',
+	    'data-mbox': opts.mbox || DEFAULT_MBOX,
+	    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
+	  };
+	}
+
+	function onComponentMounted(component, at, logger) {
+	  logger.log('MboxComponentDidMount');
+	  var customState = component.customState;
+
+	  customState.atParams = (0, _atReactUtil.getParams)(component.props);
+	  customState.mbox = component.props['data-mbox'];
+	  customState.timeout = parseInt(component.props['data-timeout'], 10);
+
+	  if (!customState.editMode) {
+	    getOffers(component, at, logger);
+	  }
+	}
+
+	function onComponentWillReceiveProps(component, at, logger, newProps) {
+	  var newMbox = newProps['data-mbox'];
+	  var newTimeout = parseInt(newProps['data-timeout'], 10);
+	  var newParams = (0, _atReactUtil.getParams)(newProps);
+
+	  if ((0, _atReactUtil.atOptsHaveChanged)(component, newMbox, newTimeout, newParams)) {
+	    var customState = component.customState;
+	    customState.atParams = newParams || customState.atParams;
+	    customState.mbox = newMbox || customState.mbox;
+	    customState.timeout = newTimeout || customState.timeout;
+
+	    if (!customState.editMode) {
+	      getOffers(component, at, logger);
+	    }
+	  }
+	}
+
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;

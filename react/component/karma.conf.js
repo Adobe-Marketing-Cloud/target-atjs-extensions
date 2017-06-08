@@ -17,26 +17,32 @@ module.exports = function (config) {
     ],
 
     reporters: [
-      'spec',
-      'coverage'
+      'spec'
     ],
-
-    preprocessors: {
-      'src/**/*.js': ['coverage']
-    },
 
     // list of files / patterns to load in the browser
     files: [
       'node_modules/react/dist/react-with-addons.js',
       'node_modules/react-dom/dist/react-dom.js',
       'test/**/*.testutil.js',
-      'src/**/*.js',
       'test/**/*.spec.js'
     ],
 
     // list of files / patterns to exclude
     exclude: [
     ],
+
+    preprocessors: {
+      'test/**/*.spec.js': ['webpack']
+    },
+
+    webpack: {
+
+    },
+
+    webpackMiddleware: {
+      stats: 'errors-only'
+    },
 
     // web server port
     port: 8080,
@@ -58,17 +64,10 @@ module.exports = function (config) {
       'karma-phantomjs-launcher',
       'karma-chrome-launcher',
       'karma-jasmine',
-      'karma-coverage',
+      'karma-webpack',
       'karma-spec-reporter',
       'karma-jasmine-textio-html-reporter'
     ],
-
-    coverageReporter: {
-      dir: 'coverage/',
-      reporters: [
-        {type: 'html', subdir: '.'}
-      ]
-    },
 
     // Continuous Integration mode
     // if true, it captures browsers, run tests and exit

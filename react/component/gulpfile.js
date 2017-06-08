@@ -13,7 +13,6 @@ var uglify = require('gulp-uglify');
 var plumber = require('gulp-plumber');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
-var version = require('./package.json').version;
 var Server = require('karma').Server;
 
 gulp.task('lint:src', () => {
@@ -34,7 +33,7 @@ gulp.task('lint:test', () => {
 });
 
 gulp.task('babel', () => {
-  return gulp.src('src/at-react-component.jsx')
+  return gulp.src('src/*.{js6,jsx}')
     .pipe(plumber())
     .pipe(babel({
       plugins: ['lodash'],
@@ -49,7 +48,8 @@ gulp.task('pack', () => {
     .pipe(plumber())
     .pipe(webpack({
       output: {
-        filename: 'at-react-component.js'
+        filename: 'at-react-component.js',
+        libraryTarget: 'umd'
       },
       plugins: [
         new lodashWebpackPlugin
@@ -58,7 +58,7 @@ gulp.task('pack', () => {
     .pipe(gulp.dest('src/'));
 });
 
-gulp.task('test:run', done => {
+gulp.task('test', done => {
   new Server({
     configFile: path.join(__dirname, '/karma.conf.js')
   }, done).start();
@@ -83,7 +83,7 @@ gulp.task('build:dist', () => {
       'src/at-react-component.js'
     ])
     .pipe(plumber())
-    .pipe(concat('at-react-component-' + version + '.js'))
+    .pipe(concat('at-react-component.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'
@@ -94,14 +94,8 @@ gulp.task('build:dist', () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build:copywp', () => {
-  return gulp.src([
-      'src/header.js',
-      'src/at-react-component-wp.jsx'
-    ])
-    .pipe(plumber())
-    .pipe(concat('at-react-component-wp-' + version + '.jsx'))
-    .pipe(gulp.dest('dist'));
+gulp.task('build:clean', () => {
+  return del(['src/**/at-react*.js']);
 });
 
 gulp.task('watch', function () {
@@ -111,8 +105,8 @@ gulp.task('watch', function () {
 
 gulp.task('lint', ['lint:src', 'lint:test']);
 
-gulp.task('test', gulpSequence('lint', 'babel', 'pack', 'test:run'));
+gulp.task('prebuild', gulpSequence('lint', 'babel', 'pack'));
 
-gulp.task('build', gulpSequence('clean', 'test', 'build:dist', 'build:copywp'));
+gulp.task('build', gulpSequence('clean', 'prebuild', 'build:dist', 'build:clean', 'test'));
 
-gulp.task('default', ['test']);
+gulp.task('default', ['build']);

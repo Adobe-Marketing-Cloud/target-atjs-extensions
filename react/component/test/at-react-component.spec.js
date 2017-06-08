@@ -1,7 +1,8 @@
 /* global adobe React */
 
+var createMboxComponent = require('../dist/at-react-component').default;
 var Utils = React.addons.TestUtils;
-var Mbox = adobe.target.ext.react.createMboxComponent({mbox: 'myMbox'});
+var Mbox = createMboxComponent(React);
 var component;
 var element;
 

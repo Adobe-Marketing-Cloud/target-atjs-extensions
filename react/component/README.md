@@ -6,19 +6,25 @@
 
 The extension returns a React component, that acts as a container for offers delivered by **at.js**.  
 Initially, it renders a hidden `<div>` element, which is later made visible once the offer content is successfully fetched by `adobe.target.getOffer()` and applied by `adobe.target.applyOffer()`.  
-The returned React component is to be composed into React apps, e.g.: `<Mbox />`
+The returned React component is to be composed into React apps, e.g.: `<Mbox />`  
+The component is available as a UMD module, to be included into Webpack/Browserify builds.
 
 ## Usage
 
-```javascript
-var Mbox = adobe.target.ext.react.createMboxComponent(options);
-```
+```javascript (ES6)
+import createMboxComponent from 'at-react-component';
+const Mbox = createMboxComponent(React);
 
-where `options` object contains custom **at.js** options.  
+...
+
+<Mbox data-mbox="testMbox">
+  Default mbox content
+</Mbox>
+```  
 
 ## Options
 
-> The following options can be provided in the `options` object:
+> The following options can be set on the component as `data-` attributes:
 
 Key | Type | Mandatory | Description
 --- | ---- | --------- | -----------
@@ -29,8 +35,7 @@ Key | Type | Mandatory | Description
 ## Notes
 
 * Server-side rendering is not yet supported, the extension is intended to be used solely on the client-side
-* Only offers created in the Form-based Composer are supported, there is no support yet for visual offers created in VEC (Visual Experience Composer)
-* Besides being passed as a parameter to `createMboxComponent`, options can also be specified as component attributes prefixed by `data-` in your React app's `render` function, for example: `<Mbox data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="1"/>`
+* `params` attributes can be set as follows: `<Mbox data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="1"/>`
 
 ## License
 

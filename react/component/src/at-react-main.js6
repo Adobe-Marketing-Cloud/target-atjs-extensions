@@ -1,0 +1,66 @@
+import {removeMboxClass, getParams, atOptsHaveChanged} from './at-react-util';
+
+export function getOffers(component, at, logger) {
+  logger.log('getOffers');
+  at.getOffer({
+    mbox: component.customState.mbox,
+    params: component.customState.atParams,
+    timeout: component.customState.timeout,
+    success: function (response) {
+      logger.log('Applying');
+      at.applyOffer({
+        mbox: component.customState.mbox,
+        offer: response,
+        element: component.mboxDiv
+      });
+      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+    },
+    error: function (status, error) {
+      logger.error('getOffer error: ', error, status);
+      component.mboxDiv.className = removeMboxClass(component.mboxDiv.className);
+    }
+  });
+}
+
+export function getDefaultProps(opts) {
+  const DEFAULT_MBOX = 'target-global-mbox';
+  const DEFAULT_TIMEOUT = 3000;
+  opts = opts || {};
+
+  return {
+    'className': 'mboxDefault',
+    'data-mbox': opts.mbox || DEFAULT_MBOX,
+    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
+  };
+}
+
+
+export function onComponentMounted(component, at, logger) {
+  logger.log('MboxComponentDidMount');
+  let customState = component.customState;
+
+  customState.atParams = getParams(component.props);
+  customState.mbox = component.props['data-mbox'];
+  customState.timeout = parseInt(component.props['data-timeout'], 10);
+
+  if (!customState.editMode) {
+    getOffers(component, at, logger);
+  }
+}
+
+export function onComponentWillReceiveProps(component, at, logger, newProps) {
+  let newMbox = newProps['data-mbox'];
+  let newTimeout = parseInt(newProps['data-timeout'], 10);
+  let newParams = getParams(newProps);
+
+  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
+    let customState = component.customState;
+    customState.atParams = newParams || customState.atParams;
+    customState.mbox = newMbox || customState.mbox;
+    customState.timeout = newTimeout || customState.timeout;
+
+    if (!customState.editMode) {
+      getOffers(component, at, logger);
+    }
+  }
+}

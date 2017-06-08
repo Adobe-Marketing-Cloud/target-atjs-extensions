@@ -61,7 +61,7 @@ function getParams(props) {
   let params = null;
   Object.keys(props)
     .filter(k => {
-      return k.startsWith('data-') && !['data-mbox', 'data-timeout'].includes(k);
+      return k.indexOf('data-') === 0 && !['data-mbox', 'data-timeout'].includes(k);
     })
     .forEach((k, i) => {
       if (i === 0) {

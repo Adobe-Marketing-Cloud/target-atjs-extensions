@@ -58,7 +58,7 @@ gulp.task('pack', () => {
     .pipe(gulp.dest('src/'));
 });
 
-gulp.task('test:run', done => {
+gulp.task('test', done => {
   new Server({
     configFile: path.join(__dirname, '/karma.conf.js')
   }, done).start();
@@ -105,8 +105,8 @@ gulp.task('watch', function () {
 
 gulp.task('lint', ['lint:src', 'lint:test']);
 
-gulp.task('test', gulpSequence('lint', 'babel', 'pack'));
+gulp.task('prebuild', gulpSequence('lint', 'babel', 'pack'));
 
-gulp.task('build', gulpSequence('clean', 'test', 'build:dist', 'build:clean'));
+gulp.task('build', gulpSequence('clean', 'prebuild', 'build:dist', 'build:clean', 'test'));
 
-gulp.task('default', ['test']);
+gulp.task('default', ['build']);

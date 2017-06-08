@@ -176,7 +176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var params = null;
 
 	  Object.keys(props).filter(function (k) {
-	    return k.startsWith('data-') && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
+	    return k.indexOf('data-') === 0 && !(0, _includes3.default)(['data-mbox', 'data-timeout'], k);
 	  }).forEach(function (k, i) {
 	    if (i === 0) {
 	      params = {};
@@ -1242,3 +1242,4 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 });
+;

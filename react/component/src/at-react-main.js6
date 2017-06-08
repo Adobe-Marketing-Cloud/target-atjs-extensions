@@ -1,13 +1,11 @@
 import {removeMboxClass, getParams, atOptsHaveChanged} from './at-react-util';
 
 export function getOffers(component, at, logger) {
-  logger.log('getOffers');
   at.getOffer({
     mbox: component.targetState.mbox,
     params: component.targetState.atParams,
     timeout: component.targetState.timeout,
     success: function (response) {
-      logger.log('Applying');
       at.applyOffer({
         mbox: component.targetState.mbox,
         offer: response,
@@ -23,7 +21,7 @@ export function getOffers(component, at, logger) {
 }
 
 export function getDefaultProps(opts) {
-  const DEFAULT_MBOX = 'target-global-mbox';
+  const DEFAULT_MBOX = 'default-mbox';
   const DEFAULT_TIMEOUT = 3000;
   opts = opts || {};
 
@@ -34,14 +32,17 @@ export function getDefaultProps(opts) {
   };
 }
 
-
 export function onComponentMounted(component, at, logger) {
-  logger.log('TargetComponentDidMount');
   let targetState = component.targetState;
 
   targetState.atParams = getParams(component.props);
   targetState.mbox = component.props['data-mbox'];
   targetState.timeout = parseInt(component.props['data-timeout'], 10);
+
+  if (targetState.mbox === 'default-mbox') {
+    logger.error('at-react-component:', 'mbox prop must be provided for each Target component!');
+    return;
+  }
 
   if (!targetState.editMode) {
     getOffers(component, at, logger);

@@ -1176,13 +1176,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _atReactUtil = __webpack_require__(1);
 
 	function getOffers(component, at, logger) {
-	  logger.log('getOffers');
 	  at.getOffer({
 	    mbox: component.targetState.mbox,
 	    params: component.targetState.atParams,
 	    timeout: component.targetState.timeout,
 	    success: function success(response) {
-	      logger.log('Applying');
 	      at.applyOffer({
 	        mbox: component.targetState.mbox,
 	        offer: response,
@@ -1210,7 +1208,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function onComponentMounted(component, at, logger) {
-	  logger.log('TargetComponentDidMount');
 	  var targetState = component.targetState;
 
 	  targetState.atParams = (0, _atReactUtil.getParams)(component.props);

@@ -1,13 +1,11 @@
 import {removeMboxClass, getParams, atOptsHaveChanged} from './at-react-util';
 
 export function getOffers(component, at, logger) {
-  logger.log('getOffers');
   at.getOffer({
     mbox: component.targetState.mbox,
     params: component.targetState.atParams,
     timeout: component.targetState.timeout,
     success: function (response) {
-      logger.log('Applying');
       at.applyOffer({
         mbox: component.targetState.mbox,
         offer: response,
@@ -34,9 +32,7 @@ export function getDefaultProps(opts) {
   };
 }
 
-
 export function onComponentMounted(component, at, logger) {
-  logger.log('TargetComponentDidMount');
   let targetState = component.targetState;
 
   targetState.atParams = getParams(component.props);

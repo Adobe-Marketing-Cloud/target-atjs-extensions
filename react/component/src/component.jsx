@@ -2,9 +2,9 @@
 import {appendMboxClass} from './util';
 import {getDefaultProps, onComponentMounted, onComponentWillReceiveProps} from './main';
 
-function onRender(React, component, queryParams) {
+function onRender(React, component) {
   component.targetState = {
-    editMode: (queryParams.indexOf('mboxEdit') !== -1)
+    editMode: (component.queryParams.indexOf('mboxEdit') !== -1)
   };
 
   return <div
@@ -17,29 +17,33 @@ function onRender(React, component, queryParams) {
 }
 
 export default function createTargetComponent(React, opts) {
-  const at = adobe.target;
-  const logger = console;
-  const queryParams = location.search;
-
-  return React.createClass({
-    getDefaultProps: function () {
-      return getDefaultProps(opts);
-    },
-
-    render: function () {
-      return onRender(React, this, queryParams);
-    },
-
-    componentDidMount: function () {
-      return onComponentMounted(this, at, logger);
-    },
-
-    shouldComponentUpdate: function () {
-      return false;
-    },
-
-    componentWillReceiveProps: function (newProps) {
-      return onComponentWillReceiveProps(this, at, logger, newProps);
+  class TargetComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.at = adobe.target;
+      this.logger = console;
+      this.queryParams = location.search;
     }
-  });
+
+    render() {
+      return onRender(React, this);
+    }
+
+    componentDidMount() {
+      return onComponentMounted(this, this.at, this.logger);
+    }
+
+    shouldComponentUpdate() {
+      return false;
+    }
+
+    componentWillReceiveProps(newProps) {
+      return onComponentWillReceiveProps(this, this.at, this.logger, newProps);
+    }
+
+  }
+
+  TargetComponent.defaultProps = getDefaultProps(opts);
+
+  return TargetComponent;
 }

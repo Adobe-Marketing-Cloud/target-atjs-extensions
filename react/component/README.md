@@ -9,10 +9,14 @@ Initially, it renders a hidden `<div>` element, which is later made visible once
 The returned React component is to be composed into React apps, e.g.: `<Target />`  
 The component is available as a UMD module, to be included into Webpack/Browserify builds.
 
+## Installation
+
+Install with `npm i @adobe/target-react-component`
+
 ## Usage
 
 ```javascript (ES6)
-import createTargetComponent from 'target-react-component';
+import createTargetComponent from '@adobe/target-react-component';
 const Target = createTargetComponent(React);
 
 ...
@@ -34,6 +38,7 @@ Key | Type | Mandatory | Description
 
 ## Notes
 
+* **at.js** must be included in the page before the React app using React components
 * Server-side rendering is not yet supported, the extension is intended to be used solely on the client-side
 * `params` attributes can be set as follows: `<Target data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="1"/>`
 

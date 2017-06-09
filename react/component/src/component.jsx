@@ -1,7 +1,6 @@
 /* global adobe, React */
-'use strict';
-import {appendMboxClass} from './at-react-util';
-import {getDefaultProps, onComponentMounted, onComponentWillReceiveProps} from './at-react-main';
+import {appendMboxClass} from './util';
+import {getDefaultProps, onComponentMounted, onComponentWillReceiveProps} from './main';
 
 function onRender(React, component, queryParams) {
   component.targetState = {

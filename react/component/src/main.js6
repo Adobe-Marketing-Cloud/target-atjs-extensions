@@ -1,4 +1,4 @@
-import {removeMboxClass, getParams, atOptsHaveChanged} from './at-react-util';
+import {removeMboxClass, getParams, atOptsHaveChanged} from './util';
 
 export function getOffers(component, at, logger) {
   at.getOffer({

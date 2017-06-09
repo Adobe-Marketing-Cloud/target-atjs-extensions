@@ -44,11 +44,11 @@ gulp.task('babel', () => {
 });
 
 gulp.task('pack', () => {
-  return gulp.src('src/at-react-component.js')
+  return gulp.src('src/component.js')
     .pipe(plumber())
     .pipe(webpack({
       output: {
-        filename: 'at-react-component.js',
+        filename: 'component.js',
         libraryTarget: 'umd'
       },
       plugins: [
@@ -79,11 +79,11 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
-      'src/header.js',
-      'src/at-react-component.js'
+      'src/header.txt',
+      'src/component.js'
     ])
     .pipe(plumber())
-    .pipe(concat('at-react-component.js'))
+    .pipe(concat('target-react-component.js'))
     .pipe(gulp.dest('dist'))
     .pipe(uglify({
       preserveComments: 'license'
@@ -95,7 +95,7 @@ gulp.task('build:dist', () => {
 });
 
 gulp.task('build:clean', () => {
-  return del(['src/**/at-react*.js']);
+  return del(['src/**/*.js']);
 });
 
 gulp.task('watch', function () {

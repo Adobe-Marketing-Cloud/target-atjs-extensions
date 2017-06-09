@@ -1,6 +1,6 @@
 /* global adobe React */
 
-var createTargetComponent = require('../dist/at-react-component').default;
+var createTargetComponent = require('../dist/target-react-component').default;
 var Utils = React.addons.TestUtils;
 var Target = createTargetComponent(React);
 var component;

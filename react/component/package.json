@@ -1,5 +1,5 @@
 {
-  "name": "@adobe/at-react-component",
+  "name": "@adobe/target-react-component",
   "version": "0.4.0",
   "description": "Adobe Target React component",
   "author": {
@@ -8,7 +8,7 @@
     "email": "anischev@adobe.com"
   },
   "homepage": "",
-  "main": "dist/at-react-component.js",
+  "main": "dist/target-react-component.js",
   "dependencies": {},
   "eslintConfig": {
     "extends": "xo-space",

@@ -1,4 +1,4 @@
-# at-react-component
+# target-react-component
 > React Component Adobe Target **at.js** extension  
 > This extension returns a React component, to be used as container for content delivered by **at.js**
 
@@ -12,7 +12,7 @@ The component is available as a UMD module, to be included into Webpack/Browseri
 ## Usage
 
 ```javascript (ES6)
-import createTargetComponent from 'at-react-component';
+import createTargetComponent from 'target-react-component';
 const Target = createTargetComponent(React);
 
 ...

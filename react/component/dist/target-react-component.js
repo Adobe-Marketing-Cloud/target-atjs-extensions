@@ -67,22 +67,22 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	/* global adobe, React */
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* global adobe, React */
+
 
 	exports.default = createTargetComponent;
 
-	var _atReactUtil = __webpack_require__(1);
+	var _util = __webpack_require__(1);
 
-	var _atReactMain = __webpack_require__(28);
+	var _main = __webpack_require__(28);
 
 	function onRender(React, component, queryParams) {
 	  component.targetState = {
@@ -96,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        component.targetDiv = _ref;
 	      }
 	    }, component.props, {
-	      className: (0, _atReactUtil.appendMboxClass)(component) }),
+	      className: (0, _util.appendMboxClass)(component) }),
 	    component.props.children
 	  );
 	}
@@ -108,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return React.createClass({
 	    getDefaultProps: function getDefaultProps() {
-	      return (0, _atReactMain.getDefaultProps)(opts);
+	      return (0, _main.getDefaultProps)(opts);
 	    },
 
 	    render: function render() {
@@ -116,7 +116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 
 	    componentDidMount: function componentDidMount() {
-	      return (0, _atReactMain.onComponentMounted)(this, at, logger);
+	      return (0, _main.onComponentMounted)(this, at, logger);
 	    },
 
 	    shouldComponentUpdate: function shouldComponentUpdate() {
@@ -124,14 +124,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 
 	    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	      return (0, _atReactMain.onComponentWillReceiveProps)(this, at, logger, newProps);
+	      return (0, _main.onComponentWillReceiveProps)(this, at, logger, newProps);
 	    }
 	  });
 	}
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -191,9 +191,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return !(0, _isEqual3.default)(targetState.atParams, params) || mbox && targetState.mbox !== mbox || timeout && targetState.timeout !== timeout;
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIsEqual = __webpack_require__(3);
 
@@ -232,9 +232,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isEqual;
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIsEqualDeep = __webpack_require__(4),
 	    isObjectLike = __webpack_require__(26);
@@ -266,9 +266,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqual;
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Stack = __webpack_require__(5),
 	    equalArrays = __webpack_require__(13),
@@ -355,9 +355,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqualDeep;
 
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var listCacheClear = __webpack_require__(6),
 	    listCacheDelete = __webpack_require__(7),
@@ -393,9 +393,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ListCache;
 
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Removes all key-value entries from the list cache.
@@ -412,9 +412,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheClear;
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -453,9 +453,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheDelete;
 
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var eq = __webpack_require__(9);
 
@@ -480,9 +480,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = assocIndexOf;
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Performs a
@@ -523,9 +523,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -548,9 +548,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheGet;
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -570,9 +570,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheHas;
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -602,9 +602,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheSet;
 
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var SetCache = __webpack_require__(14),
 	    arraySome = __webpack_require__(16),
@@ -691,9 +691,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalArrays;
 
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(15);
 
@@ -741,9 +741,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = castArray;
 
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Checks if `value` is classified as an `Array` object.
@@ -773,9 +773,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isArray;
 
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * A specialized version of `_.some` for arrays without support for iteratee
@@ -802,9 +802,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arraySome;
 
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -825,9 +825,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * A specialized version of `_.indexOf` which performs strict equality
@@ -854,9 +854,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = strictIndexOf;
 
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Performs a
@@ -897,9 +897,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var getAllKeys = __webpack_require__(21);
 
@@ -992,9 +992,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalObjects;
 
 
-/***/ },
+/***/ }),
 /* 21 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var overArg = __webpack_require__(22);
 
@@ -1004,9 +1004,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = nativeKeys;
 
 
-/***/ },
+/***/ }),
 /* 22 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Creates a unary function that invokes `func` with its argument transformed.
@@ -1025,9 +1025,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = overArg;
 
 
-/***/ },
+/***/ }),
 /* 23 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -1053,9 +1053,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = objectToString;
 
 
-/***/ },
+/***/ }),
 /* 24 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1077,9 +1077,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ },
+/***/ }),
 /* 25 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1101,9 +1101,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ },
+/***/ }),
 /* 26 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Checks if `value` is object-like. A value is object-like if it's not `null`
@@ -1136,9 +1136,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isObjectLike;
 
 
-/***/ },
+/***/ }),
 /* 27 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -1159,9 +1159,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ },
+/***/ }),
 /* 28 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1173,7 +1173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.onComponentMounted = onComponentMounted;
 	exports.onComponentWillReceiveProps = onComponentWillReceiveProps;
 
-	var _atReactUtil = __webpack_require__(1);
+	var _util = __webpack_require__(1);
 
 	function getOffers(component, at, logger) {
 	  at.getOffer({
@@ -1186,11 +1186,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        offer: response,
 	        element: component.targetDiv
 	      });
-	      component.targetDiv.className = (0, _atReactUtil.removeMboxClass)(component.targetDiv.className);
+	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
 	    },
 	    error: function error(status, _error) {
 	      logger.error('getOffer error: ', _error, status);
-	      component.targetDiv.className = (0, _atReactUtil.removeMboxClass)(component.targetDiv.className);
+	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
 	    }
 	  });
 	}
@@ -1210,7 +1210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function onComponentMounted(component, at, logger) {
 	  var targetState = component.targetState;
 
-	  targetState.atParams = (0, _atReactUtil.getParams)(component.props);
+	  targetState.atParams = (0, _util.getParams)(component.props);
 	  targetState.mbox = component.props['data-mbox'];
 	  targetState.timeout = parseInt(component.props['data-timeout'], 10);
 
@@ -1227,9 +1227,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function onComponentWillReceiveProps(component, at, logger, newProps) {
 	  var newMbox = newProps['data-mbox'];
 	  var newTimeout = parseInt(newProps['data-timeout'], 10);
-	  var newParams = (0, _atReactUtil.getParams)(newProps);
+	  var newParams = (0, _util.getParams)(newProps);
 
-	  if ((0, _atReactUtil.atOptsHaveChanged)(component, newMbox, newTimeout, newParams)) {
+	  if ((0, _util.atOptsHaveChanged)(component, newMbox, newTimeout, newParams)) {
 	    var targetState = component.targetState;
 	    targetState.atParams = newParams || targetState.atParams;
 	    targetState.mbox = newMbox || targetState.mbox;
@@ -1241,7 +1241,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

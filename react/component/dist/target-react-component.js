@@ -67,13 +67,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* global adobe, React */
 
@@ -84,9 +86,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _main = __webpack_require__(28);
 
-	function onRender(React, component, queryParams) {
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function onRender(React, component) {
 	  component.targetState = {
-	    editMode: queryParams.indexOf('mboxEdit') !== -1
+	    editMode: component.queryParams.indexOf('mboxEdit') !== -1
 	  };
 
 	  return React.createElement(
@@ -102,36 +110,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function createTargetComponent(React, opts) {
-	  var at = adobe.target;
-	  var logger = console;
-	  var queryParams = location.search;
+	  var TargetComponent = function (_React$Component) {
+	    _inherits(TargetComponent, _React$Component);
 
-	  return React.createClass({
-	    getDefaultProps: function getDefaultProps() {
-	      return (0, _main.getDefaultProps)(opts);
-	    },
+	    function TargetComponent(props) {
+	      _classCallCheck(this, TargetComponent);
 
-	    render: function render() {
-	      return onRender(React, this, queryParams);
-	    },
+	      var _this = _possibleConstructorReturn(this, (TargetComponent.__proto__ || Object.getPrototypeOf(TargetComponent)).call(this, props));
 
-	    componentDidMount: function componentDidMount() {
-	      return (0, _main.onComponentMounted)(this, at, logger);
-	    },
-
-	    shouldComponentUpdate: function shouldComponentUpdate() {
-	      return false;
-	    },
-
-	    componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-	      return (0, _main.onComponentWillReceiveProps)(this, at, logger, newProps);
+	      _this.at = adobe.target;
+	      _this.logger = console;
+	      _this.queryParams = location.search;
+	      return _this;
 	    }
-	  });
+
+	    _createClass(TargetComponent, [{
+	      key: 'render',
+	      value: function render() {
+	        return onRender(React, this);
+	      }
+	    }, {
+	      key: 'componentDidMount',
+	      value: function componentDidMount() {
+	        return (0, _main.onComponentMounted)(this, this.at, this.logger);
+	      }
+	    }, {
+	      key: 'shouldComponentUpdate',
+	      value: function shouldComponentUpdate() {
+	        return false;
+	      }
+	    }, {
+	      key: 'componentWillReceiveProps',
+	      value: function componentWillReceiveProps(newProps) {
+	        return (0, _main.onComponentWillReceiveProps)(this, this.at, this.logger, newProps);
+	      }
+	    }]);
+
+	    return TargetComponent;
+	  }(React.Component);
+
+	  TargetComponent.defaultProps = (0, _main.getDefaultProps)(opts);
+
+	  return TargetComponent;
 	}
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -191,9 +216,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return !(0, _isEqual3.default)(targetState.atParams, params) || mbox && targetState.mbox !== mbox || timeout && targetState.timeout !== timeout;
 	}
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var baseIsEqual = __webpack_require__(3);
 
@@ -232,9 +257,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isEqual;
 
 
-/***/ }),
+/***/ },
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var baseIsEqualDeep = __webpack_require__(4),
 	    isObjectLike = __webpack_require__(26);
@@ -266,9 +291,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqual;
 
 
-/***/ }),
+/***/ },
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var Stack = __webpack_require__(5),
 	    equalArrays = __webpack_require__(13),
@@ -355,9 +380,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqualDeep;
 
 
-/***/ }),
+/***/ },
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var listCacheClear = __webpack_require__(6),
 	    listCacheDelete = __webpack_require__(7),
@@ -393,9 +418,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ListCache;
 
 
-/***/ }),
+/***/ },
 /* 6 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Removes all key-value entries from the list cache.
@@ -412,9 +437,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheClear;
 
 
-/***/ }),
+/***/ },
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -453,9 +478,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheDelete;
 
 
-/***/ }),
+/***/ },
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var eq = __webpack_require__(9);
 
@@ -480,9 +505,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = assocIndexOf;
 
 
-/***/ }),
+/***/ },
 /* 9 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Performs a
@@ -523,9 +548,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ }),
+/***/ },
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -548,9 +573,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheGet;
 
 
-/***/ }),
+/***/ },
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -570,9 +595,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheHas;
 
 
-/***/ }),
+/***/ },
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -602,9 +627,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheSet;
 
 
-/***/ }),
+/***/ },
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var SetCache = __webpack_require__(14),
 	    arraySome = __webpack_require__(16),
@@ -691,9 +716,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalArrays;
 
 
-/***/ }),
+/***/ },
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(15);
 
@@ -741,9 +766,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = castArray;
 
 
-/***/ }),
+/***/ },
 /* 15 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Checks if `value` is classified as an `Array` object.
@@ -773,9 +798,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isArray;
 
 
-/***/ }),
+/***/ },
 /* 16 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * A specialized version of `_.some` for arrays without support for iteratee
@@ -802,9 +827,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arraySome;
 
 
-/***/ }),
+/***/ },
 /* 17 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -825,9 +850,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ }),
+/***/ },
 /* 18 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * A specialized version of `_.indexOf` which performs strict equality
@@ -854,9 +879,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = strictIndexOf;
 
 
-/***/ }),
+/***/ },
 /* 19 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Performs a
@@ -897,9 +922,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ }),
+/***/ },
 /* 20 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var getAllKeys = __webpack_require__(21);
 
@@ -992,9 +1017,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalObjects;
 
 
-/***/ }),
+/***/ },
 /* 21 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var overArg = __webpack_require__(22);
 
@@ -1004,9 +1029,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = nativeKeys;
 
 
-/***/ }),
+/***/ },
 /* 22 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Creates a unary function that invokes `func` with its argument transformed.
@@ -1025,9 +1050,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = overArg;
 
 
-/***/ }),
+/***/ },
 /* 23 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -1053,9 +1078,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = objectToString;
 
 
-/***/ }),
+/***/ },
 /* 24 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1077,9 +1102,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ }),
+/***/ },
 /* 25 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1101,9 +1126,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ }),
+/***/ },
 /* 26 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Checks if `value` is object-like. A value is object-like if it's not `null`
@@ -1136,9 +1161,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isObjectLike;
 
 
-/***/ }),
+/***/ },
 /* 27 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -1159,9 +1184,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ }),
+/***/ },
 /* 28 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1241,7 +1266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ })
+/***/ }
 /******/ ])
 });
 ;

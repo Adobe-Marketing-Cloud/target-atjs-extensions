@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -154,9 +154,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return TargetComponent;
 	}
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -216,9 +216,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return !(0, _isEqual3.default)(targetState.atParams, params) || mbox && targetState.mbox !== mbox || timeout && targetState.timeout !== timeout;
 	}
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIsEqual = __webpack_require__(3);
 
@@ -257,9 +257,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isEqual;
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIsEqualDeep = __webpack_require__(4),
 	    isObjectLike = __webpack_require__(26);
@@ -291,9 +291,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqual;
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var Stack = __webpack_require__(5),
 	    equalArrays = __webpack_require__(13),
@@ -380,9 +380,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = baseIsEqualDeep;
 
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var listCacheClear = __webpack_require__(6),
 	    listCacheDelete = __webpack_require__(7),
@@ -418,9 +418,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ListCache;
 
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Removes all key-value entries from the list cache.
@@ -437,9 +437,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheClear;
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -478,9 +478,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheDelete;
 
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var eq = __webpack_require__(9);
 
@@ -505,9 +505,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = assocIndexOf;
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Performs a
@@ -548,9 +548,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -573,9 +573,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheGet;
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -595,9 +595,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheHas;
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var assocIndexOf = __webpack_require__(8);
 
@@ -627,9 +627,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = listCacheSet;
 
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var SetCache = __webpack_require__(14),
 	    arraySome = __webpack_require__(16),
@@ -716,9 +716,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalArrays;
 
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var isArray = __webpack_require__(15);
 
@@ -766,9 +766,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = castArray;
 
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Checks if `value` is classified as an `Array` object.
@@ -798,9 +798,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isArray;
 
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * A specialized version of `_.some` for arrays without support for iteratee
@@ -827,9 +827,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arraySome;
 
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -850,9 +850,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * A specialized version of `_.indexOf` which performs strict equality
@@ -879,9 +879,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = strictIndexOf;
 
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Performs a
@@ -922,9 +922,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = eq;
 
 
-/***/ },
+/***/ }),
 /* 20 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var getAllKeys = __webpack_require__(21);
 
@@ -1017,9 +1017,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = equalObjects;
 
 
-/***/ },
+/***/ }),
 /* 21 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var overArg = __webpack_require__(22);
 
@@ -1029,9 +1029,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = nativeKeys;
 
 
-/***/ },
+/***/ }),
 /* 22 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Creates a unary function that invokes `func` with its argument transformed.
@@ -1050,9 +1050,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = overArg;
 
 
-/***/ },
+/***/ }),
 /* 23 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -1078,9 +1078,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = objectToString;
 
 
-/***/ },
+/***/ }),
 /* 24 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1102,9 +1102,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ },
+/***/ }),
 /* 25 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * This method returns `false`.
@@ -1126,9 +1126,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = stubFalse;
 
 
-/***/ },
+/***/ }),
 /* 26 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Checks if `value` is object-like. A value is object-like if it's not `null`
@@ -1161,9 +1161,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = isObjectLike;
 
 
-/***/ },
+/***/ }),
 /* 27 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var baseIndexOf = __webpack_require__(18);
 
@@ -1184,9 +1184,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = arrayIncludes;
 
 
-/***/ },
+/***/ }),
 /* 28 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -1209,7 +1209,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      at.applyOffer({
 	        mbox: component.targetState.mbox,
 	        offer: response,
-	        element: component.targetDiv
+	        selector: component.targetDiv
 	      });
 	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
 	    },
@@ -1266,7 +1266,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

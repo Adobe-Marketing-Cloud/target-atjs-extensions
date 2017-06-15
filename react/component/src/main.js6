@@ -9,7 +9,7 @@ export function getOffers(component, at, logger) {
       at.applyOffer({
         mbox: component.targetState.mbox,
         offer: response,
-        element: component.targetDiv
+        selector: component.targetDiv
       });
       component.targetDiv.className = removeMboxClass(component.targetDiv.className);
     },

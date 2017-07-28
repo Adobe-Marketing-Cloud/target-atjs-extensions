@@ -10,7 +10,7 @@ export interface TargetWindow extends Window {
   targetPageParamsAll?: Function,
 }
 
-interface Opts {
+export interface Opts {
   mbox?: string,
   timeout?: number,
   params?: { [key: string]: string; },

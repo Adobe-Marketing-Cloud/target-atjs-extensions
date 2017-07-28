@@ -1,0 +1,15 @@
+{
+  "name": "at-angular2-directive",
+  "version": "0.0.1",
+  "description": "Angular2 Target directive",
+  "repository": "/at-angular2-directive",
+  "license": "Apache-2.0",
+  "main": "target.directive.ts",
+  "module": "target.directive.ts",
+  "peerDependencies": {
+    "@angular/core": "^4.0.0"
+  },
+  "dependencies": {
+    "classnames": "^2.2.5"
+  }
+}

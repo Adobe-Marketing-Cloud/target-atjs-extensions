@@ -39,12 +39,25 @@ export class AppModule { }
 
 Once the library is imported, you can use Target **mbox** directive in your Angular application:
 
+```javascript
+// Specify Target options in your app.component.ts
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent {
+  targetOpts = {
+    mbox: 'simpleDirective'
+  };
+}
+```
+
 ```xml
 <!-- You can now use Target mbox directive in app.component.html -->
 <h1>
   {{title}}
 </h1>
-<div [mbox]="{mbox: 'sampleMbox'}">
+<div [mbox]="targetOpts">
   Default content
 </div>
 ```

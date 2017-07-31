@@ -1,0 +1,10 @@
+var gulpIf = require('gulp-if');
+var gulp = require('gulp');
+
+function isFixed(file) {
+  return file.eslint != null && file.eslint.fixed;
+}
+
+module.exports = function(dest) {
+  return gulpIf(isFixed, gulp.dest(dest));
+};

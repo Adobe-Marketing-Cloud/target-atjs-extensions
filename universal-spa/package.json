@@ -1,0 +1,50 @@
+{
+  "name": "universal-spa",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "",
+  "dependencies": {},
+  "eslintConfig": {
+    "extends": "xo-space",
+    "fix": true,
+    "env": {
+      "browser": true,
+      "jasmine": true,
+      "phantomjs": true
+    },
+    "rules": {
+      "no-unused-vars": "warn"
+    }
+  },
+  "repository": "/universal-spa",
+  "scripts": {
+    "lint": "gulp lint",
+    "watch": "gulp watch",
+    "test": "gulp",
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "eslint-config-xo-space": "^0.16.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-eslint": "3.0.1",
+    "gulp-eslint-if-fixed": "1.0.0",
+    "gulp-exclude-gitignore": "^1.1.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sequence": "^0.4.6",
+    "gulp-uglify": "^3.0.0",
+    "jasmine-core": "^2.6.4",
+    "karma": "^1.7.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jasmine-textio-html-reporter": "^1.0.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-spec-reporter": "0.0.31",
+    "phantomjs-prebuilt": "^2.1.14"
+  }
+}

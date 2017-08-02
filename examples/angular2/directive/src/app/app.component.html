@@ -1,0 +1,32 @@
+<div class="container">
+  <blockquote>In the example below, a Target mbox directive is replacing content in the "Simple Directive Content" area.</blockquote>
+  <ul class="collapsible" data-collapsible="accordion">
+    <li>
+      <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
+      <div class="collapsible-body">
+        <p>
+          In order to use the directive, first specify Target mbox options in your component:
+        </p>
+        <pre>
+          <code [innerHTML]="demoCode"></code>
+        </pre>
+        <p>
+          You can then use the directive in your component template as follows:
+        </p>
+        <pre>
+    &lt;h4 <b>[mbox]="</b>targetOpts<b>"</b>&gt;
+        Default content.
+    &lt;/h4&gt;
+      </pre>
+      </div>
+    </li>
+  </ul>
+
+  <div class="row" [mbox]="atOpts">
+    <h4>
+      Unfortunately, we have no offer for the moment.
+    </h4>
+  </div>
+
+</div>
+

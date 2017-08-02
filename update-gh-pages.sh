@@ -1,8 +1,7 @@
 #!/bin/bash
-cd "${0%/*}"
-git add . && git stash
 git checkout master
 git pull
+git stash
 tmpdir=`mktemp -d`
 cp -r demos/* $tmpdir/
 git checkout gh-pages

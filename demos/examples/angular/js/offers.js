@@ -16,7 +16,7 @@ $(function() {
       },
       success: function(offers) {
         var offer = offers[0];
-        if (offer.type === 'html') {
+        if (offer.action === 'setContent') {
           $offerPlaceHolder.
             html(offer.content).
             removeClass('mboxDefault');

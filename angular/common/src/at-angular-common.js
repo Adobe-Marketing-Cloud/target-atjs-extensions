@@ -16,8 +16,7 @@
         deferred.resolve({
           mbox: options.mbox,
           offer: response,
-          selector: options.selector,
-          element: options.element
+          selector: options.selector || options.element
         });
       } else {
         deferred.reject('Empty offer');

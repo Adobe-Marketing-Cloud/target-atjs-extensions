@@ -53,7 +53,7 @@ gulp.task('clean', () => {
 
 gulp.task('build:dist', () => {
   return gulp.src([
-      '../common/dist/at-angular-common-0.1.0.js',
+      '../common/dist/at-angular-common-!(*.min).js',
       'src/header.js',
       'src/at-angular-ng-route.js'
     ])

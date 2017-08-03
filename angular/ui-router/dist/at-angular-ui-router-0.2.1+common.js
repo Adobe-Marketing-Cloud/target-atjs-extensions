@@ -31,8 +31,7 @@
         deferred.resolve({
           mbox: options.mbox,
           offer: response,
-          selector: options.selector,
-          element: options.element
+          selector: options.selector || options.element
         });
       } else {
         deferred.reject('Empty offer');
@@ -111,7 +110,7 @@
 
 
 /* global adobe, angular */
-(function (document, angular, at) {
+(function (angular, at) {
   'use strict';
 
   function addModuleDependencies(module, dependencies) {
@@ -122,87 +121,46 @@
     });
   }
 
-  function addMboxDirective(module) {
-    module.directive('mbox',
-      ['logger', 'options', 'offerService', function (logger, options, offerService) {
-        return {
-          restrict: 'AE',
-          link: {
-            pre: function preLink(scope, element) {
-              element.addClass('mboxDefault');
-            },
-            post: function postLink(scope, element, attributes) {
-              var elem;
-              if (!options.selector) {
-                elem = element[0];
-              }
-              offerService.getOfferPromise({
-                mbox: attributes.mboxname,
-                params: options.params,
-                timeout: options.timeout,
-                selector: options.selector,
-                element: elem
-              })
-              .then(offerService.applyOfferPromise)
-              .catch(function (reason) {
-                logger.error('mboxDirective error: ' + reason);
-              })
-              .finally(function () {
-                element.removeClass('mboxDefault');
-              });
-            }
-          }
-        };
-      }]);
+  function setStateOfferResolve(state, offerPromiseFn) {
+    state.resolve = state.resolve || {};
+    state.resolve.offerData = offerPromiseFn;
   }
 
-  function select(selector) {
-    return document.querySelectorAll(selector);
-  }
-
-  function isMboxInjectionAllowed(routeService, path, options, mboxId) {
-    return routeService.isRouteAllowed(path) && // allowed route
-      !select('#' + mboxId).length && // mbox does not exist
-      select(options.selector).length > 0; // element to append to exists
-  }
-
-  function compileMbox($compile, element, scope, options, mboxId) {
-    if (options.appendToSelector) {
-      var compiled = $compile('<div id="' + mboxId + '" mbox data-mboxname="' + options.mbox + '"></div>')(scope);
-      element.append(compiled);
-    } else {
-      element.attr('mbox', ''); // turns element into mbox directive
-      element.attr('data-mboxname', options.mbox);
-      element.attr('id', mboxId);
-      $compile(element)(scope);
-    }
+  function NgStateService(routeService, offerService, options, logger) {
+    this.applyTargetToStates = function (states) {
+      states.forEach(function (state) {
+        if (routeService.isRouteAllowed(state.url)) {
+          logger.log('location: ' + state.url);
+          setStateOfferResolve(state, function () {
+            return offerService.getOfferPromise(options);
+          });
+        }
+      });
+    };
   }
 
   function initializeModule(module) {
-    module.run(['$rootScope', '$injector', '$location', '$compile',
-      'routeService', 'options', 'logger',
-      function ($rootScope, $injector, $location, $compile, routeService, options, logger) {
-        // When DOM is updated, inject Mbox directive for Target call
-        $rootScope.$on('$viewContentLoaded', function (event, next, current) {
-          var currentPath = $location.path();
-          logger.log('$viewContentLoaded ' + currentPath);
-          // Set ID for mbox so it won't be injected more than once on page when $viewContentLoaded is fired
-          var mboxId = options.mbox + '-dir';
-          if (isMboxInjectionAllowed(routeService, currentPath, options, mboxId)) {
-            var el = angular.element(select(options.selector));
-            compileMbox($compile, el, el.scope(), options, mboxId);
-            logger.log(((options.appendToSelector) ? 'appended' : 'created') + ' mbox directive', options.mbox);
+    module.service('ngStateService', ['routeService', 'offerService', 'options', 'logger', NgStateService]);
+    module.run(['$rootScope', '$state', 'offerService', 'ngStateService', 'logger',
+      function ($rootScope, $state, offerService, ngStateService, logger) {
+        ngStateService.applyTargetToStates($state.get());
+
+        $rootScope.$on('$viewContentLoaded', function () {
+          var offerData = $state.$current.locals.globals.offerData;
+          if (offerData) {
+            offerService.applyOfferPromise(offerData)
+              .catch(function (reason) {
+                logger.error('AT applyOffer error: ' + reason);
+              });
           }
         });
-      }
-    ]);
+      }]);
   }
 
-  at.ext.angular.initDirective = function (app, opts) {
+  at.ext.angular.initStates = function (app, opts) {
     at.ext.angular.setupCommon(opts);
     var appModule = (typeof app === 'string') ? angular.module(app) : app;
     addModuleDependencies(appModule, ['target.angular.common']);
-    addMboxDirective(appModule);
     initializeModule(appModule);
   };
-})(document, angular, adobe.target);
+})(angular, adobe.target);

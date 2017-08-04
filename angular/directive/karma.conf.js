@@ -30,7 +30,7 @@ module.exports = function (config) {
       'node_modules/angular/angular.js',
       'node_modules/angular-mocks/angular-mocks.js',
       'test/**/*.testutil.js',
-      '../common/dist/at-angular-common-0.1.0.js',
+      '../common/dist/at-angular-common-!(*.min).js',
       'src/**/*.js',
       'test/**/*.spec.js'
     ],

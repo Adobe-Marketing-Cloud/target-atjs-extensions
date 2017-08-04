@@ -8,7 +8,7 @@ export default class Header extends Component {
       <nav className="teal darken-1">
       <div className="nav-wrapper">
       <div className=" -pad-left1">
-      <a href="../../"><i className="fa fa-home left"></i></a>
+      <a href="../../../"><i className="fa fa-home left"></i></a>
       <a className="brand-logo">React Component Example</a>
     <a href="#" data-activates="mobile-demo" className="button-collapse"><i className="mdi-navigation-menu"></i></a>
       <ul id="nav-mobile" className="right hide-on-med-and-down">

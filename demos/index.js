@@ -19,7 +19,6 @@ http.createServer(app).listen(port);
  * Setting up the static directory for serving files
  */
 app.use(express.static(__dirname));
-app.use('/at-js', express.static('../at-js'));
 
 /**
  * Show a message Mango App is running

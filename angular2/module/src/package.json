@@ -1,0 +1,33 @@
+{
+  "name": "@adobe/target-ng-module",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Adobe-Marketing-Cloud/target-atjs-extensions"
+  },
+  "author": {
+    "name": "Adobe Systems Inc.",
+    "url": "https://www.adobe.com",
+    "email": "anischev@adobe.com"
+  },
+  "keywords": [
+    "angular",
+    "ng",
+    "target",
+    "module"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Adobe-Marketing-Cloud/target-atjs-extensions/issues"
+  },
+  "module": "target-ng-module.js",
+  "typings": "target-ng-module.d.ts",
+  "dependencies": {
+    "classnames": "^2.2.5"
+  },
+  "peerDependencies": {
+    "@angular/core": "^4.0.0",
+    "rxjs": "^5.1.0",
+    "zone.js": "^0.8.4"
+  }
+}

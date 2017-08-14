@@ -21,10 +21,15 @@
     <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script>
+      window.targetGlobalSettings = {
+        cookieDomain: "adobe-marketing-cloud.github.io"
+      }
+    </script>
     <script src="../common-js/page-params.js"></script>
     <script src="../../jquery/jquery.min.js"></script>
     <script src="../../materialize/materialize.min.js"></script>
-    <script src="../../../at-js/at.js"></script>
+    <script src="../../at-js/mangoapp.at.1.1.0.min.js"></script>
 </head>
 <body>
 
@@ -43,7 +48,7 @@
 <main>
     <div class="container">
         <blockquote>
-            In this example, a view change mbox fire off the hash change event when you click Profile2 below. The response will deliver a Target offer which will replace the main content.
+            In this example, a view change mbox fires off the hash change event when you click Profile2 below. The response will deliver a Target offer which will replace the main content.
         </blockquote>
         <ul class="collapsible" data-collapsible="accordion">
             <li>
@@ -93,7 +98,7 @@
                             bibendum sodales, augue velit cursus nunc.
                             <div class="offer">
                                 <div style="border-top: 1px solid lightblue;padding: 10px">
-                                    We glad you are here.
+                                    We're glad you are here.
                                 </div>
                             </div>
                         </span>

@@ -11,5 +11,4 @@ bower_components/
 .idea/
 
 #dist folder
-dist/
 mbox/coverage/

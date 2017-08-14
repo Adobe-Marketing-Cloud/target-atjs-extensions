@@ -1,0 +1,67 @@
+import {removeMboxClass, getParams, atOptsHaveChanged} from './util';
+
+export function getOffers(component, at, logger) {
+  at.getOffer({
+    mbox: component.targetState.mbox,
+    params: component.targetState.atParams,
+    timeout: component.targetState.timeout,
+    success: function (response) {
+      at.applyOffer({
+        mbox: component.targetState.mbox,
+        offer: response,
+        selector: component.targetDiv
+      });
+      component.targetDiv.className = removeMboxClass(component.targetDiv.className);
+    },
+    error: function (status, error) {
+      logger.error('getOffer error: ', error, status);
+      component.targetDiv.className = removeMboxClass(component.targetDiv.className);
+    }
+  });
+}
+
+export function getDefaultProps(opts) {
+  const DEFAULT_MBOX = 'default-mbox';
+  const DEFAULT_TIMEOUT = 3000;
+  opts = opts || {};
+
+  return {
+    'className': 'mboxDefault',
+    'data-mbox': opts.mbox || DEFAULT_MBOX,
+    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
+  };
+}
+
+export function onComponentMounted(component, at, logger) {
+  let targetState = component.targetState;
+
+  targetState.atParams = getParams(component.props);
+  targetState.mbox = component.props['data-mbox'];
+  targetState.timeout = parseInt(component.props['data-timeout'], 10);
+
+  if (targetState.mbox === 'default-mbox') {
+    logger.error('at-react-component:', 'mbox prop must be provided for each Target component!');
+    return;
+  }
+
+  if (!targetState.editMode) {
+    getOffers(component, at, logger);
+  }
+}
+
+export function onComponentWillReceiveProps(component, at, logger, newProps) {
+  let newMbox = newProps['data-mbox'];
+  let newTimeout = parseInt(newProps['data-timeout'], 10);
+  let newParams = getParams(newProps);
+
+  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
+    let targetState = component.targetState;
+    targetState.atParams = newParams || targetState.atParams;
+    targetState.mbox = newMbox || targetState.mbox;
+    targetState.timeout = newTimeout || targetState.timeout;
+
+    if (!targetState.editMode) {
+      getOffers(component, at, logger);
+    }
+  }
+}

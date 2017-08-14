@@ -21,13 +21,18 @@
     <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script>
+      window.targetGlobalSettings = {
+        cookieDomain: "adobe-marketing-cloud.github.io"
+      }
+    </script>
     <script src="../common-js/page-params.js"></script>
     <script src="../../jquery/jquery.min.js"></script>
     <script src="../../angular/angular.min.js"></script>
     <script src="../../angular-route/angular-route.min.js"></script>
     <script src="../../materialize/materialize.min.js"></script>
-    <script src="../../../at-js/at.js"></script>
-    <script src="js/directive-mbox.js"></script>
+    <script src="../../at-js/mangoapp.at.1.1.0.min.js"></script>
+    <script src="../../at-js-ext/at-angular-directive-0.1.4+common.min.js"></script>
 </head>
 <body ng-app="sampleApp">
 <header>
@@ -53,7 +58,7 @@
 </header>
 <main>
     <div class="container">
-        <blockquote>In the example below, we have two links that will track events. And one trackEvent defined inline. Check Description.</blockquote>
+        <blockquote>In the example below, we have two links that will track events and one trackEvent defined inline.</blockquote>
         <blockquote>
             Note: choose View1 or View2 from the top right corner. Notice network tab for json?... requests 
         </blockquote>
@@ -62,7 +67,7 @@
                 <div class="collapsible-header"><i class="fa fa-align-justify"></i>Description</div>
                 <div class="collapsible-body">
                     <p>
-                        You can define inline (no prevent default):
+                        You can define event tracking inline (no prevent default):
                     </p>
 <pre>
     &lt;a onclick="adobe.target.trackEvent({
@@ -80,13 +85,13 @@
       onclick="adobe.target.trackEvent({
         mbox: 'myMboxName',
         event: event,
-        usePreventDefault: true,
+        preventDefault: true,
         success: function(){
           alert('example#2. Look at url. It will change after clicking ok');
         }})"&gt;switch to view2 (with prevent default)&lt;/a&gt;
 </pre>
                     <p>
-                        or assign it to multiple elements by selector,type parameters
+                        or assign it to multiple elements by using <em>selector, type</em> parameters
                     </p>
 <pre>
     &lt;a href="#view1" class="trackEventClass"&gt;switch to view1 (with prevent default)&lt;/a&gt;
@@ -96,7 +101,7 @@
           mbox: 'myMboxName',
           type: 'click',
           selector: '.trackEventClass',
-          usePreventDefault: true,  // works only for  [a:click, form:submit] element:event combinations
+          preventDefault: true,  // works only for  [a:click, form:submit] element:event combinations
           success: function() {
             alert('example#3. Look at url. It will change after clicking ok');
           }
@@ -127,7 +132,7 @@
                    onclick="adobe.target.trackEvent({
                      mbox: 'myMboxName',
                      event:event,
-                     usePreventDefault: true,
+                     preventDefault: true,
                      success:function(){alert('example#2. Look at url. It will change after clicking ok');}})">switch to view2 (with prevent default)</a>
             </div>
 
@@ -141,7 +146,7 @@
                         mbox: 'myMboxName',
                         type: 'click',
                         selector: '.trackEventClass',
-                        usePreventDefault: true,
+                        preventDefault: true,
                         success: function() {
                             alert('example#3. Look at url. It will change after clicking ok');
                         }
@@ -154,6 +159,6 @@
     </div>
 </main>
 <script src="js/directive-example.js"></script>
-<script src="../../store/js/widgets.js"></script>
+<script src="js/widgets.js"></script>
 </body>
 </html>

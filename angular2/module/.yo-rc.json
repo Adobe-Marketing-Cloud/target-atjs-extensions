@@ -1,0 +1,7 @@
+{
+  "generator-angular2-library": {
+    "promptValues": {
+      "gitRepositoryUrl": "https://github.com/Adobe-Marketing-Cloud/target-atjs-extensions"
+    }
+  }
+}

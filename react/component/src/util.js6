@@ -1,0 +1,42 @@
+import _ from 'lodash';
+
+export function appendMboxClass(component) {
+  const className = component.props.className;
+  const mboxName = component.props['data-mbox'];
+
+  if (component.targetState.editMode) {
+    return 'mbox-name-' + mboxName;
+  }
+  if (className.indexOf('mboxDefault') === -1) {
+    return (className ? className + ' ' : '') + 'mboxDefault';
+  }
+  return className;
+}
+
+export function removeMboxClass(className) {
+  return className.replace(/\bmboxDefault\b/, '');
+}
+
+export function getParams(props) {
+  props = props || {};
+  let params = null;
+
+  Object.keys(props)
+    .filter(k => {
+    return k.indexOf('data-') === 0 && !_.includes(['data-mbox', 'data-timeout'], k);
+})
+.forEach((k, i) => {
+    if (i === 0) {
+    params = {};
+  }
+  params[k.substring(5)] = props[k];
+});
+  return params;
+}
+
+export function atOptsHaveChanged(component, mbox, timeout, params) {
+  let targetState = component.targetState;
+  return !_.isEqual(targetState.atParams, params) ||
+    (mbox && targetState.mbox !== mbox) ||
+    (timeout && targetState.timeout !== timeout);
+}

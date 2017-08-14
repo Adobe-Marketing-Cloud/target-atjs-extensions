@@ -21,12 +21,18 @@
     <link rel="stylesheet" type="text/css" href="../../fontawesome/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../materialize/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="../../assets/styles.css">
+    <script>
+      window.targetGlobalSettings = {
+        cookieDomain: "adobe-marketing-cloud.github.io"
+      }
+    </script>
     <script src="../common-js/page-params.js"></script>
     <script src="../../jquery/jquery.min.js"></script>
     <script src="../../angular/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
     <script src="../../materialize/materialize.min.js"></script>
-    <script src="js/at.0.4.11.js"></script>
+    <script src="../../at-js/sandbox.at.1.1.0.min.js"></script>
+    <script src="../../at-js-ext/at-angular-ui-router-0.2.1+common.min.js"></script>
 </head>
 <body ng-app="sampleApp">
 <header>
@@ -53,7 +59,7 @@
 <main>
     <div class="container">
         <blockquote>
-            In this example, a state change mbox will fire when you click View2 in the top right corner.  The response will deliver a Target offer which will replace the content below.
+            In this example, a state change mbox will fire when you click View2 in the top right corner.  The response will deliver a Target offer, which will replace the content below.
         </blockquote>
         <ul class="collapsible" data-collapsible="accordion">
             <li>
@@ -71,13 +77,14 @@
                     <ol> 
                         <li>at.js library</li>
                         <li>AngularJS library</li>
+                        <li>Angular UI-Router library</li>
                     </ol>
 
                     <h5 style="padding: 1rem 0 0 2.2rem">UI-Router Extension Integration:</h5>
                     
                     <ol>
                         
-                        <li>Copy <a target="_blank" href="js/adobe.target.ext.angular.lib+uirouter.js">adobe.target.ext.angular.lib+uirouter.js</a> file to your server</li>
+                        <li>Copy <a target="_blank" href="../../at-js-ext/at-angular-ui-router-0.1.0+common.min.js">at-angular-ui-router-0.1.0+common.min.js</a> file to your server</li>
 
 
                         <li>
@@ -94,7 +101,7 @@
                             </pre>
 
                             <p>
-                                or example with all available options:
+                                or see an example with all available options:
                             </p>
 
                             <pre>
@@ -120,16 +127,16 @@
 
 
                     <p style="padding-bottom: 0.3rem">
-                        UI-Router extension consists of 2 parts:
+                        The extension distribution consists of:
                     </p>
 
                     <ol>
-                        <li><em>Angular Service</em>
-                            <br />- Service <em>adobeTargetOfferService</em> is a wrapper function that contains at.js API and some utility methods 
-                            <br />- The at.js API methods include <em>adobe.target.getOffer</em> and <em>adobe.target.applyOffer</em>
+                        <li><em>Angular Common Adobe Target at.js extension</em>
+                            <br />- <em>target.angular.common</em> Angular module wraps <em>at.js</em> API as well as exposes several helper providers
+                            <br />- The at.js API methods include <em>adobe.target.getOffer</em> and <em>adobe.target.applyOffer</em>, which are exposed as <em>offerService.getOfferPromise</em> and <em>offerService.applyOfferPromise</em> promise wrappers
                         </li>
-                        <li><em>Angular Run Block</em>
-                            <br />- Uses <em>adobeTargetOfferService</em> to apply Target calls to specified routes
+                        <li><em>Angular UI-Router Adobe Target extension</em>
+                            <br />- Uses <em>target.angular.common</em>'s <em>routeService</em> and <em>offerService</em> to apply Target calls to specified states.
                             <br />- Uses Angular <em>$viewContentLoaded</em> event to apply Target response. 
                         </li>
                     </ol>
@@ -150,7 +157,6 @@
 <script src="js/state-change-demo-app.js"></script>
 
 <!-- Start Adobe Target SPA Integration -->
-<script src="js/adobe.target.ext.angular.lib+uirouter.js"></script>
 <script>
 
 window.targetPageParams=function(){
@@ -177,6 +183,6 @@ adobe.target.ext.angular.initStates(sampleApp,
 </script>
 <!-- End Adobe Target SPA Integration -->
 
-<script src="../../store/js/widgets.js"></script>
+<script src="js/widgets.js"></script>
 </body>
 </html>

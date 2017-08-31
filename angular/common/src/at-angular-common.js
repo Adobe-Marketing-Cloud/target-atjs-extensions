@@ -19,11 +19,11 @@
           selector: options.selector || options.element
         });
       } else {
-        deferred.reject('Empty offer');
+        deferred.resolve({error: 'Empty offer'});
       }
     };
     atOpts.error = function (status, error) {
-      deferred.reject(error);
+      deferred.resolve({error: error});
     };
     at.getOffer(atOpts);
     return deferred.promise;
@@ -31,6 +31,13 @@
 
   function applyOfferPromise(promise, options) {
     return promise(function (resolve, reject) {
+      if (!options) {
+        options = {error: 'Missing offer param'};
+      }
+      if (options.error) {
+        reject(options.error);
+        return;
+      }
       at.applyOffer(options);
       resolve();
     });
@@ -71,7 +78,7 @@
 
   function setupCommonModule(settings, logger, opts) {
     angular.module('target.angular.common', [])
-      .constant('version', '0.3.0')
+      .constant('version', '0.1.2')
       .constant('settings', settings)
       .constant('logger', logger)
       .constant('customOptions', opts || {})

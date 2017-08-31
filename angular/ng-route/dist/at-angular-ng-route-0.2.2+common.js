@@ -34,11 +34,11 @@
           selector: options.selector || options.element
         });
       } else {
-        deferred.reject('Empty offer');
+        deferred.resolve({error: 'Empty offer'});
       }
     };
     atOpts.error = function (status, error) {
-      deferred.reject(error);
+      deferred.resolve({error: error});
     };
     at.getOffer(atOpts);
     return deferred.promise;
@@ -46,6 +46,13 @@
 
   function applyOfferPromise(promise, options) {
     return promise(function (resolve, reject) {
+      if (!options) {
+        options = {error: 'Missing offer param'};
+      }
+      if (options.error) {
+        reject(options.error);
+        return;
+      }
       at.applyOffer(options);
       resolve();
     });
@@ -86,7 +93,7 @@
 
   function setupCommonModule(settings, logger, opts) {
     angular.module('target.angular.common', [])
-      .constant('version', '0.3.0')
+      .constant('version', '0.1.2')
       .constant('settings', settings)
       .constant('logger', logger)
       .constant('customOptions', opts || {})
@@ -108,7 +115,6 @@
   });
 })(angular, adobe.target);
 
-
 /* global adobe, angular */
 (function (angular, at) {
   'use strict';
@@ -121,17 +127,17 @@
     });
   }
 
-  function setStateOfferResolve(state, offerPromiseFn) {
-    state.resolve = state.resolve || {};
-    state.resolve.offerData = offerPromiseFn;
+  function setRouteOfferResolve(route, offerPromiseFn) {
+    route.resolve = route.resolve || {};
+    route.resolve.offerData = offerPromiseFn;
   }
 
-  function NgStateService(routeService, offerService, options, logger) {
-    this.applyTargetToStates = function (states) {
-      states.forEach(function (state) {
-        if (routeService.isRouteAllowed(state.url)) {
-          logger.log('location: ' + state.url);
-          setStateOfferResolve(state, function () {
+  function NgRouteService(routeService, offerService, options, logger) {
+    this.applyTargetToRoutes = function (routes) {
+      Object.keys(routes).forEach(function (routeName) {
+        if (routeService.isRouteAllowed(routeName)) {
+          logger.log('location: ' + routeName);
+          setRouteOfferResolve(routes[routeName], function () {
             return offerService.getOfferPromise(options);
           });
         }
@@ -140,13 +146,13 @@
   }
 
   function initializeModule(module) {
-    module.service('ngStateService', ['routeService', 'offerService', 'options', 'logger', NgStateService]);
-    module.run(['$rootScope', '$state', 'offerService', 'ngStateService', 'logger',
-      function ($rootScope, $state, offerService, ngStateService, logger) {
-        ngStateService.applyTargetToStates($state.get());
+    module.service('ngRouteService', ['routeService', 'offerService', 'options', 'logger', NgRouteService]);
+    module.run(['$rootScope', '$route', 'offerService', 'ngRouteService', 'logger',
+      function ($rootScope, $route, offerService, ngRouteService, logger) {
+        ngRouteService.applyTargetToRoutes($route.routes);
 
         $rootScope.$on('$viewContentLoaded', function () {
-          var offerData = $state.$current.locals.globals.offerData;
+          var offerData = $route.current.locals.offerData;
           if (offerData) {
             offerService.applyOfferPromise(offerData)
               .catch(function (reason) {
@@ -157,7 +163,7 @@
       }]);
   }
 
-  at.ext.angular.initStates = function (app, opts) {
+  at.ext.angular.initRoutes = function (app, opts) {
     at.ext.angular.setupCommon(opts);
     var appModule = (typeof app === 'string') ? angular.module(app) : app;
     addModuleDependencies(appModule, ['target.angular.common']);

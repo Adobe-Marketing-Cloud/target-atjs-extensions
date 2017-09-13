@@ -21,13 +21,11 @@
 
   function applyOffer(offer) {
     at.applyOffer({
+      selector: offer.selector,
       offer: [{
-        type: 'actions',
-        content: [{
-          selector: offer.selector,
-          content: offer.responseText,
-          action: (offer.method ? offer.method : 'append') + 'Content'
-        }]
+        selector: offer.selector,
+        content: offer.responseText,
+        action: (offer.method ? offer.method : 'append') + 'Content'
       }]
     });
     execHandler('Success', offer.success);

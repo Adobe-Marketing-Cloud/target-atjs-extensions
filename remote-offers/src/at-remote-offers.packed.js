@@ -42,16 +42,16 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	__webpack_require__(1);
 	__webpack_require__(2);
 	module.exports = __webpack_require__(3);
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/* Polyfill service v3.11.0
 	 * For detailed credits and licence information see http://github.com/financial-times/polyfill-service.
@@ -245,9 +245,9 @@
 	.call('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * @license
@@ -825,9 +825,9 @@
 
 	})(window);
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	 /* global adobe */
 	(function (window, document, at) {
@@ -852,13 +852,11 @@
 
 	  function applyOffer(offer) {
 	    at.applyOffer({
+	      selector: offer.selector,
 	      offer: [{
-	        type: 'actions',
-	        content: [{
-	          selector: offer.selector,
-	          content: offer.responseText,
-	          action: (offer.method ? offer.method : 'append') + 'Content'
-	        }]
+	        selector: offer.selector,
+	        content: offer.responseText,
+	        action: (offer.method ? offer.method : 'append') + 'Content'
 	      }]
 	    });
 	    execHandler('Success', offer.success);
@@ -966,9 +964,9 @@
 	})(window, document, adobe.target);
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {// Best place to find information on XHR features is:
 	// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest
@@ -1082,5 +1080,5 @@
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ }
+/***/ })
 /******/ ]);

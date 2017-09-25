@@ -9,8 +9,21 @@ describe('greeter', function () {
 <script src=\\"http://evilhost\\"><\\/script>';
   var sanitizedHtml = '<b style="color: red">hello</b><div id="1">1</div><div id="2">2</div><img src="http://adobe.com/1.png"><a></a>';
 
+  it('should remove customCode offers', function () {
+    testOffer = '[{"action":"customCode","content":"alert(6)"}]';
+
+    adobe.target.ext.getSecureOffer({
+      mbox: 'jsTest',
+      success: function (response) {
+        offers = response;
+      }
+    });
+
+    expect(offers[0].content).toEqual('');
+  });
+
   it('should sanitize HTML offers', function () {
-    testOffer = '[{"type":"html","content":"' + maliciousHtml + '"}]';
+    testOffer = '[{"action":"setContent","content":"' + maliciousHtml + '"}]';
 
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
@@ -18,15 +31,16 @@ describe('greeter', function () {
         offers = response;
       }
     });
+
     expect(offers[0].content).toEqual(sanitizedHtml);
   });
 
   it('should sanitize Action offers', function () {
-    testOffer = '[{"type":"actions","content":[{"selector":"#aaa","cssSelector":"#aaa","content":"' +
+    testOffer = '[{"selector":"#aaa","cssSelector":"#aaa","content":"' +
     maliciousHtml + '","action":"setContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
     maliciousHtml + '","action":"prependContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
     maliciousHtml + '","action":"appendContent"},{"selector":"#bbb","cssSelector":"#bbb","content":"' +
-    maliciousHtml + '","action":"replaceContent"}]}]';
+    maliciousHtml + '","action":"replaceContent"}]';
 
     adobe.target.ext.getSecureOffer({
       mbox: 'htmlTest',
@@ -34,15 +48,16 @@ describe('greeter', function () {
         offers = response;
       }
     });
-    offers[0].content
-      .forEach(function (action) {
-        expect(action.content).toEqual(sanitizedHtml);
+
+    offers
+      .forEach(function (offer) {
+        expect(offer.content).toEqual(sanitizedHtml);
       });
   });
 
   it('should sanitize multiple offers', function () {
-    testOffer = '[{"type":"html","content":"' +
-    maliciousHtml + '"},{"type":"html","content":"' + maliciousHtml + '"}]';
+    testOffer = '[{"action":"setContent","content":"' +
+    maliciousHtml + '"},{"action":"setContent","content":"' + maliciousHtml + '"}]';
 
     adobe.target.ext.getSecureOffer({
       mbox: 'multiHtmlTest',
@@ -50,6 +65,7 @@ describe('greeter', function () {
         offers = response;
       }
     });
+
     offers
       .forEach(function (offer) {
         expect(offer.content).toEqual(sanitizedHtml);

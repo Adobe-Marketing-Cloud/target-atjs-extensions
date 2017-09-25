@@ -4877,25 +4877,12 @@
           timeout: opts.timeout,
           success: function (response) {
             response.forEach(function (offer) {
-              if (offer.plugins && offer.plugins.length) {
-                offer.plugins = undefined;
+              if (offer.action === 'customCode') {
+                offer.content = '';
+                return;
               }
-              switch (offer.type) {
-                case 'html':
-                  logger.log('Sanitizing HTML offer');
-                  offer.content = html_sanitize(offer.content, allowAllUrls);
-                  break;
-                case 'actions':
-                  logger.log('Sanitizing action offers');
-                  offer.content
-                    .forEach(function (action) {
-                      if (action.content) {
-                        action.content = html_sanitize(action.content, allowAllUrls);
-                      }
-                    });
-                  break;
-                default:
-                  break;
+              if (offer.content) {
+                offer.content = html_sanitize(offer.content, allowAllUrls);
               }
             });
             opts.success(response);

@@ -40,7 +40,7 @@ Key | Type | Mandatory | Description
 
 * **at.js** must be included in the page before the React app using React components
 * Server-side rendering is not yet supported, the extension is intended to be used solely on the client-side
-* `params` attributes can be set as follows: `<Target data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="1"/>`
+* `params` attributes can be set as follows: `<Target data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="3000"/>`
 
 ## License
 

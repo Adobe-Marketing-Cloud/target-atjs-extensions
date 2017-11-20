@@ -40,6 +40,7 @@ Key | Type | Mandatory | Description
 
 * **at.js** must be included in the page before the React app using React components
 * Server-side rendering is not yet supported, the extension is intended to be used solely on the client-side
+* React Component state updating is disabled (once Target has updated component, app can’t update component)
 * `params` attributes can be set as follows: `<Target data-mbox="myMbox" data-param1="value1" data-param2="value2" data-timeout="3000"/>`
 
 ## License

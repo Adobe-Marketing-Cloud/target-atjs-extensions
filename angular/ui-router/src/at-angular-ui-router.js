@@ -11,37 +11,47 @@
     });
   }
 
-  function setStateOfferResolve(state, offerPromiseFn) {
-    state.resolve = state.resolve || {};
-    state.resolve.offerData = offerPromiseFn;
-  }
+  var getOfferResolve = {
+    token: 'targetOfferData',
+    policy: {
+      when: 'EAGER',
+      async: 'WAIT'
+    },
+    deps: ['offerService', 'options'],
+    resolveFn: function (offerService, options) {
+      return offerService.getOfferPromise(options);
+    }
+  };
 
-  function NgStateService(routeService, offerService, options, logger) {
-    this.applyTargetToStates = function (states) {
-      states.forEach(function (state) {
-        if (routeService.isRouteAllowed(state.url)) {
-          logger.log('location: ' + state.url);
-          setStateOfferResolve(state, function () {
-            return offerService.getOfferPromise(options);
-          });
-        }
+  function applyOffer(offerService, offer, logger) {
+    offerService.applyOfferPromise(offer)
+      .catch(function (reason) {
+        logger.error('AT applyOffer error: ' + reason);
       });
-    };
   }
 
   function initializeModule(module) {
-    module.service('ngStateService', ['routeService', 'offerService', 'options', 'logger', NgStateService]);
-    module.run(['$rootScope', '$state', 'offerService', 'ngStateService', 'logger',
-      function ($rootScope, $state, offerService, ngStateService, logger) {
-        ngStateService.applyTargetToStates($state.get());
+    module.run(['$transitions', 'offerService', 'routeService', 'logger',
+      function ($transitions, offerService, routeService, logger) {
+        $transitions.onCreate({}, function (transition) {
+          if (this.routeService.isRouteAllowed(transition.to().url)) {
+            transition.addResolvable(getOfferResolve, transition.to().name);
+          }
+        }, {
+          bind: {
+            routeService: routeService
+          }
+        });
 
-        $rootScope.$on('$viewContentLoaded', function () {
-          var offerData = $state.$current.locals.globals.offerData;
-          if (offerData) {
-            offerService.applyOfferPromise(offerData)
-              .catch(function (reason) {
-                logger.error('AT applyOffer error: ' + reason);
-              });
+        $transitions.onSuccess({}, function (transition) {
+          if (transition.getResolveTokens().indexOf('targetOfferData') > -1) {
+            var offer = transition.injector().get('targetOfferData');
+            applyOffer(this.offerService, offer, logger);
+          }
+        }, {
+          bind: {
+            offerService: offerService,
+            logger: logger
           }
         });
       }]);

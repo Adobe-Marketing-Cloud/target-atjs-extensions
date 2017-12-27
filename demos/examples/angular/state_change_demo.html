@@ -29,10 +29,10 @@
     <script src="../common-js/page-params.js"></script>
     <script src="../../jquery/jquery.min.js"></script>
     <script src="../../angular/angular.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+    <script src="//unpkg.com/@uirouter/angularjs@1.0.12/release/angular-ui-router.min.js"></script>
     <script src="../../materialize/materialize.min.js"></script>
     <script src="../../at-js/sandbox.at.1.1.0.min.js"></script>
-    <script src="../../at-js-ext/at-angular-ui-router-0.2.1+common.min.js"></script>
+    <script src="../../at-js-ext/at-angular-ui-router-0.3.0+common.min.js"></script>
 </head>
 <body ng-app="sampleApp">
 <header>
@@ -150,7 +150,7 @@
         </ul>
 
         <div class="valign-wrapper">
-            <div ui-view></div>
+            <ui-view></ui-view>
         </div>
     </div>
 </main>
@@ -178,7 +178,6 @@ adobe.target.ext.angular.initStates(sampleApp,
         //timeout: 500,
         allowedRoutesFilter: ['/view2'], // blank for all routes or restrict to specific routes: ['/','/about','/item/:id']
         disallowedRoutesFilter: ['/view1'], //exclude specific routes: ['/login','/privacy']
-        debug: true
     });
 </script>
 <!-- End Adobe Target SPA Integration -->

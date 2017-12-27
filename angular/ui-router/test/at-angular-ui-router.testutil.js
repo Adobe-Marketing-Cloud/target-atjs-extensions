@@ -40,6 +40,7 @@ var adobe = {
       opts.success(offer);
     },
     applyOffer: function (opts) {
+      document.getElementById('#offer').insertAdjacentHTML('beforeend', opts.offer);
     }
   }
 };
@@ -53,14 +54,12 @@ var app = angular.module('myApp', ['ui.router'])
         .state('home', {
           url: '/',
           templateUrl: 'test/home.html',
-          controller: 'HomeController',
-          resolve: {}
+          controller: 'HomeController'
         })
         .state('blog', {
           url: '/blog',
           templateUrl: 'test/blog.html',
-          controller: 'BlogController',
-          resolve: {}
+          controller: 'BlogController'
         });
     }
   ]);

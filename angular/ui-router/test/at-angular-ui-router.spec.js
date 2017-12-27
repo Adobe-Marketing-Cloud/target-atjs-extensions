@@ -18,7 +18,7 @@ describe('ui-router tests', function () {
   beforeEach(inject(['$rootScope', '$compile', '$state', 'offerService',
     function (_$rootScope_, $compile, _$state_, _offerService_) {
       spyOn(adobe.target, 'getOffer').and.callThrough();
-      spyOn(adobe.target, 'applyOffer');
+      spyOn(adobe.target, 'applyOffer').and.callThrough();
 
       $rootScope = _$rootScope_;
       $state = _$state_;
@@ -50,8 +50,11 @@ describe('ui-router tests', function () {
     $rootScope.$digest();
     expect($state.current.name).toBe('home');
     expect($state.current.templateUrl).toBe('test/home.html');
+    var elem = document.getElementById('#offer');
+    expect(elem.innerHTML).toEqual('<p>Sample Offer</p>');
+    /*
     expect($state.$current.locals.globals.offerData.offer).toBeDefined();
-    expect($state.$current.locals.globals.offerData.offer).toEqual('<p>Sample Offer</p>');
+    expect($state.$current.locals.globals.offerData.offer).toEqual('<p>Sample Offer</p>'); */
     expectTargetCalls();
   });
 
@@ -61,8 +64,12 @@ describe('ui-router tests', function () {
     $rootScope.$digest();
     expect($state.current.name).toBe('blog');
     expect($state.current.templateUrl).toBe('test/blog.html');
+    var elem = document.getElementById('#offer');
+    expect(elem.innerHTML).toEqual('<p>Sample Offer</p><p>Sample Offer</p>');
+    /*
     expect($state.$current.locals.globals.offerData.offer).toBeDefined();
     expect($state.$current.locals.globals.offerData.offer).toEqual('<p>Sample Offer</p>');
+    */
     expectTargetCalls();
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "at-angular-ui-router",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "",
   "homepage": "",
   "dependencies": {},
@@ -26,9 +26,9 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
+    "@uirouter/angularjs": "^1.0.12",
     "angular": "^1.5.8",
     "angular-mocks": "^1.5.8",
-    "angular-ui-router": "^0.3.1",
     "del": "^2.2.1",
     "eslint-config-xo-space": "^0.14.0",
     "gulp": "^3.9.1",

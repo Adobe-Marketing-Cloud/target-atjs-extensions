@@ -1,26 +1,10 @@
 /* global adobe, React */
-import {appendMboxClass} from './util';
-import {getDefaultProps, onComponentMounted, onComponentWillReceiveProps} from './main';
-
-function onRender(React, component) {
-  component.targetState = {
-    editMode: (component.queryParams.indexOf('mboxEdit') !== -1)
-  };
-
-  return <div
-    ref={ref => {
-      component.targetDiv = ref;
-    }}
-    {...component.props}
-    className={appendMboxClass(component)}>{component.props.children}
-  </div>;
-}
+import {getDefaultProps, onRender, onComponentMounted, onComponentWillReceiveProps} from './main';
 
 export default function createTargetComponent(React, opts) {
   class TargetComponent extends React.Component {
     constructor(props) {
       super(props);
-      this.at = adobe.target;
       this.logger = console;
       this.queryParams = location.search;
     }
@@ -30,7 +14,7 @@ export default function createTargetComponent(React, opts) {
     }
 
     componentDidMount() {
-      return onComponentMounted(this, this.at, this.logger);
+      return onComponentMounted(this, this.logger);
     }
 
     shouldComponentUpdate() {
@@ -38,7 +22,7 @@ export default function createTargetComponent(React, opts) {
     }
 
     componentWillReceiveProps(newProps) {
-      return onComponentWillReceiveProps(this, this.at, this.logger, newProps);
+      return onComponentWillReceiveProps(this, this.logger, newProps);
     }
 
   }

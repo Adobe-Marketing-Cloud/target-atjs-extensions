@@ -23,18 +23,19 @@ export function getParams(props) {
 
   Object.keys(props)
     .filter(k => {
-    return k.indexOf('data-') === 0 && !_.includes(['data-mbox', 'data-timeout'], k);
-})
-.forEach((k, i) => {
-    if (i === 0) {
-    params = {};
-  }
-  params[k.substring(5)] = props[k];
-});
+      return k.indexOf('data-') === 0 && !_.includes(['data-mbox', 'data-timeout'], k);
+    })
+    .forEach((k, i) => {
+      if (i === 0) {
+        params = {};
+      }
+      params[k.substring(5)] = props[k];
+    });
+
   return params;
 }
 
-export function atOptsHaveChanged(component, mbox, timeout, params) {
+export function haveOptionsChanged(component, mbox, timeout, params) {
   let targetState = component.targetState;
   return !_.isEqual(targetState.atParams, params) ||
     (mbox && targetState.mbox !== mbox) ||

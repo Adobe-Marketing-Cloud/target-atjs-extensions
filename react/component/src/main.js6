@@ -1,6 +1,13 @@
-import {removeMboxClass, getParams, atOptsHaveChanged} from './util';
+import {appendMboxClass, removeMboxClass, getParams, haveOptionsChanged} from './util';
 
-export function getOffers(component, at, logger) {
+export function getOffers(component, logger) {
+  if (!component.targetState.initialized) {
+    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+    return;
+  }
+
+  const at = window.adobe.target;
+
   at.getOffer({
     mbox: component.targetState.mbox,
     params: component.targetState.atParams,
@@ -32,9 +39,31 @@ export function getDefaultProps(opts) {
   };
 }
 
-export function onComponentMounted(component, at, logger) {
-  let targetState = component.targetState;
+export function onRender(React, component) {
+  component.targetState = {
+    initialized: Boolean(window.adobe && window.adobe.target),
+    editMode: (component.queryParams.indexOf('mboxEdit') !== -1)
+  };
 
+  if (!component.targetState.initialized) {
+    return <div {...component.props}>{component.props.children}</div>;
+  }
+
+  return <div
+    ref={ref => {
+      component.targetDiv = ref;
+    }}
+    {...component.props} className={appendMboxClass(component)}>{component.props.children}
+  </div>;
+}
+
+export function onComponentMounted(component, logger) {
+  if (!component.targetState.initialized) {
+    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+    return;
+  }
+
+  let targetState = component.targetState;
   targetState.atParams = getParams(component.props);
   targetState.mbox = component.props['data-mbox'];
   targetState.timeout = parseInt(component.props['data-timeout'], 10);
@@ -44,24 +73,35 @@ export function onComponentMounted(component, at, logger) {
     return;
   }
 
-  if (!targetState.editMode) {
-    getOffers(component, at, logger);
+  if (targetState.editMode) {
+    return;
   }
+
+  getOffers(component, logger);
 }
 
-export function onComponentWillReceiveProps(component, at, logger, newProps) {
+export function onComponentWillReceiveProps(component, logger, newProps) {
+  if (!component.targetState.initialized) {
+    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+    return;
+  }
+
   let newMbox = newProps['data-mbox'];
   let newTimeout = parseInt(newProps['data-timeout'], 10);
   let newParams = getParams(newProps);
 
-  if (atOptsHaveChanged(component, newMbox, newTimeout, newParams)) {
-    let targetState = component.targetState;
-    targetState.atParams = newParams || targetState.atParams;
-    targetState.mbox = newMbox || targetState.mbox;
-    targetState.timeout = newTimeout || targetState.timeout;
-
-    if (!targetState.editMode) {
-      getOffers(component, at, logger);
-    }
+  if (!haveOptionsChanged(component, newMbox, newTimeout, newParams)) {
+    return;
   }
+
+  let targetState = component.targetState;
+  targetState.atParams = newParams || targetState.atParams;
+  targetState.mbox = newMbox || targetState.mbox;
+  targetState.timeout = newTimeout || targetState.timeout;
+
+  if (targetState.editMode) {
+    return;
+  }
+
+  getOffers(component, logger);
 }

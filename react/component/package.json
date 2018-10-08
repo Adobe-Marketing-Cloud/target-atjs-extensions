@@ -1,6 +1,6 @@
 {
   "name": "@adobe/target-react-component",
-  "version": "0.4.3",
+  "version": "0.5.4",
   "description": "Adobe Target React component",
   "author": {
     "name": "Adobe Systems Inc.",
@@ -65,8 +65,8 @@
     "karma-webpack": "^2.0.3",
     "lodash-webpack-plugin": "^0.10.0",
     "phantomjs-prebuilt": "^2.1.11",
-    "react": "^15.3.0",
-    "react-dom": "^15.4.2",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
     "webpack-stream": "^3.2.0"
   }
 }

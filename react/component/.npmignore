@@ -1,0 +1,7 @@
+src/
+test/
+karma.conf.js
+gulpfile.js
+.gitignore
+.gitattributes
+.editorconfig

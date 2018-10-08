@@ -77,37 +77,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* global adobe, React */
-
-
 	exports.default = createTargetComponent;
 
-	var _util = __webpack_require__(1);
-
-	var _main = __webpack_require__(28);
+	var _main = __webpack_require__(1);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* global adobe, React */
 
-	function onRender(React, component) {
-	  component.targetState = {
-	    editMode: component.queryParams.indexOf('mboxEdit') !== -1
-	  };
-
-	  return React.createElement(
-	    'div',
-	    _extends({
-	      ref: function ref(_ref) {
-	        component.targetDiv = _ref;
-	      }
-	    }, component.props, {
-	      className: (0, _util.appendMboxClass)(component) }),
-	    component.props.children
-	  );
-	}
 
 	function createTargetComponent(React, opts) {
 	  var TargetComponent = function (_React$Component) {
@@ -118,7 +97,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var _this = _possibleConstructorReturn(this, (TargetComponent.__proto__ || Object.getPrototypeOf(TargetComponent)).call(this, props));
 
-	      _this.at = adobe.target;
 	      _this.logger = console;
 	      _this.queryParams = location.search;
 	      return _this;
@@ -127,12 +105,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _createClass(TargetComponent, [{
 	      key: 'render',
 	      value: function render() {
-	        return onRender(React, this);
+	        return (0, _main.onRender)(React, this);
 	      }
 	    }, {
 	      key: 'componentDidMount',
 	      value: function componentDidMount() {
-	        return (0, _main.onComponentMounted)(this, this.at, this.logger);
+	        return (0, _main.onComponentMounted)(this, this.logger);
 	      }
 	    }, {
 	      key: 'shouldComponentUpdate',
@@ -142,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	      key: 'componentWillReceiveProps',
 	      value: function componentWillReceiveProps(newProps) {
-	        return (0, _main.onComponentWillReceiveProps)(this, this.at, this.logger, newProps);
+	        return (0, _main.onComponentWillReceiveProps)(this, this.logger, newProps);
 	      }
 	    }]);
 
@@ -164,18 +142,151 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _isEqual2 = __webpack_require__(2);
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports.getOffers = getOffers;
+	exports.getDefaultProps = getDefaultProps;
+	exports.onRender = onRender;
+	exports.onComponentMounted = onComponentMounted;
+	exports.onComponentWillReceiveProps = onComponentWillReceiveProps;
+
+	var _util = __webpack_require__(2);
+
+	function getOffers(component, logger) {
+	  if (!component.targetState.initialized) {
+	    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+	    return;
+	  }
+
+	  var at = window.adobe.target;
+
+	  at.getOffer({
+	    mbox: component.targetState.mbox,
+	    params: component.targetState.atParams,
+	    timeout: component.targetState.timeout,
+	    success: function success(response) {
+	      at.applyOffer({
+	        mbox: component.targetState.mbox,
+	        offer: response,
+	        selector: component.targetDiv
+	      });
+	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
+	    },
+	    error: function error(status, _error) {
+	      logger.error('getOffer error: ', _error, status);
+	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
+	    }
+	  });
+	}
+
+	function getDefaultProps(opts) {
+	  var DEFAULT_MBOX = 'default-mbox';
+	  var DEFAULT_TIMEOUT = 3000;
+	  opts = opts || {};
+
+	  return {
+	    'className': 'mboxDefault',
+	    'data-mbox': opts.mbox || DEFAULT_MBOX,
+	    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
+	  };
+	}
+
+	function onRender(React, component) {
+	  component.targetState = {
+	    initialized: Boolean(window.adobe && window.adobe.target),
+	    editMode: component.queryParams.indexOf('mboxEdit') !== -1
+	  };
+
+	  if (!component.targetState.initialized) {
+	    return React.createElement(
+	      'div',
+	      component.props,
+	      component.props.children
+	    );
+	  }
+
+	  return React.createElement(
+	    'div',
+	    _extends({
+	      ref: function ref(_ref) {
+	        component.targetDiv = _ref;
+	      }
+	    }, component.props, { className: (0, _util.appendMboxClass)(component) }),
+	    component.props.children
+	  );
+	}
+
+	function onComponentMounted(component, logger) {
+	  if (!component.targetState.initialized) {
+	    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+	    return;
+	  }
+
+	  var targetState = component.targetState;
+	  targetState.atParams = (0, _util.getParams)(component.props);
+	  targetState.mbox = component.props['data-mbox'];
+	  targetState.timeout = parseInt(component.props['data-timeout'], 10);
+
+	  if (targetState.mbox === 'default-mbox') {
+	    logger.error('at-react-component:', 'mbox prop must be provided for each Target component!');
+	    return;
+	  }
+
+	  if (targetState.editMode) {
+	    return;
+	  }
+
+	  getOffers(component, logger);
+	}
+
+	function onComponentWillReceiveProps(component, logger, newProps) {
+	  if (!component.targetState.initialized) {
+	    logger.error('at-react-component:', 'window.adobe.target namespace is missing');
+	    return;
+	  }
+
+	  var newMbox = newProps['data-mbox'];
+	  var newTimeout = parseInt(newProps['data-timeout'], 10);
+	  var newParams = (0, _util.getParams)(newProps);
+
+	  if (!(0, _util.haveOptionsChanged)(component, newMbox, newTimeout, newParams)) {
+	    return;
+	  }
+
+	  var targetState = component.targetState;
+	  targetState.atParams = newParams || targetState.atParams;
+	  targetState.mbox = newMbox || targetState.mbox;
+	  targetState.timeout = newTimeout || targetState.timeout;
+
+	  if (targetState.editMode) {
+	    return;
+	  }
+
+	  getOffers(component, logger);
+	}
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _isEqual2 = __webpack_require__(3);
 
 	var _isEqual3 = _interopRequireDefault(_isEqual2);
 
-	var _includes2 = __webpack_require__(27);
+	var _includes2 = __webpack_require__(28);
 
 	var _includes3 = _interopRequireDefault(_includes2);
 
 	exports.appendMboxClass = appendMboxClass;
 	exports.removeMboxClass = removeMboxClass;
 	exports.getParams = getParams;
-	exports.atOptsHaveChanged = atOptsHaveChanged;
+	exports.haveOptionsChanged = haveOptionsChanged;
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -208,19 +319,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    params[k.substring(5)] = props[k];
 	  });
+
 	  return params;
 	}
 
-	function atOptsHaveChanged(component, mbox, timeout, params) {
+	function haveOptionsChanged(component, mbox, timeout, params) {
 	  var targetState = component.targetState;
 	  return !(0, _isEqual3.default)(targetState.atParams, params) || mbox && targetState.mbox !== mbox || timeout && targetState.timeout !== timeout;
 	}
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseIsEqual = __webpack_require__(3);
+	var baseIsEqual = __webpack_require__(4);
 
 	/**
 	 * Performs a deep comparison between two values to determine if they are
@@ -258,11 +370,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseIsEqualDeep = __webpack_require__(4),
-	    isObjectLike = __webpack_require__(26);
+	var baseIsEqualDeep = __webpack_require__(5),
+	    isObjectLike = __webpack_require__(27);
 
 	/**
 	 * The base implementation of `_.isEqual` which supports partial comparisons
@@ -292,17 +404,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var Stack = __webpack_require__(5),
-	    equalArrays = __webpack_require__(13),
-	    equalByTag = __webpack_require__(19),
-	    equalObjects = __webpack_require__(20),
-	    getTag = __webpack_require__(23),
-	    isArray = __webpack_require__(15),
-	    isBuffer = __webpack_require__(24),
-	    isTypedArray = __webpack_require__(25);
+	var Stack = __webpack_require__(6),
+	    equalArrays = __webpack_require__(14),
+	    equalByTag = __webpack_require__(20),
+	    equalObjects = __webpack_require__(21),
+	    getTag = __webpack_require__(24),
+	    isArray = __webpack_require__(16),
+	    isBuffer = __webpack_require__(25),
+	    isTypedArray = __webpack_require__(26);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -381,14 +493,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var listCacheClear = __webpack_require__(6),
-	    listCacheDelete = __webpack_require__(7),
-	    listCacheGet = __webpack_require__(10),
-	    listCacheHas = __webpack_require__(11),
-	    listCacheSet = __webpack_require__(12);
+	var listCacheClear = __webpack_require__(7),
+	    listCacheDelete = __webpack_require__(8),
+	    listCacheGet = __webpack_require__(11),
+	    listCacheHas = __webpack_require__(12),
+	    listCacheSet = __webpack_require__(13);
 
 	/**
 	 * Creates an list cache object.
@@ -419,7 +531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 	/**
@@ -438,10 +550,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(8);
+	var assocIndexOf = __webpack_require__(9);
 
 	/** Used for built-in method references. */
 	var arrayProto = Array.prototype;
@@ -479,10 +591,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var eq = __webpack_require__(9);
+	var eq = __webpack_require__(10);
 
 	/**
 	 * Gets the index at which the `key` is found in `array` of key-value pairs.
@@ -506,7 +618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 	/**
@@ -549,10 +661,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(8);
+	var assocIndexOf = __webpack_require__(9);
 
 	/**
 	 * Gets the list cache value for `key`.
@@ -574,10 +686,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(8);
+	var assocIndexOf = __webpack_require__(9);
 
 	/**
 	 * Checks if a list cache value for `key` exists.
@@ -596,10 +708,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var assocIndexOf = __webpack_require__(8);
+	var assocIndexOf = __webpack_require__(9);
 
 	/**
 	 * Sets the list cache `key` to `value`.
@@ -628,12 +740,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var SetCache = __webpack_require__(14),
-	    arraySome = __webpack_require__(16),
-	    cacheHas = __webpack_require__(17);
+	var SetCache = __webpack_require__(15),
+	    arraySome = __webpack_require__(17),
+	    cacheHas = __webpack_require__(18);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1,
@@ -717,10 +829,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(15);
+	var isArray = __webpack_require__(16);
 
 	/**
 	 * Casts `value` as an array if it's not one.
@@ -767,7 +879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	/**
@@ -799,7 +911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 	/**
@@ -828,10 +940,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(18);
+	var baseIndexOf = __webpack_require__(19);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -851,7 +963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 	/**
@@ -880,7 +992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 	/**
@@ -923,10 +1035,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var getAllKeys = __webpack_require__(21);
+	var getAllKeys = __webpack_require__(22);
 
 	/** Used to compose bitmasks for value comparisons. */
 	var COMPARE_PARTIAL_FLAG = 1;
@@ -1018,10 +1130,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var overArg = __webpack_require__(22);
+	var overArg = __webpack_require__(23);
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = overArg(Object.keys, Object);
@@ -1030,7 +1142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 	/**
@@ -1051,7 +1163,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -1076,30 +1188,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	module.exports = objectToString;
-
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-	/**
-	 * This method returns `false`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.13.0
-	 * @category Util
-	 * @returns {boolean} Returns `false`.
-	 * @example
-	 *
-	 * _.times(2, _.stubFalse);
-	 * // => [false, false]
-	 */
-	function stubFalse() {
-	  return false;
-	}
-
-	module.exports = stubFalse;
 
 
 /***/ }),
@@ -1128,6 +1216,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 26 */
+/***/ (function(module, exports) {
+
+	/**
+	 * This method returns `false`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.13.0
+	 * @category Util
+	 * @returns {boolean} Returns `false`.
+	 * @example
+	 *
+	 * _.times(2, _.stubFalse);
+	 * // => [false, false]
+	 */
+	function stubFalse() {
+	  return false;
+	}
+
+	module.exports = stubFalse;
+
+
+/***/ }),
+/* 27 */
 /***/ (function(module, exports) {
 
 	/**
@@ -1162,10 +1274,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseIndexOf = __webpack_require__(18);
+	var baseIndexOf = __webpack_require__(19);
 
 	/**
 	 * A specialized version of `_.includes` for arrays without support for
@@ -1183,88 +1295,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	module.exports = arrayIncludes;
 
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getOffers = getOffers;
-	exports.getDefaultProps = getDefaultProps;
-	exports.onComponentMounted = onComponentMounted;
-	exports.onComponentWillReceiveProps = onComponentWillReceiveProps;
-
-	var _util = __webpack_require__(1);
-
-	function getOffers(component, at, logger) {
-	  at.getOffer({
-	    mbox: component.targetState.mbox,
-	    params: component.targetState.atParams,
-	    timeout: component.targetState.timeout,
-	    success: function success(response) {
-	      at.applyOffer({
-	        mbox: component.targetState.mbox,
-	        offer: response,
-	        selector: component.targetDiv
-	      });
-	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
-	    },
-	    error: function error(status, _error) {
-	      logger.error('getOffer error: ', _error, status);
-	      component.targetDiv.className = (0, _util.removeMboxClass)(component.targetDiv.className);
-	    }
-	  });
-	}
-
-	function getDefaultProps(opts) {
-	  var DEFAULT_MBOX = 'default-mbox';
-	  var DEFAULT_TIMEOUT = 3000;
-	  opts = opts || {};
-
-	  return {
-	    'className': 'mboxDefault',
-	    'data-mbox': opts.mbox || DEFAULT_MBOX,
-	    'data-timeout': opts.timeout || DEFAULT_TIMEOUT
-	  };
-	}
-
-	function onComponentMounted(component, at, logger) {
-	  var targetState = component.targetState;
-
-	  targetState.atParams = (0, _util.getParams)(component.props);
-	  targetState.mbox = component.props['data-mbox'];
-	  targetState.timeout = parseInt(component.props['data-timeout'], 10);
-
-	  if (targetState.mbox === 'default-mbox') {
-	    logger.error('at-react-component:', 'mbox prop must be provided for each Target component!');
-	    return;
-	  }
-
-	  if (!targetState.editMode) {
-	    getOffers(component, at, logger);
-	  }
-	}
-
-	function onComponentWillReceiveProps(component, at, logger, newProps) {
-	  var newMbox = newProps['data-mbox'];
-	  var newTimeout = parseInt(newProps['data-timeout'], 10);
-	  var newParams = (0, _util.getParams)(newProps);
-
-	  if ((0, _util.atOptsHaveChanged)(component, newMbox, newTimeout, newParams)) {
-	    var targetState = component.targetState;
-	    targetState.atParams = newParams || targetState.atParams;
-	    targetState.mbox = newMbox || targetState.mbox;
-	    targetState.timeout = newTimeout || targetState.timeout;
-
-	    if (!targetState.editMode) {
-	      getOffers(component, at, logger);
-	    }
-	  }
-	}
 
 /***/ })
 /******/ ])

@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@adobe/target-react-component": "^0.4.3",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "@adobe/target-react-component": "^0.5.4",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2",
     "react-router": "^3.0.5",
-    "react-scripts": "1.0.10"
+    "react-scripts": "1.0.15"
   },
   "scripts": {
     "start": "react-scripts start",
